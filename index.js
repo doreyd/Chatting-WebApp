@@ -1,4 +1,5 @@
 const express = require("express");
+const mongoose = require("mongoose");
 
 const app = express();
 
@@ -7,6 +8,10 @@ app.get("/", (req, res, next) => {
 });
 
 const port = process.env.PORT || 5000;
-app.listen(port, () =>
-  console.log(`Conection is now established at port ${port}`)
-);
+
+mongoose.connect("mongodb://localhost/database", { useNewUrlParser: true });
+mongoose.connection
+  .once("open", () => console.log(`Connection to database established`))
+  .on("error", err => console.log(`Connection error : ${err}`));
+
+app.listen(port, () => console.log(`Server is now running at port ${port}...`));
