@@ -21,6 +21,10 @@ app.use(
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+let conversationZero = {
+  init: []
+};
+
 // Signing up a new user and adding it to the database
 app.post("/signup", (req, res, next) => {
   UserRecord.find({ email: req.body.email }, (err, data) => {
@@ -31,15 +35,43 @@ app.post("/signup", (req, res, next) => {
         email: req.body.email,
         password: req.body.password,
         userName: req.body.userName,
-        allMessage: {},
+        allMessage: conversationZero,
         login: true
       });
       newUser
         .save()
-        .then(() => res.status(201).json({ message: "user added" }))
+        .then(data =>
+          res.status(201).json({ message: "user added", data: data })
+        )
         .catch(err => res.status(500).json({ error: err }));
     }
   });
+});
+
+app.post("/removeuser", (req, res, next) => {
+  UserRecord.findOne(
+    { email: req.body.email, password: req.body.password },
+    (err, data) => {
+      if (data === null)
+        res
+          .status(500)
+          .json({ message: "email/password combination not in database" });
+      else {
+        UserRecord.remove({
+          email: req.body.email,
+          password: req.body.password
+        })
+          .then(() =>
+            res
+              .status(201)
+              .json({ message: "User has been Successfully deleted" })
+          )
+          .catch(err => {
+            res.status(500).json({ error: err });
+          });
+      }
+    }
+  );
 });
 
 // Route for signing in
@@ -47,32 +79,36 @@ app.post("/signin", (req, res, next) => {
   UserRecord.findOne(
     { email: req.body.email, password: req.body.password },
     (err, data) => {
-      if (data.length === 0)
+      if (data === null)
         res
           .status(500)
           .json({ message: "email/password combination not in database" });
       else {
         req.session.user = data.userName;
-        console.log(req.session.user);
         res.status(200).json(data);
       }
     }
   );
 });
 
+// Route for sending messages
 app.post("/sendmessage", (req, res, next) => {
-  UserRecord.findOne({ userName: req.body.dest }, data => {
-    if (!data.allMessage[req.session.user])
-      data.allMessage[req.session.user] = [];
-    data.allMessage[req.session.user].push(["sender", req.body.message]);
-  })
-    .exec()
-    .then(() => {
-      res.status(200).json({ message: "Your message was successfully sent !" });
-    })
-    .catch(err => {
-      res.status(500).json({ error: err });
-    });
+  UserRecord.findOne({ email: req.body.receiver }, (err, data) => {
+    let newArray = [req.body.sender, req.body.receiver, Date.now(), false];
+    if (!data.allMessage[req.body.sender]) {
+      data.allMessage[req.body.sender] = [];
+    }
+    data.allMessage[req.body.sender].push(newArray);
+    data.markModified("allMessage");
+    data
+      .save()
+      .then(() =>
+        res.status(200).json({ message: "Your message was successfully sent" })
+      )
+      .catch(err => {
+        res.status(500).json({ error: err });
+      });
+  });
 });
 
 // Route for home page
