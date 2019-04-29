@@ -91,45 +91,51 @@ app.post("/signin", (req, res, next) => {
   );
 });
 
-const ff = (req, res) => {
-  let check = 0;
+const updateMessages = (req, res) => {
   UserRecord.findOne({ email: req.body.receiver }, (err, data) => {
-    let newArray = ["sender", req.body.message, Date.now(), false];
-    if (!data.allMessage[req.body.sender]) {
-      data.allMessage[req.body.sender] = [];
+    console.log(data === null);
+    if (data === null)
+      res.status(500).json({ message: "the destination given is inexistant" });
+    else {
+      let newArray = ["sender", req.body.message, Date.now(), false];
+      if (!data.allMessage[req.body.sender]) {
+        data.allMessage[req.body.sender] = [];
+      }
+      data.allMessage[req.body.sender].push(newArray);
+      data.markModified("allMessage");
+      data
+        .save()
+        .then(
+          UserRecord.findOne({ email: req.body.sender }, (err, data2) => {
+            let newArray2 = ["receiver", req.body.message, Date.now(), false];
+            if (!data2.allMessage[req.body.receiver]) {
+              data2.allMessage[req.body.receiver] = [];
+            }
+            data2.allMessage[req.body.receiver].push(newArray2);
+            data2.markModified("allMessage");
+            data2
+              .save()
+              .then(() =>
+                res
+                  .status(200)
+                  .json({ message: "Your message was successfully sent" })
+              )
+              .catch(err => {
+                check++;
+                res.status(500).json({ error: err });
+              });
+          })
+        )
+        .catch(err => {
+          check++;
+          res.status(500).json({ error: err });
+        });
     }
-    data.allMessage[req.body.sender].push(newArray);
-    data.markModified("allMessage");
-    data
-      .save()
-      .then()
-      .catch(err => {
-        check++;
-        res.status(500).json({ error: err });
-      });
   });
-
-  UserRecord.findOne({ email: req.body.sender }, (err, data2) => {
-    let newArray2 = ["receiver", req.body.message, Date.now(), false];
-    if (!data2.allMessage[req.body.receiver]) {
-      data2.allMessage[req.body.receiver] = [];
-    }
-    data2.allMessage[req.body.receiver].push(newArray2);
-    data2.markModified("allMessage");
-    data2
-      .save()
-      .then()
-      .catch(err => {
-        check++;
-        res.status(500).json({ error: err });
-      });
-  });
-  if (check === 0)
-    res.status(200).json({ message: "Your message was successfully sent" });
 };
 // Route for sending messages
 app.post("/sendmessage", (req, res) => {
-  ff(req, res);
+  updateMessages(req, res);
 });
 
 // Route for home page
