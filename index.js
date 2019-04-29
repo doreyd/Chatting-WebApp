@@ -91,10 +91,10 @@ app.post("/signin", (req, res, next) => {
   );
 });
 
-// Route for sending messages
-app.post("/sendmessage", (req, res, next) => {
+const ff = (req, res) => {
+  let check = 0;
   UserRecord.findOne({ email: req.body.receiver }, (err, data) => {
-    let newArray = [req.body.sender, req.body.receiver, Date.now(), false];
+    let newArray = ["sender", req.body.message, Date.now(), false];
     if (!data.allMessage[req.body.sender]) {
       data.allMessage[req.body.sender] = [];
     }
@@ -102,13 +102,34 @@ app.post("/sendmessage", (req, res, next) => {
     data.markModified("allMessage");
     data
       .save()
-      .then(() =>
-        res.status(200).json({ message: "Your message was successfully sent" })
-      )
+      .then()
       .catch(err => {
+        check++;
         res.status(500).json({ error: err });
       });
   });
+
+  UserRecord.findOne({ email: req.body.sender }, (err, data2) => {
+    let newArray2 = ["receiver", req.body.message, Date.now(), false];
+    if (!data2.allMessage[req.body.receiver]) {
+      data2.allMessage[req.body.receiver] = [];
+    }
+    data2.allMessage[req.body.receiver].push(newArray2);
+    data2.markModified("allMessage");
+    data2
+      .save()
+      .then()
+      .catch(err => {
+        check++;
+        res.status(500).json({ error: err });
+      });
+  });
+  if (check === 0)
+    res.status(200).json({ message: "Your message was successfully sent" });
+};
+// Route for sending messages
+app.post("/sendmessage", (req, res) => {
+  ff(req, res);
 });
 
 // Route for home page
