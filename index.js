@@ -2,14 +2,27 @@ const express = require("express");
 const mongoose = require("mongoose");
 const UserRecord = require("./models");
 const bodyParser = require("body-parser");
+const session = require("express-session");
 
 const app = express();
+
+app.use(
+  session({
+    secret: "dfgAGBSdfgdf-98986dfgdg/*fdg",
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+      secure: false,
+      maxAge: 1000 * 60 * 60 * 24
+    }
+  })
+);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Signing up a new user and adding it to the database
-app.post("/signUp", (req, res, next) => {
+app.post("/signup", (req, res, next) => {
   UserRecord.find({ email: req.body.email }, (err, data) => {
     if (data.length !== 0)
       res.status(500).json({ message: "email already in use" });
@@ -29,9 +42,9 @@ app.post("/signUp", (req, res, next) => {
   });
 });
 
-// Singin In as a user
-app.post("/signIn", (req, res, next) => {
-  UserRecord.find(
+// Route for signing in
+app.post("/signin", (req, res, next) => {
+  UserRecord.findOne(
     { email: req.body.email, password: req.body.password },
     (err, data) => {
       if (data.length === 0)
@@ -39,14 +52,30 @@ app.post("/signIn", (req, res, next) => {
           .status(500)
           .json({ message: "email/password combination not in database" });
       else {
-        res
-          .status(200)
-          .json({ allMessage: data[0].allMessage, login: data[0].login });
+        req.session.user = data.userName;
+        console.log(req.session.user);
+        res.status(200).json(data);
       }
     }
   );
 });
 
+app.post("/sendmessage", (req, res, next) => {
+  UserRecord.findOne({ userName: req.body.dest }, data => {
+    if (!data.allMessage[req.session.user])
+      data.allMessage[req.session.user] = [];
+    data.allMessage[req.session.user].push(["sender", req.body.message]);
+  })
+    .exec()
+    .then(() => {
+      res.status(200).json({ message: "Your message was successfully sent !" });
+    })
+    .catch(err => {
+      res.status(500).json({ error: err });
+    });
+});
+
+// Route for home page
 app.get("/", (req, res, next) => {
   res.status(200).send("Welcome to this new chatting Web-App. Enjoy!");
 });
