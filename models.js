@@ -6,7 +6,7 @@ const userRecordSchema = new Schema({
   password: String,
   userName: String,
   allMessage: Object,
-  login: String
+  login: Boolean
 });
 
 const UserRecord = mongoose.model("UserRecord", userRecordSchema);
