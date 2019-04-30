@@ -67,3 +67,29 @@ $signIn.onclick = () => {
     };
   }
 };
+
+let emailPattern = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+
+function checkEmailFormat(id) {
+  let inputElem = document.getElementById(id);
+  let inputValue = inputElem.value;
+  if (inputValue.match(emailPattern)) {
+    inputElem.style.background = "#c6fbbd";
+  } else {
+    inputElem.style.background = "#fad6d8";
+  }
+}
+
+$email.onkeyup = () => {
+  checkEmailFormat("email");
+};
+$email.onpaste = () => {
+  checkEmailFormat("email");
+};
+
+$email2.onkeyup = () => {
+  checkEmailFormat("email2");
+};
+$email2.onpaste = () => {
+  checkEmailFormat("email2");
+};
