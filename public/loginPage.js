@@ -33,3 +33,37 @@ $signUp.onclick = () => {
     };
   }
 };
+
+$signIn.onclick = () => {
+  let height = parseInt(window.getComputedStyle($signInContainer).height);
+  let heightUp = parseInt(window.getComputedStyle($signUpContainer).height);
+  if (height === 160) {
+    $signInContainer.style.height = "35px";
+    $signUpContainer.style.top = "45px";
+
+    $signInContainer.onmouseout = () => {
+      $signInContainer.style.background = "transparent";
+    };
+    if (heightUp !== 200) {
+      $signUpContainer.style.background = "transparent";
+      $signUpContainer.onmouseout = () => {
+        $signUpContainer.style.background = "transparent";
+      };
+    }
+  } else if (height === 35) {
+    $signInContainer.style.height = "160px";
+    $signUpContainer.style.top = "170px";
+    $signInContainer.style.background = "white";
+    $signInContainer.style.opacity = "0.8";
+    $signInContainer.onmouseout = () => {
+      $signInContainer.style.background = "white";
+      $signInContainer.style.opacity = "0.8";
+    };
+    $signUpContainer.style.background = "white";
+    $signUpContainer.style.opacity = "0.8";
+    $signUpContainer.onmouseout = () => {
+      $signUpContainer.style.background = "white";
+      $signUpContainer.style.opacity = "0.8";
+    };
+  }
+};
