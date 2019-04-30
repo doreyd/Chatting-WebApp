@@ -6,7 +6,9 @@ const session = require("express-session");
 const { updateMessages, signin } = require("./controller/updateMessages");
 const socket = require("socket.io");
 
+// initializing variables that will be used to pair session with sockets
 let sess_sock = {};
+let userName;
 
 const app = express();
 
@@ -24,6 +26,8 @@ app.use(
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use("/files", express.static(__dirname + "/public"));
 
 let conversationZero = {
   init: []
@@ -78,7 +82,6 @@ app.post("/removeuser", (req, res, next) => {
   );
 });
 
-let userName;
 // Route for signing in
 app.post("/signin", (req, res, next) => {
   // signin(req, res);
@@ -105,7 +108,7 @@ app.post("/sendmessage", (req, res) => {
 
 // Route for home page
 app.get("/", (req, res, next) => {
-  res.status(200).send("Welcome to this new chatting Web-App. Enjoy!");
+  res.status(200).sendFile(__dirname + "/chatPage.html");
 });
 
 // Connecting to database

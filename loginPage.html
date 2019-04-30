@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<head>
+        <link rel="shortcut icon" href="images/smallLogo.gif"> 
+        <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+
+    <div id="frontPage">
+    <div id="loginInlogUp">     
+            <div id="signInContainer" > 
+                <form method="POST" action="/signIn" name="formSignIn"  id="formSignIn" >
+                        <div id="signIn">Sign In</div>               
+                        <input type="text" id="email2" spellcheck="false" name="emailSignIn" placeholder="Email" required>
+                        <input type="password" id="password2" name="passwordSignIn" spellcheck="false" placeholder="Password" required>
+                        <div id="rememberUser">
+                        <input type="checkbox" id="toRemember" name="toRemember" >
+                        <div id="rememberText">Remember me</div>
+                        <div id="forgot">Forgot password</div>
+                        </div>
+                        <div id="submit2">Sign In</div>  
+                </form>
+    
+                </div>
+                
+                <div id="signUpContainer">
+                    <form method="POST" action="/signUp"  name="formSignUp" id="formSignUp">
+                            <div id="signUp">Sign Up</div>
+                            <input type="text" id="email" spellcheck="false" name="emailSignUp" placeholder="Email">
+                            <input type="password" id="password" name="passwordSignUp" spellcheck="false" placeholder="Password">
+                            <input type="text" id="userName" name="userName" spellcheck="false" placeholder="User Name">
+                            <div id="acceptRules">
+                                    <input type="checkbox" id="acceptRulesCheckbox" name="rules" >
+                                    <div id="rules">I have read and agree to the Terms of Use and Privacy Policy</div>
+                            </div>
+                            <div id="submit">Sign Up</div>
+           
+                    </form>
+                </div>
+                
+            </div>
+        </div>
+
+
+</body>
+</html>
