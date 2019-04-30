@@ -3,6 +3,8 @@ const mongoose = require("mongoose");
 const UserRecord = require("./models");
 const bodyParser = require("body-parser");
 const session = require("express-session");
+const { updateMessages, signin } = require("./controller/updateMessages");
+const socket = require("socket.io");
 
 const app = express();
 
@@ -76,63 +78,9 @@ app.post("/removeuser", (req, res, next) => {
 
 // Route for signing in
 app.post("/signin", (req, res, next) => {
-  UserRecord.findOne(
-    { email: req.body.email, password: req.body.password },
-    (err, data) => {
-      if (data === null)
-        res
-          .status(500)
-          .json({ message: "email/password combination not in database" });
-      else {
-        req.session.user = data.userName;
-        res.status(200).json(data);
-      }
-    }
-  );
+  signin(req, res);
 });
 
-const updateMessages = (req, res) => {
-  UserRecord.findOne({ email: req.body.receiver }, (err, data) => {
-    console.log(data === null);
-    if (data === null)
-      res.status(500).json({ message: "the destination given is inexistant" });
-    else {
-      let newArray = ["sender", req.body.message, Date.now(), false];
-      if (!data.allMessage[req.body.sender]) {
-        data.allMessage[req.body.sender] = [];
-      }
-      data.allMessage[req.body.sender].push(newArray);
-      data.markModified("allMessage");
-      data
-        .save()
-        .then(
-          UserRecord.findOne({ email: req.body.sender }, (err, data2) => {
-            let newArray2 = ["receiver", req.body.message, Date.now(), false];
-            if (!data2.allMessage[req.body.receiver]) {
-              data2.allMessage[req.body.receiver] = [];
-            }
-            data2.allMessage[req.body.receiver].push(newArray2);
-            data2.markModified("allMessage");
-            data2
-              .save()
-              .then(() =>
-                res
-                  .status(200)
-                  .json({ message: "Your message was successfully sent" })
-              )
-              .catch(err => {
-                check++;
-                res.status(500).json({ error: err });
-              });
-          })
-        )
-        .catch(err => {
-          check++;
-          res.status(500).json({ error: err });
-        });
-    }
-  });
-};
 // Route for sending messages
 app.post("/sendmessage", (req, res) => {
   updateMessages(req, res);
@@ -151,4 +99,10 @@ mongoose.connection
 
 // Start the server
 const port = process.env.PORT || 5000;
-app.listen(port, () => console.log(`Server is now running at port ${port}...`));
+const server = app.listen(port, () => {
+  console.log(`Listening on port ${port} .....`);
+});
+
+// Start the WebSocket on this server
+const io = socket(server);
+io.on("connection", socket => {});
