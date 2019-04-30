@@ -11,3 +11,25 @@ const $email = document.getElementById("email");
 const $email2 = document.getElementById("email2");
 const $password = document.getElementById("password");
 const $password2 = document.getElementById("password2");
+
+$signUp.onclick = () => {
+  let height = parseInt(window.getComputedStyle($signUpContainer).height);
+  let heightIn = parseInt(window.getComputedStyle($signInContainer).height);
+
+  if (height === 200) {
+    $signUpContainer.style.height = "35px";
+    if (heightIn !== 160) {
+      $signUpContainer.onmouseout = () => {
+        $signUpContainer.style.background = "transparent";
+      };
+    }
+  } else if (height === 35) {
+    $signUpContainer.style.height = "200px";
+    $signUpContainer.style.background = "white";
+    $signUpContainer.style.opacity = "0.8";
+    $signUpContainer.onmouseout = () => {
+      $signUpContainer.style.background = "white";
+      $signUpContainer.style.opacity = "0.8";
+    };
+  }
+};
