@@ -128,3 +128,28 @@ function sendMessageForm(messageDestination, message, messageOrigin) {
   };
   socket.emit("sendMessage", objBeingSent);
 }
+
+function initializeSendBox(thisUser) {
+  $sendBox.addEventListener("keyup", event => {
+    let senderName = $senderName.innerText;
+    nowIsTyping(senderName, thisUser);
+    $sendBox.onblur = () => {
+      stopTyping(senderName, thisUser);
+    };
+
+    if (event.key === "Enter") {
+      if ($sendBox.value !== "") {
+        if (senderName.includes("@")) {
+          addNewMessage("receiver", "XXX", thisUser);
+        } else {
+          addNewMessage("receiver", $sendBox.value, thisUser);
+          sendMessageForm(senderName, $sendBox.value, thisUser);
+          allMessage[senderName].push(["receiver", $sendBox.value]);
+        }
+
+        $sendBox.value = "";
+        $messages.scrollTo(0, $messages.scrollHeight);
+      }
+    }
+  });
+}
