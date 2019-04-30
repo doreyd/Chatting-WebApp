@@ -108,7 +108,7 @@ app.post("/sendmessage", (req, res) => {
 
 // Route for home page
 app.get("/", (req, res, next) => {
-  res.status(200).sendFile(__dirname + "/chatPage.html");
+  res.status(200).sendFile(__dirname + "/loginPage.html");
 });
 
 // Connecting to database
