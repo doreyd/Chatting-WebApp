@@ -8,31 +8,33 @@
     <div id="frontPage">
     <div id="loginInlogUp">     
             <div id="signInContainer" > 
-                <form method="POST" action="/signIn" name="formSignIn"  id="formSignIn" >
+                <form method="POST" action="/signin" name="formSignIn"  id="formSignIn" >
                         <div id="signIn">Sign In</div>               
-                        <input type="text" id="email2" spellcheck="false" name="emailSignIn" placeholder="Email" required>
-                        <input type="password" id="password2" name="passwordSignIn" spellcheck="false" placeholder="Password" required>
+                        <input type="text" id="email2" spellcheck="false" name="email" placeholder="Email" required>
+                        <input type="password" id="password2" name="password" spellcheck="false" placeholder="Password" required>
                         <div id="rememberUser">
                         <input type="checkbox" id="toRemember" name="toRemember" >
                         <div id="rememberText">Remember me</div>
                         <div id="forgot">Forgot password</div>
                         </div>
-                        <div id="submit2">Sign In</div>  
+                        <!-- <div id="submit2">Sign In</div>   -->
+                        <input type="submit" value="Sign In" id="submit2">
                 </form>
     
                 </div>
                 
                 <div id="signUpContainer">
-                    <form method="POST" action="/signUp"  name="formSignUp" id="formSignUp">
+                    <form method="POST" action="/signup"  name="formSignUp" id="formSignUp">
                             <div id="signUp">Sign Up</div>
-                            <input type="text" id="email" spellcheck="false" name="emailSignUp" placeholder="Email">
-                            <input type="password" id="password" name="passwordSignUp" spellcheck="false" placeholder="Password">
+                            <input type="text" id="email" spellcheck="false" name="email" placeholder="Email">
+                            <input type="password" id="password" name="password" spellcheck="false" placeholder="Password">
                             <input type="text" id="userName" name="userName" spellcheck="false" placeholder="User Name">
                             <div id="acceptRules">
                                     <input type="checkbox" id="acceptRulesCheckbox" name="rules" >
                                     <div id="rules">I have read and agree to the Terms of Use and Privacy Policy</div>
                             </div>
-                            <div id="submit">Sign Up</div>
+                            <!-- <div id="submit">Sign Up</div> -->
+                            <input type="submit" value="Sign Up" id="submit">
            
                     </form>
                 </div>

@@ -84,18 +84,19 @@ app.post("/removeuser", (req, res, next) => {
 
 // Route for signing in
 app.post("/signin", (req, res, next) => {
+  console.log(`email: ${req.body.email}, password: ${req.body.password} `);
   // signin(req, res);
   UserRecord.findOne(
     { email: req.body.email, password: req.body.password },
     (err, data) => {
-      if (data === null)
+      if (data === null) {
         res
           .status(500)
           .json({ message: "email/password combination not in database" });
-      else {
+      } else {
         req.session.user = data.userName;
         userName = data.userName;
-        res.status(200).json(data);
+        res.status(200).sendFile(__dirname + "/chatPage.html");
       }
     }
   );
@@ -109,6 +110,7 @@ app.post("/sendmessage", (req, res) => {
 // Route for home page
 app.get("/", (req, res, next) => {
   res.status(200).sendFile(__dirname + "/loginPage.html");
+  // res.status(200).sendFile(__dirname + "/signintest.html");
 });
 
 // Connecting to database
