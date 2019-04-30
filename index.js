@@ -120,6 +120,28 @@ const server = app.listen(port, () => {
   console.log(`Listening on port ${port} .....`);
 });
 
+// recording messages into the database
+function updateOne(sender, receiver, message, type) {
+  UserRecord.findOne({ userName: receiver }, (err, d) => {
+    let newArray = [type, message];
+    if (typeof d.allMessage[sender] === "undefined") {
+      d.allMessage[sender] = [];
+    }
+    d.allMessage[sender].push(newArray);
+    d.markModified("allMessage");
+    d.save();
+  });
+}
+
+// recording messages into the database
+function updateMongoMessages(obj) {
+  let receiver = obj["messageDestination"];
+  let message = obj["message"];
+  let sender = obj["messageOrigin"];
+  updateOne(sender, receiver, message, "sender"); // save to the sender
+  updateOne(receiver, sender, message, "receiver"); // save to the receiver
+}
+
 // Start the WebSocket on this server
 const io = socket(server);
 io.on("connection", socket => {
@@ -128,6 +150,8 @@ io.on("connection", socket => {
     sess_sock[userName] = socket.id;
   }
 
+  // Realtime updating by looping through the connected sockets
+  // & checking if the receiver of the message is currently connected
   const realtimeUpdate = (eventEmitted, obj) => {
     Object.keys(io.sockets.sockets).forEach(id => {
       if (id === sessionSocket[obj["receiver"]]) {
@@ -136,8 +160,9 @@ io.on("connection", socket => {
     });
   };
 
+  // Managing realtime communication through socket events handling
   socket.on("sendMessage", objBeingSent => {
-    updateMongoMessages(objBeingSent);
+    updateMongoMessages(objBeingSent); // will update the mongodb
     realtimeUpdate("msgBack", objBeingSent);
   });
 
