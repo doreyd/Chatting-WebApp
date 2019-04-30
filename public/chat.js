@@ -213,3 +213,28 @@ function mesgInserting(sender, receiver) {
     );
   }
 }
+
+function loadMessageFromDB() {
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      allMessage = JSON.parse(xhttp.responseText);
+      console.log(allMessage);
+      loadChatStation(allMessage);
+    }
+  };
+  xhttp.open("GET", "/getMessages", true);
+  xhttp.send();
+}
+
+function loadChatStation(allMessage) {
+  let i = 0;
+  for (sender in allMessage) {
+    addSenderToChatStation(sender, userDetails[sender][0], i * 40);
+    i++;
+  }
+}
+
+loadMessageFromDB();
+
+$messageStation.style.display = "none";
