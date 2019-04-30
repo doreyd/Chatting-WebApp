@@ -6,6 +6,8 @@ const session = require("express-session");
 const { updateMessages, signin } = require("./controller/updateMessages");
 const socket = require("socket.io");
 
+let sessionSocket = {};
+
 const app = express();
 
 app.use(
@@ -76,9 +78,24 @@ app.post("/removeuser", (req, res, next) => {
   );
 });
 
+let userName;
 // Route for signing in
 app.post("/signin", (req, res, next) => {
-  signin(req, res);
+  // signin(req, res);
+  UserRecord.findOne(
+    { email: req.body.email, password: req.body.password },
+    (err, data) => {
+      if (data === null)
+        res
+          .status(500)
+          .json({ message: "email/password combination not in database" });
+      else {
+        req.session.user = data.userName;
+        userName = data.userName;
+        res.status(200).json(data);
+      }
+    }
+  );
 });
 
 // Route for sending messages
@@ -105,4 +122,9 @@ const server = app.listen(port, () => {
 
 // Start the WebSocket on this server
 const io = socket(server);
-io.on("connection", socket => {});
+io.on("connection", socket => {
+  sessionSocket[userName] = socket.id;
+  if (typeof userName !== "undefined") {
+    sessionSocket[userName] = socket.id;
+  }
+});
