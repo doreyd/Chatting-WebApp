@@ -104,3 +104,27 @@ socket.on("msgBack", function(data) {
     }
   }
 });
+
+function nowIsTyping(messageDestination, messageOrigin) {
+  let objBeingSent = {
+    messageDestination: messageDestination,
+    messageOrigin: messageOrigin
+  };
+  socket.emit("nowTyping", objBeingSent);
+}
+
+function stopTyping(messageDestination, messageOrigin) {
+  let objBeingSent = {
+    messageDestination: messageDestination,
+    messageOrigin: messageOrigin
+  };
+  socket.emit("stopTyping", objBeingSent);
+}
+function sendMessageForm(messageDestination, message, messageOrigin) {
+  let objBeingSent = {
+    messageDestination: messageDestination,
+    message: message,
+    messageOrigin: messageOrigin
+  };
+  socket.emit("sendMessage", objBeingSent);
+}
