@@ -50,3 +50,16 @@ function addNewMessage(msgType, msgContent, sender) {
   mesg.style.height = mesgCore.offsetHeight + 5 + "px";
   $messages.scrollTo(0, $messages.scrollHeight);
 }
+
+function loadMessages(sender, receiver) {
+  $senderName.innerText = sender;
+  $senderImg.src = "/images/" + sender + ".jpg";
+  $messages.innerHTML = "";
+  let senderMessages = allMessage[sender];
+  for (let i = 0; i < senderMessages.length; i++) {
+    let msgOrigin = senderMessages[i][0] === "sender" ? sender : receiver;
+    addNewMessage(senderMessages[i][0], senderMessages[i][1], msgOrigin);
+  }
+}
+
+$messages.scrollTo(0, $messages.scrollHeight);
