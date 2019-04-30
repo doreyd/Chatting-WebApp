@@ -178,3 +178,26 @@ $chat.onclick = () => {
     $chatStation.style.display = "none";
   }
 };
+
+$communicateWith = "";
+
+function addSenderToChatStation(senderNameTemp, senderImgTemp, topPos) {
+  let senderCont = document.createElement("div");
+  let senderImg = document.createElement("img");
+  let senderName = document.createElement("div");
+  senderCont.className = "messageSender2";
+
+  senderImg.src = "/images/" + senderImgTemp;
+  senderImg.className = "senderImg";
+
+  senderName.innerText = senderNameTemp;
+  senderName.className = "senderName2";
+  senderCont.onclick = () => {
+    $messageStation.style.display = "block";
+    $communicateWith = senderNameTemp;
+    openMessagingBox(senderNameTemp, $thisUserName);
+  };
+  senderCont.appendChild(senderImg);
+  senderCont.appendChild(senderName);
+  $innerChat.appendChild(senderCont);
+}
