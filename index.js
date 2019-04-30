@@ -102,6 +102,13 @@ app.post("/signin", (req, res, next) => {
   );
 });
 
+// Get the user name in chat page
+app.get("/getUserName", (req, res) => {
+  UserRecord.findOne({ email: req.session.user.email }, (err, data) => {
+    res.send(data.userName);
+  });
+});
+
 // Route for sending messages
 app.post("/sendmessage", (req, res) => {
   updateMessages(req, res);

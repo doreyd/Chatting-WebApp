@@ -8,3 +8,16 @@ const $messageSender = document.getElementById("messageSender");
 const $chat = document.getElementById("chat");
 const $chatStation = document.getElementById("chatStation");
 const $innerChat = document.getElementById("innerChat");
+
+let $thisUserName = "";
+
+function getThisUserName() {
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      $thisUserName = xhttp.responseText;
+    }
+  };
+  xhttp.open("GET", "/getUserName", true);
+  xhttp.send();
+}
