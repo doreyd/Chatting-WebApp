@@ -63,3 +63,17 @@ function loadMessages(sender, receiver) {
 }
 
 $messages.scrollTo(0, $messages.scrollHeight);
+
+const socket = io("http://localhost:3000");
+
+socket.on("otherNowTyping", function(data) {
+  if ($communicateWith === data["messageOrigin"]) {
+    $nowTyping.style.display = "block";
+  }
+});
+
+socket.on("otherStoppedTyping", function(data) {
+  if ($communicateWith === data["messageOrigin"]) {
+    $nowTyping.style.display = "none";
+  }
+});
