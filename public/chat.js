@@ -77,3 +77,30 @@ socket.on("otherStoppedTyping", function(data) {
     $nowTyping.style.display = "none";
   }
 });
+
+socket.on("msgBack", function(data) {
+  if ($communicateWith === data["messageOrigin"]) {
+    $nowTyping.style.display = "none";
+    addNewMessage("sender", data["message"], data["messageOrigin"]);
+    $messageSender.style.background = "#d0fbcc";
+    $messageSender.style.backgroundImage = "linear-gradient(#e4fde2, #b7feb0)";
+  } else {
+    addTempMessage("sender", data["message"], data["messageOrigin"]);
+    let sendCont = document.getElementById(data["messageOrigin"]);
+    if (sendCont !== null) {
+      sendCont.style.backgroundImage = "linear-gradient(#e4fde2, #b7feb0)";
+      $tempMsg.style.right = "330px";
+      setTimeout(() => {
+        $tempMsg.style.right = "-300px";
+      }, 3000);
+      allMessage[data["messageOrigin"]].push(["sender", data["message"]]);
+    } else {
+      loadMessageFromDB();
+      $tempMsg.style.right = "330px";
+      setTimeout(() => {
+        $tempMsg.style.right = "-300px";
+      }, 3000);
+      allMessage[data["messageOrigin"]].push(["sender", data["message"]]);
+    }
+  }
+});
