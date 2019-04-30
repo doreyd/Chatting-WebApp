@@ -201,3 +201,15 @@ function addSenderToChatStation(senderNameTemp, senderImgTemp, topPos) {
   senderCont.appendChild(senderName);
   $innerChat.appendChild(senderCont);
 }
+
+function mesgInserting(sender, receiver) {
+  let senderFreshMessages = freshMsg[sender];
+  for (let i = 0; i < senderFreshMessages.length; i++) {
+    let msgOrigin = senderFreshMessages[i][0] === "sender" ? sender : receiver;
+    addNewMessage(
+      senderFreshMessages[i][0],
+      senderFreshMessages[i][1],
+      msgOrigin
+    );
+  }
+}
