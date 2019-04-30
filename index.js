@@ -128,28 +128,24 @@ io.on("connection", socket => {
     sess_sock[userName] = socket.id;
   }
 
-  socket.on("sendMessage", messObj => {
-    updateMongoMessages(messObj);
+  const realtimeUpdate = (eventEmitted, obj) => {
     Object.keys(io.sockets.sockets).forEach(id => {
-      if (id === sess_sock[messObj["receiver"]]) {
-        io.sockets.sockets[id].emit("msgBack", messObj);
+      if (id === sessionSocket[obj["receiver"]]) {
+        io.sockets.sockets[id].emit(eventEmitted, obj);
       }
     });
+  };
+
+  socket.on("sendMessage", objBeingSent => {
+    updateMongoMessages(objBeingSent);
+    realtimeUpdate("msgBack", objBeingSent);
   });
 
-  socket.on("nowTyping", messObj => {
-    Object.keys(io.sockets.sockets).forEach(id => {
-      if (id === sess_sock[messObj["receiver"]]) {
-        io.sockets.sockets[id].emit("otherNowTyping", messObj);
-      }
-    });
+  socket.on("nowTyping", objBeingSent => {
+    realtimeUpdate("otherNowTyping", objBeingSent);
   });
 
-  socket.on("stopTyping", messObj => {
-    Object.keys(io.sockets.sockets).forEach(id => {
-      if (id === sess_sock[messObj["receiver"]]) {
-        io.sockets.sockets[id].emit("otherStoppedTyping", messObj);
-      }
-    });
+  socket.on("stopTyping", objBeingSent => {
+    realtimeUpdate("otherStoppedTyping", objBeingSent);
   });
 });
