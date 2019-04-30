@@ -6,7 +6,7 @@ const session = require("express-session");
 const { updateMessages, signin } = require("./controller/updateMessages");
 const socket = require("socket.io");
 
-let sessionSocket = {};
+let sess_sock = {};
 
 const app = express();
 
@@ -123,8 +123,33 @@ const server = app.listen(port, () => {
 // Start the WebSocket on this server
 const io = socket(server);
 io.on("connection", socket => {
-  sessionSocket[userName] = socket.id;
+  sess_sock[userName] = socket.id;
   if (typeof userName !== "undefined") {
-    sessionSocket[userName] = socket.id;
+    sess_sock[userName] = socket.id;
   }
+
+  socket.on("sendMessage", messObj => {
+    updateMongoMessages(messObj);
+    Object.keys(io.sockets.sockets).forEach(id => {
+      if (id === sess_sock[messObj["receiver"]]) {
+        io.sockets.sockets[id].emit("msgBack", messObj);
+      }
+    });
+  });
+
+  socket.on("nowTyping", messObj => {
+    Object.keys(io.sockets.sockets).forEach(id => {
+      if (id === sess_sock[messObj["receiver"]]) {
+        io.sockets.sockets[id].emit("otherNowTyping", messObj);
+      }
+    });
+  });
+
+  socket.on("stopTyping", messObj => {
+    Object.keys(io.sockets.sockets).forEach(id => {
+      if (id === sess_sock[messObj["receiver"]]) {
+        io.sockets.sockets[id].emit("otherStoppedTyping", messObj);
+      }
+    });
+  });
 });
