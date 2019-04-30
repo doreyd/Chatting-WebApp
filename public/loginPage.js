@@ -68,6 +68,7 @@ $signIn.onclick = () => {
   }
 };
 
+// Email validation
 let emailPattern = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
 function checkEmailFormat(id) {
@@ -92,4 +93,30 @@ $email2.onkeyup = () => {
 };
 $email2.onpaste = () => {
   checkEmailFormat("email2");
+};
+
+//Password Validation
+let passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{9,})/;
+
+function checkPasswordFormat(id) {
+  let inputElem = document.getElementById(id);
+  let inputValue = inputElem.value;
+  if (inputValue.match(passwordPattern)) {
+    inputElem.style.background = "#c6fbbd";
+  } else {
+    inputElem.style.background = "#fad6d8";
+  }
+}
+
+$password2.onkeyup = () => {
+  checkPasswordFormat("password2");
+};
+$password2.onpaste = () => {
+  checkPasswordFormat("password2");
+};
+$password.onkeyup = () => {
+  checkPasswordFormat("password");
+};
+$password.onpaste = () => {
+  checkPasswordFormat("password");
 };
