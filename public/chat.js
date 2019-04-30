@@ -21,3 +21,32 @@ function getThisUserName() {
   xhttp.open("GET", "/getUserName", true);
   xhttp.send();
 }
+
+getThisUserName();
+
+function addNewMessage(msgType, msgContent, sender) {
+  let mesg = document.createElement("div");
+  let mesgImg = document.createElement("img");
+  let mesgCore = document.createElement("div");
+
+  mesg.className = msgType;
+  mesgImg.className = msgType + "Img";
+  mesgCore.className = msgType + "Message";
+
+  if (msgContent.length > 15) {
+    mesgCore.style.wordWrap = "break-word";
+    mesgCore.style.width = "150px";
+  } else {
+    mesgCore.style.width = (msgContent.length * 140) / 17 + "px";
+  }
+
+  mesgCore.innerText = msgContent;
+  mesgImg.src = `/files/${sender}.jpg`;
+
+  mesg.appendChild(mesgImg);
+  mesg.appendChild(mesgCore);
+  $messages.appendChild(mesg);
+
+  mesg.style.height = mesgCore.offsetHeight + 5 + "px";
+  $messages.scrollTo(0, $messages.scrollHeight);
+}
