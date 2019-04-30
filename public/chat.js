@@ -153,3 +153,28 @@ function initializeSendBox(thisUser) {
     }
   });
 }
+
+function openMessagingBox(sender, receiver) {
+  initializeSendBox(receiver);
+  loadMessages(sender, receiver);
+}
+
+$messageSender.onclick = () => {
+  let posY = parseInt(window.getComputedStyle($messageStation).bottom);
+  if (posY === 0) {
+    $messageStation.style.bottom = "-306px";
+    $sendBox.style.bottom = "-350px";
+  } else {
+    $messageStation.style.bottom = "0px";
+    $sendBox.style.bottom = "0px";
+  }
+};
+
+$chat.onclick = () => {
+  let display = $chatStation.style.display;
+  if (display !== "block") {
+    $chatStation.style.display = "block";
+  } else {
+    $chatStation.style.display = "none";
+  }
+};
