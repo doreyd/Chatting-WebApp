@@ -134,7 +134,7 @@ function updateOne(sender, receiver, message, type) {
 }
 
 // recording messages into the database
-function updateMongoMessages(obj) {
+function updateDB(obj) {
   let receiver = obj["messageDestination"];
   let message = obj["message"];
   let sender = obj["messageOrigin"];
@@ -162,7 +162,7 @@ io.on("connection", socket => {
 
   // Managing realtime communication through socket events handling
   socket.on("sendMessage", objBeingSent => {
-    updateMongoMessages(objBeingSent); // will update the mongodb
+    updateDB(objBeingSent); // will update the mongodb
     realtimeUpdate("msgBack", objBeingSent);
   });
 
