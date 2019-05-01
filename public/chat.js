@@ -11,6 +11,16 @@ const $innerChat = document.getElementById("innerChat");
 
 let $thisUserName = "";
 
+let userDetails = {
+  kayla: ["kayla.jpg"],
+  dawn: ["dawn.jpg"],
+  scarlett: ["scarlett.jpg"],
+  natalie: ["natalie.jpg"],
+  jolie: ["jolie.jpg"],
+  miley: ["miley.jpg"],
+  jessica: ["jessica.jpg"]
+};
+
 function getThisUserName() {
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
@@ -53,7 +63,7 @@ function addNewMessage(msgType, msgContent, sender) {
 
 function loadMessages(sender, receiver) {
   $senderName.innerText = sender;
-  $senderImg.src = "/images/" + sender + ".jpg";
+  $senderImg.src = "/files/" + sender + ".jpg";
   $messages.innerHTML = "";
   let senderMessages = allMessage[sender];
   for (let i = 0; i < senderMessages.length; i++) {
@@ -187,7 +197,7 @@ function addSenderToChatStation(senderNameTemp, senderImgTemp, topPos) {
   let senderName = document.createElement("div");
   senderCont.className = "messageSender2";
 
-  senderImg.src = "/images/" + senderImgTemp;
+  senderImg.src = "/files/" + senderImgTemp;
   senderImg.className = "senderImg";
 
   senderName.innerText = senderNameTemp;

@@ -6,6 +6,22 @@ const session = require("express-session");
 const { updateMessages, signin } = require("./controller/updateMessages");
 const socket = require("socket.io");
 
+let conversationZero = {
+  kayla: [
+    ["receiver", "this is a response to the test"],
+    ["sender", "this is a test"],
+    ["sender", "this"],
+    ["sender", "hi"],
+    ["sender", "how are you"],
+    ["sender", "howdddddddddddddddddddddddddddddddddddddddd"],
+    ["sender", "You wanna grab a coffee sometime next week "]
+  ],
+  dawn: [
+    ["sender", "how was the book i gave you"],
+    ["receiver", "I really liked it !! "],
+    ["sender", "I think i will be buying that car we saw last time. "]
+  ]
+};
 // initializing variables that will be used to pair session with sockets
 let sess_sock = {};
 let userName;
@@ -29,9 +45,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use("/files", express.static(__dirname + "/public"));
 
-let conversationZero = {
-  init: []
-};
+// let conversationZero = {
+//   init: []
+// };
 
 // Signing up a new user and adding it to the database
 app.post("/signup", (req, res, next) => {
@@ -94,12 +110,21 @@ app.post("/signin", (req, res, next) => {
           .status(500)
           .json({ message: "email/password combination not in database" });
       } else {
-        req.session.user = data.userName;
+        req.session.user = data;
         userName = data.userName;
         res.status(200).sendFile(__dirname + "/chatPage.html");
       }
     }
   );
+});
+
+app.get("/getMessages", (req, res) => {
+  UserRecord.findOne({ email: req.session.user.email }, function(
+    err,
+    dataRetrieved
+  ) {
+    res.status(200).json(dataRetrieved.allMessage);
+  });
 });
 
 // Get the user name in chat page
