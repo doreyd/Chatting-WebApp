@@ -6,6 +6,7 @@ const $sendBox = document.getElementById("sendBox");
 const $messageStation = document.getElementById("messageStation");
 const $messageSender = document.getElementById("messageSender");
 const $chat = document.getElementById("chat");
+const $chatContainer = document.getElementById("chatContainer");
 const $chatStation = document.getElementById("chatStation");
 const $innerChat = document.getElementById("innerChat");
 
@@ -34,6 +35,8 @@ function getThisUserName() {
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
       $thisUserName = xhttp.responseText;
+      $chat.src = `files/${$thisUserName}.jpg`;
+      chatContainer.innerText = `Welcome ${$thisUserName} !`;
     }
   };
   xhttp.open("GET", "/getUserName", true);
@@ -221,37 +224,16 @@ $messageSender.onclick = () => {
   }
 };
 
-$chat.onclick = () => {
-  let display = $chatStation.style.display;
-  if (display !== "block") {
-    $chatStation.style.display = "block";
-  } else {
-    $chatStation.style.display = "none";
-  }
-};
+// $chat.onclick = () => {
+//   let display = $chatStation.style.display;
+//   if (display !== "block") {
+//     $chatStation.style.display = "block";
+//   } else {
+//     $chatStation.style.display = "none";
+//   }
+// };
 
 $communicateWith = "";
-
-// function addSenderToChatStation(senderNameTemp, senderImgTemp, topPos) {
-//   let senderCont = document.createElement("div");
-//   let senderImg = document.createElement("img");
-//   let senderName = document.createElement("div");
-//   senderCont.className = "messageSender2";
-
-//   senderImg.src = "/files/" + senderImgTemp;
-//   senderImg.className = "senderImg";
-
-//   senderName.innerText = senderNameTemp;
-//   senderName.className = "senderName2";
-//   senderCont.onclick = () => {
-//     $messageStation.style.display = "block";
-//     $communicateWith = senderNameTemp;
-//     openMessagingBox(senderNameTemp, $thisUserName);
-//   };
-//   senderCont.appendChild(senderImg);
-//   senderCont.appendChild(senderName);
-//   $innerChat.appendChild(senderCont);
-// }
 
 function addSenderToChatStation(senderNameTemp, senderImgTemp, topPos) {
   let senderCont = document.createElement("div");
@@ -271,7 +253,7 @@ function addSenderToChatStation(senderNameTemp, senderImgTemp, topPos) {
   };
   senderCont.appendChild(senderImg);
   senderCont.appendChild(senderName);
-  $leftAnchor.appendChild(senderCont);
+  $innerChat.appendChild(senderCont);
 }
 
 function mesgInserting(sender, receiver) {
@@ -303,7 +285,7 @@ function loadMessageFromDB() {
 
 function loadChatStation(allMessage) {
   let i = 0;
-  $leftAnchor.innerHTML = "";
+  $innerChat.innerHTML = "";
   for (sender in allMessage) {
     addSenderToChatStation(sender, userDetails[sender][0], i * 40);
     i++;
