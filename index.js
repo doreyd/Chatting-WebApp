@@ -190,9 +190,15 @@ io.on("connection", socket => {
   // Realtime updating by looping through the connected sockets
   // & checking if the receiver of the message is currently connected
   const realtimeUpdate = (eventEmitted, obj) => {
+    console.log("receiver is : " + obj["receiver"]);
     Object.keys(io.sockets.sockets).forEach(id => {
-      if (id === sessionSocket[obj["receiver"]]) {
+      console.log("id :" + id);
+      console.log("sess-sock : " + sess_sock[obj["receiver"]]);
+      console.log("*********************");
+      console.log(sess_sock);
+      if (id === sess_sock[obj["receiver"]]) {
         io.sockets.sockets[id].emit(eventEmitted, obj);
+        console.log(id);
       }
     });
   };
@@ -204,6 +210,7 @@ io.on("connection", socket => {
   });
 
   socket.on("nowTyping", objBeingSent => {
+    console.log(objBeingSent);
     realtimeUpdate("otherNowTyping", objBeingSent);
   });
 

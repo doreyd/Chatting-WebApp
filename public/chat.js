@@ -74,67 +74,68 @@ function loadMessages(sender, receiver) {
 
 $messages.scrollTo(0, $messages.scrollHeight);
 
-const socket = io("http://localhost:3000");
+const socket = io("http://localhost:5000");
 
 socket.on("otherNowTyping", function(data) {
-  if ($communicateWith === data["messageOrigin"]) {
+  if ($communicateWith === data["sender"]) {
     $nowTyping.style.display = "block";
   }
 });
 
 socket.on("otherStoppedTyping", function(data) {
-  if ($communicateWith === data["messageOrigin"]) {
+  if ($communicateWith === data["sender"]) {
     $nowTyping.style.display = "none";
   }
 });
 
 socket.on("msgBack", function(data) {
-  if ($communicateWith === data["messageOrigin"]) {
+  if ($communicateWith === data["sender"]) {
     $nowTyping.style.display = "none";
-    addNewMessage("sender", data["message"], data["messageOrigin"]);
+    addNewMessage("sender", data["message"], data["sender"]);
     $messageSender.style.background = "#d0fbcc";
     $messageSender.style.backgroundImage = "linear-gradient(#e4fde2, #b7feb0)";
   } else {
-    addTempMessage("sender", data["message"], data["messageOrigin"]);
-    let sendCont = document.getElementById(data["messageOrigin"]);
+    addTempMessage("sender", data["message"], data["sender"]);
+    let sendCont = document.getElementById(data["sender"]);
     if (sendCont !== null) {
       sendCont.style.backgroundImage = "linear-gradient(#e4fde2, #b7feb0)";
       $tempMsg.style.right = "330px";
       setTimeout(() => {
         $tempMsg.style.right = "-300px";
       }, 3000);
-      allMessage[data["messageOrigin"]].push(["sender", data["message"]]);
+      allMessage[data["sender"]].push(["sender", data["message"]]);
     } else {
       loadMessageFromDB();
       $tempMsg.style.right = "330px";
       setTimeout(() => {
         $tempMsg.style.right = "-300px";
       }, 3000);
-      allMessage[data["messageOrigin"]].push(["sender", data["message"]]);
+      allMessage[data["sender"]].push(["sender", data["message"]]);
     }
   }
 });
 
-function nowIsTyping(messageDestination, messageOrigin) {
+function nowIsTyping(receiver, sender) {
+  console.log(receiver, sender);
   let objBeingSent = {
-    messageDestination: messageDestination,
-    messageOrigin: messageOrigin
+    receiver: receiver,
+    sender: sender
   };
   socket.emit("nowTyping", objBeingSent);
 }
 
-function stopTyping(messageDestination, messageOrigin) {
+function stopTyping(receiver, sender) {
   let objBeingSent = {
-    messageDestination: messageDestination,
-    messageOrigin: messageOrigin
+    receiver: receiver,
+    sender: sender
   };
   socket.emit("stopTyping", objBeingSent);
 }
-function sendMessageForm(messageDestination, message, messageOrigin) {
+function sendMessageForm(receiver, message, sender) {
   let objBeingSent = {
-    messageDestination: messageDestination,
+    receiver: receiver,
     message: message,
-    messageOrigin: messageOrigin
+    sender: sender
   };
   socket.emit("sendMessage", objBeingSent);
 }
