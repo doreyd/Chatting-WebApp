@@ -14,11 +14,14 @@ const $mesgImg = document.getElementById("mesgImg");
 const $mesgCore = document.getElementById("mesgCore");
 const $tempMsg = document.getElementById("tempMsg");
 
+const $leftAnchor = document.getElementById("leftAnchor");
+
 let $thisUserName = "";
 
 let userDetails = {
   kayla: ["kayla.jpg"],
   dawn: ["dawn.jpg"],
+  john: ["john.jpg"],
   scarlett: ["scarlett.jpg"],
   natalie: ["natalie.jpg"],
   jolie: ["jolie.jpg"],
@@ -195,7 +198,6 @@ function initializeSendBox(thisUser) {
           sendMessageForm(senderName, $sendBox.value, thisUser);
           allMessage[senderName].push(["receiver", $sendBox.value]);
         }
-
         $sendBox.value = "";
         $messages.scrollTo(0, $messages.scrollHeight);
       }
@@ -230,6 +232,27 @@ $chat.onclick = () => {
 
 $communicateWith = "";
 
+// function addSenderToChatStation(senderNameTemp, senderImgTemp, topPos) {
+//   let senderCont = document.createElement("div");
+//   let senderImg = document.createElement("img");
+//   let senderName = document.createElement("div");
+//   senderCont.className = "messageSender2";
+
+//   senderImg.src = "/files/" + senderImgTemp;
+//   senderImg.className = "senderImg";
+
+//   senderName.innerText = senderNameTemp;
+//   senderName.className = "senderName2";
+//   senderCont.onclick = () => {
+//     $messageStation.style.display = "block";
+//     $communicateWith = senderNameTemp;
+//     openMessagingBox(senderNameTemp, $thisUserName);
+//   };
+//   senderCont.appendChild(senderImg);
+//   senderCont.appendChild(senderName);
+//   $innerChat.appendChild(senderCont);
+// }
+
 function addSenderToChatStation(senderNameTemp, senderImgTemp, topPos) {
   let senderCont = document.createElement("div");
   let senderImg = document.createElement("img");
@@ -248,7 +271,7 @@ function addSenderToChatStation(senderNameTemp, senderImgTemp, topPos) {
   };
   senderCont.appendChild(senderImg);
   senderCont.appendChild(senderName);
-  $innerChat.appendChild(senderCont);
+  $leftAnchor.appendChild(senderCont);
 }
 
 function mesgInserting(sender, receiver) {
@@ -263,6 +286,7 @@ function mesgInserting(sender, receiver) {
   }
 }
 
+let yy = 0;
 function loadMessageFromDB() {
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
@@ -279,7 +303,7 @@ function loadMessageFromDB() {
 
 function loadChatStation(allMessage) {
   let i = 0;
-  $innerChat.innerHTML = "";
+  $leftAnchor.innerHTML = "";
   for (sender in allMessage) {
     addSenderToChatStation(sender, userDetails[sender][0], i * 40);
     i++;

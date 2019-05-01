@@ -10,6 +10,12 @@ body {
   overflow: auto;
 }
 
+#leftAnchor {
+  position: absolute;
+  top: 200px;
+  left: 40px;
+}
+
 #chatContainer {
   top: 0px;
   right: 120px;
