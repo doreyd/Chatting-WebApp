@@ -9,6 +9,11 @@ const $chat = document.getElementById("chat");
 const $chatStation = document.getElementById("chatStation");
 const $innerChat = document.getElementById("innerChat");
 
+const $mesg = document.getElementById("mesg");
+const $mesgImg = document.getElementById("mesgImg");
+const $mesgCore = document.getElementById("mesgCore");
+const $tempMsg = document.getElementById("tempMsg");
+
 let $thisUserName = "";
 
 let userDetails = {
@@ -33,6 +38,31 @@ function getThisUserName() {
 }
 
 getThisUserName();
+
+function addTempMessage(msgType, msgCOntent, sender) {
+  mesg.className = msgType;
+  mesgImg.className = msgType + "Img";
+  mesgCore.className = msgType + "Message";
+
+  if (msgCOntent.length > 15) {
+    mesgCore.style.wordWrap = "break-word";
+    mesgCore.style.width = "150px";
+  } else {
+    mesgCore.style.width = (msgCOntent.length * 140) / 17 + "px";
+  }
+
+  mesgCore.innerText = msgCOntent;
+
+  let sender2 = "";
+  if (sender.includes("@")) {
+    sender2 = "default";
+  } else {
+    sender2 = sender;
+  }
+
+  mesgImg.src = `/files/${sender2}.jpg`;
+  mesg.style.height = mesgCore.offsetHeight + 5 + "px";
+}
 
 function addNewMessage(msgType, msgContent, sender) {
   let mesg = document.createElement("div");
@@ -89,15 +119,19 @@ socket.on("otherStoppedTyping", function(data) {
 });
 
 socket.on("msgBack", function(data) {
+  console.log("0000");
   if ($communicateWith === data["sender"]) {
+    console.log("1111");
     $nowTyping.style.display = "none";
     addNewMessage("sender", data["message"], data["sender"]);
     $messageSender.style.background = "#d0fbcc";
     $messageSender.style.backgroundImage = "linear-gradient(#e4fde2, #b7feb0)";
   } else {
+    console.log("2222");
     addTempMessage("sender", data["message"], data["sender"]);
     let sendCont = document.getElementById(data["sender"]);
     if (sendCont !== null) {
+      console.log("3333");
       sendCont.style.backgroundImage = "linear-gradient(#e4fde2, #b7feb0)";
       $tempMsg.style.right = "330px";
       setTimeout(() => {
@@ -105,11 +139,15 @@ socket.on("msgBack", function(data) {
       }, 3000);
       allMessage[data["sender"]].push(["sender", data["message"]]);
     } else {
+      console.log("4444");
       loadMessageFromDB();
       $tempMsg.style.right = "330px";
       setTimeout(() => {
         $tempMsg.style.right = "-300px";
       }, 3000);
+      if (!allMessage[data["sender"]]) {
+        allMessage[data["sender"]] = [];
+      }
       allMessage[data["sender"]].push(["sender", data["message"]]);
     }
   }
@@ -230,7 +268,8 @@ function loadMessageFromDB() {
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
       allMessage = JSON.parse(xhttp.responseText);
-      console.log(allMessage);
+      //   console.log(allMessage);
+
       loadChatStation(allMessage);
     }
   };
@@ -240,6 +279,7 @@ function loadMessageFromDB() {
 
 function loadChatStation(allMessage) {
   let i = 0;
+  $innerChat.innerHTML = "";
   for (sender in allMessage) {
     addSenderToChatStation(sender, userDetails[sender][0], i * 40);
     i++;
