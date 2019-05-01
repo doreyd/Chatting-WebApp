@@ -172,9 +172,9 @@ function updateOne(sender, receiver, message, type) {
 
 // recording messages into the database
 function updateDB(obj) {
-  let receiver = obj["messageDestination"];
+  let receiver = obj["receiver"];
   let message = obj["message"];
-  let sender = obj["messageOrigin"];
+  let sender = obj["sender"];
   updateOne(sender, receiver, message, "sender"); // save to the sender
   updateOne(receiver, sender, message, "receiver"); // save to the receiver
 }
