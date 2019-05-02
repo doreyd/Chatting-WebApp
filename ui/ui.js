@@ -42,13 +42,24 @@ let users = [
 ];
 
 // Dynamic selection of dom elements from users array
-let elems = users.map(x => document.getElementById(x[0]));
+// let elems = users.map(x => document.getElementById(x[0]));
+
+// Dynamically create the image elements that will hold the user's avatar
+let elems = users.map(x => {
+  let elem = document.createElement("img");
+  elem.id = x[0];
+  document.body.append(elem);
+  return elem;
+});
 
 // setting the main variables
 let colorBase = "steelblue";
+let colorSecond = "#f1f1ee";
 let dimBase = 80;
 let dimC = 20;
 let dimFactor = 4;
+let padding = "4px";
+let mrg = 2;
 
 const setUsers = () => {
   elems.forEach((elem, i) => {
@@ -60,7 +71,7 @@ const setUsers = () => {
     elem.style.width = dim + "px";
     elem.style.borderRadius = "50%";
     elem.style.border = "4px solid " + colorBase;
-    elem.style.padding = "2px";
+    elem.style.padding = padding;
     elem.src = users[i][0] + ".jpg";
     setName(dim, elem.style.top, elem.style.left, users[i][0]);
     if (users[i][3] !== 0) {
@@ -75,10 +86,14 @@ const setMsgQt = (dim, top, left, msgQty) => {
   circle.style.height = dimC + "px";
   circle.style.width = dimC + "px";
   circle.style.borderRadius = "50%";
-  circle.style.background = "#e4e4e2";
+  // circle.style.background = "#e4e4e2";
+  // circle.style.color = colorBase;
+  circle.style.background = colorSecond;
   circle.style.color = colorBase;
-  cy = parseInt(top) + dim / 2 - (dim * 1.414) / 4;
-  cx = parseInt(left) + dim / 2 + (dim * 1.414) / 4;
+  circle.style.border = mrg + "px solid white";
+
+  cy = parseInt(top) + dim / 2 - mrg - (dim * 1.414) / 4;
+  cx = parseInt(left) + dim / 2 + mrg + (dim * 1.414) / 4;
 
   circle.style.top = Math.round(cy - dimC / 2) + "px";
   circle.style.left = Math.round(cx - (dimC * 7) / 20) + "px";
@@ -103,12 +118,12 @@ const setName = (dim, top, left, name) => {
   nameDiv.style.fontWeight = "bold";
   nameDiv.style.textAlign = "center";
   nameDiv.style.verticalAlign = "middle";
-  nameDiv.style.background = "#e4e4e2";
+  nameDiv.style.background = colorSecond;
   nameDiv.style.color = colorBase;
   nameDiv.style.borderRadius = "5px";
   nameDiv.style.padding = "2px 5px 2px 5px";
   nameDiv.innerText = name;
-
+  nameDiv.style.border = mrg + "px solid white";
   document.body.append(nameDiv);
 };
 
