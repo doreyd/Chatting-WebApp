@@ -29,6 +29,10 @@ const stateChange = (messages, type, state) => {
 
 console.log(stateCount(data["kayla"], "sender", false));
 
+// *****************************************************************
+// ****************** Module for creating the UI *******************
+// *****************************************************************
+
 // users array = [id, top, left, msgQty]
 let users = [
   ["kayla", 100, 100, 16],
@@ -40,19 +44,16 @@ let users = [
 // Dynamic selection of dom elements from users array
 let elems = users.map(x => document.getElementById(x[0]));
 
-// let colorBase = "#3749ce";
+// setting the main variables
 let colorBase = "steelblue";
-let dimI = 80;
+let dimBase = 80;
 let dimC = 20;
 let dimFactor = 4;
-// let msgQty = 6;
 
 const setUsers = () => {
   elems.forEach((elem, i) => {
-    let dim = dimI + users[i][3] * dimFactor;
+    let dim = dimBase + users[i][3] * dimFactor;
     elem.style.position = "absolute";
-    // elem.style.top = Math.round(Math.random() * 600) + "px";
-    // elem.style.left = Math.round(Math.random() * 1000) + "px";
     elem.style.top = users[i][1] + "px";
     elem.style.left = users[i][2] + "px";
     elem.style.height = dim + "px";
@@ -112,8 +113,3 @@ const setName = (dim, top, left, name) => {
 };
 
 setUsers();
-
-// set dimensions as dim
-// set position as top, left
-// set number of messages as msgQty
-// set name of user as name
