@@ -29,8 +29,9 @@ const stateChange = (messages, type, state) => {
 
 console.log(stateCount(data["kayla"], "sender", false));
 
+// users array = [id, top, left, msgQty]
 let users = [
-  ["kayla", 100, 100, 6],
+  ["kayla", 100, 100, 16],
   ["john", 400, 400, 3],
   ["dawn", 200, 500, 2],
   ["myself", 300, 300, 0]
@@ -41,12 +42,14 @@ let elems = users.map(x => document.getElementById(x[0]));
 
 // let colorBase = "#3749ce";
 let colorBase = "steelblue";
-let dim = 80;
+let dimI = 80;
 let dimC = 20;
+let dimFactor = 4;
 // let msgQty = 6;
 
 const setUsers = () => {
   elems.forEach((elem, i) => {
+    let dim = dimI + users[i][3] * dimFactor;
     elem.style.position = "absolute";
     // elem.style.top = Math.round(Math.random() * 600) + "px";
     // elem.style.left = Math.round(Math.random() * 1000) + "px";
@@ -58,14 +61,14 @@ const setUsers = () => {
     elem.style.border = "4px solid " + colorBase;
     elem.style.padding = "2px";
     elem.src = users[i][0] + ".jpg";
-    setName(elem.style.top, elem.style.left, users[i][0]);
+    setName(dim, elem.style.top, elem.style.left, users[i][0]);
     if (users[i][3] !== 0) {
-      setMsgQt(elem.style.top, elem.style.left, users[i][3]);
+      setMsgQt(dim, elem.style.top, elem.style.left, users[i][3]);
     }
   });
 };
 
-const setMsgQt = (top, left, msgQty) => {
+const setMsgQt = (dim, top, left, msgQty) => {
   let circle = document.createElement("div");
   circle.style.position = "absolute";
   circle.style.height = dimC + "px";
@@ -89,7 +92,7 @@ const setMsgQt = (top, left, msgQty) => {
   document.body.append(circle);
 };
 
-const setName = (top, left, name) => {
+const setName = (dim, top, left, name) => {
   let nameDiv = document.createElement("div");
   nameDiv.style.position = "absolute";
   nameDiv.style.top = parseInt(top) + dim + "px";
