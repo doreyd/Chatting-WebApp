@@ -49,6 +49,7 @@ const setUsers = () => {
     elem.style.border = "4px solid steelblue";
     elem.style.padding = "2px";
     setMsgQt(dim, elem.style.top, elem.style.left);
+    setName(dim, elem.style.top, elem.style.left, "john");
   });
 };
 
@@ -75,6 +76,25 @@ const setMsgQt = (dim, top, left) => {
   circle.innerText = "15";
 
   document.body.append(circle);
+};
+
+const setName = (dim, top, left, name) => {
+  let nameDiv = document.createElement("div");
+  nameDiv.style.position = "absolute";
+  nameDiv.style.top = parseInt(top) + dim + "px";
+  nameDiv.style.left = parseInt(left) + "px";
+
+  nameDiv.style.fontFmily = "verdana";
+  nameDiv.style.fontWeight = "bold";
+  nameDiv.style.textAlign = "center";
+  nameDiv.style.verticalAlign = "middle";
+  nameDiv.style.background = "#e4e4e2";
+  nameDiv.style.color = "steelblue";
+  nameDiv.style.borderRadius = "5px";
+  nameDiv.style.padding = "2px 5px 2px 5px";
+  nameDiv.innerText = name;
+
+  document.body.append(nameDiv);
 };
 
 setUsers();
