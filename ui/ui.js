@@ -38,7 +38,7 @@ let users = [
   ["kayla", 400, 100, 16],
   ["john", 400, 400, 3],
   ["dawn", 200, 500, 2],
-  ["kayla", 300, 100, 5],
+  ["kayla", 300, 100, 15],
   ["john", 40, 350, 8],
   ["dawn", 500, 500, 1],
   ["myself", 300, 300, 0]
@@ -133,9 +133,10 @@ const setName = (dim, top, left, name) => {
 setUsers();
 
 // Function to create and set up SVG elements
-const newSvgElem = (type, appendTo, props = {}) => {
+const newSvgElem = (type, appendTo, props = {}, textContent) => {
   let newElem = document.createElementNS("http://www.w3.org/2000/svg", type);
   for (prop in props) newElem.setAttribute(prop, props[prop]);
+  if (textContent) newElem.textContent = textContent;
   appendTo.append(newElem);
   return newElem;
 };
@@ -149,7 +150,7 @@ let circleStyle = {
 
 let svg = newSvgElem("svg", document.body, { height: 600, width: 1300 });
 
-const setStyle = i => {
+const outStyleBig = i => {
   let dim = dimBase + users[i][3] * dimFactor,
     cy = users[i][1],
     cx = users[i][2],
@@ -157,7 +158,17 @@ const setStyle = i => {
     fill = colorBase;
   return { cy, cx, r, fill };
 };
-const setStyle2 = i => {
+
+const outStyleSmall = i => {
+  let dim = dimBase + users[i][3] * dimFactor,
+    cy = Math.round(users[i][1] - (dim * 1.414) / 4),
+    cx = Math.round(users[i][2] + (dim * 1.414) / 4),
+    r = Math.round(dimC / 2) + 3,
+    fill = colorBase;
+  return { cy, cx, r, fill };
+};
+
+const inStyle = i => {
   let dim = dimBase + users[i][3] * dimFactor,
     cy = users[i][1],
     cx = users[i][2],
@@ -177,9 +188,33 @@ let msgQtyStyle = i => {
   fill = colorSecond;
   return { cy, cx, r, fill, stroke, "stroke-width": strokeWidth };
 };
-users.forEach((x, i) => newSvgElem("circle", svg, setStyle(i)));
-users.forEach((x, i) => newSvgElem("circle", svg, setStyle2(i)));
+
+// let textClass ={}
+
+let textStyle = i => {
+  let dim = dimBase + users[i][3] * dimFactor;
+  let y = Math.round(users[i][1] - (dim * 1.414) / 4) + 5;
+  let x = Math.round(users[i][2] + (dim * 1.414) / 4);
+  x = users[i][3] > 9 ? x - 10 : x - 4;
+  let fill = colorBase;
+  let fontFamily = "verdana";
+  let fontWeight = "bold";
+  let fontSize = "14px";
+  return {
+    y,
+    x,
+    fill,
+    "font-family": fontFamily,
+    "font-weight": fontWeight,
+    "font-size": fontSize
+  };
+};
+
+users.forEach((x, i) => newSvgElem("circle", svg, outStyleBig(i)));
+users.forEach((x, i) => newSvgElem("circle", svg, outStyleSmall(i)));
+users.forEach((x, i) => newSvgElem("circle", svg, inStyle(i)));
 users.forEach((x, i) => newSvgElem("circle", svg, msgQtyStyle(i)));
+users.forEach((x, i) => newSvgElem("text", svg, textStyle(i), users[i][3]));
 
 const setMsgQt2 = (dim, top, left, msgQty) => {
   let circle = document.createElement("div");
