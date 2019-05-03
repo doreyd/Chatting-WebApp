@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <title>HTML5 SVG Image</title>
+      <style>
+      #img{
+         position:absolute;
+      }
+      </style>
+   <head>
+   <body>
+      <svg id="svgOne"  width="1300" height="600">
+                    <!-- <clipPath id="myCircle">
+               <circle id="circle" cx="200" cy="180" r="250" fill="#FFFFFF" />
+            </clipPath> -->
+         <!-- <image id="img" x="130" y="130" id="img" xlink:href="kayla.jpg" clip-path="url(#myCircle)" /> -->
+     </svg>
+<script>
+let svg = document.getElementById("svgOne");
+
+let svgHTML = svg.innerHTML;
+svg.innerHTML = svgHTML+ `<image id="img" xlink:href="kayla.jpg" clip-path="url(#myCircle)" />`;
+let clipPath = document.createElementNS(
+    "http://www.w3.org/2000/svg",
+    "clipPath"
+  );
+
+  clipPath.setAttribute("id","myCircle");
+  let newElem = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+newElem.setAttribute("cx","200");
+newElem.setAttribute("cy","200");
+newElem.setAttribute("r","80");
+newElem.setAttribute("id","circle");
+clipPath.append(newElem);
+ svg.append(clipPath);
+
+//****
+// let img = document.createElementNS("http://www.w3.org/2000/svg", "image");
+// img.setAttribute("x","130");
+// img.setAttribute("y","130");
+// img.setAttribute("clip-path","url(#myCircle)");
+// img.setAttribute("xlink:href","kayla.jpg");
+// img.setAttribute("id","img");
+//  svg.append(img);
+ //***
+
+let circle = document.getElementById("circle");
+
+console.log(circle);
+console.log(svg);
+// let img = document.getElementById("img");
+
+function setImg(x,y,d){
+  let img =document.getElementById("img")
+   img.setAttribute("x", x);
+   img.setAttribute("y", y);
+   img.style.height = d+"px";
+   img.style.width = d+"px";
+
+   console.log(img);
+}
+
+function getCirDetails(circle){
+let cx= circle.getAttribute("cx");
+let cy= circle.getAttribute("cy");
+let r= circle.getAttribute("r");
+ return {cx:cx, cy:cy, r:r}; 
+}
+
+function processData(){
+   let obj = getCirDetails(circle);
+  let  {cx,cy,r}=obj;
+  console.log([cx-r, cy-r, 2*r])
+return [cx-r, cy-r, 2*r];
+}
+
+setImg( ...processData(circle));
+
+   </script>
+
+
+   </body>
+</html>

@@ -141,6 +141,53 @@ const newSvgElem = (type, appendTo, props = {}, textContent) => {
   return newElem;
 };
 
+function setImg(img, x, y, d) {
+  // let img = document.getElementById(imgId);
+  img.setAttribute("x", x);
+  img.setAttribute("y", y);
+  img.style.height = d + "px";
+  img.style.width = d + "px";
+}
+
+function getCirDetails(circle) {
+  let cx = circle.getAttribute("cx");
+  let cy = circle.getAttribute("cy");
+  let r = circle.getAttribute("r");
+  return { cx: cx, cy: cy, r: r };
+}
+
+function processData(circle) {
+  let obj = getCirDetails(circle);
+  let { cx, cy, r } = obj;
+  return [cx - r, cy - r, 2 * r];
+}
+
+const newSvgElem2 = (type, appendTo, props = {}, i) => {
+  let newElem = document.createElementNS("http://www.w3.org/2000/svg", type);
+  let clipPath = document.createElementNS(
+    "http://www.w3.org/2000/svg",
+    "clipPath"
+  );
+  clipPath.setAttribute("id", `circle${i}`);
+  // clipPath.id = `circle${i}`;
+  let img = document.createElementNS("http://www.w3.org/2000/svg", "img");
+  // img.id = `img${i}`;
+  img.setAttribute("xlink:href", `kayla.jpg`);
+  img.setAttribute("clip-path", `url(#circle${i})`);
+
+  for (prop in props) newElem.setAttribute(prop, props[prop]);
+
+  // console.log(processData(newElem));
+  // console.log(img);
+  setImg(img, ...processData(newElem));
+  console.log(clipPath);
+  console.log(img);
+  clipPath.append(newElem);
+  appendTo.append(clipPath);
+  appendTo.append(img);
+  return newElem;
+};
+
 let circleStyle = {
   cx: 100,
   cy: 100,
@@ -154,7 +201,7 @@ const outStyleBig = i => {
   let dim = dimBase + users[i][3] * dimFactor,
     cy = users[i][1],
     cx = users[i][2],
-    r = Math.round(dim / 2),
+    r = Math.round(dim / 2) + 1,
     fill = colorBase;
   return { cy, cx, r, fill };
 };
@@ -163,7 +210,7 @@ const outStyleSmall = i => {
   let dim = dimBase + users[i][3] * dimFactor,
     cy = Math.round(users[i][1] - (dim * 1.414) / 4),
     cx = Math.round(users[i][2] + (dim * 1.414) / 4),
-    r = Math.round(dimC / 2) + 3,
+    r = Math.round(dimC / 2) + 4,
     fill = colorBase;
   return { cy, cx, r, fill };
 };
@@ -178,6 +225,7 @@ const inStyle = i => {
     stroke = "white";
   return { cy, cx, r, fill, stroke, "stroke-width": strokeWidth };
 };
+
 let msgQtyStyle = i => {
   let dim = dimBase + users[i][3] * dimFactor,
     cy = Math.round(users[i][1] - (dim * 1.414) / 4),
@@ -209,12 +257,93 @@ let textStyle = i => {
     "font-size": fontSize
   };
 };
+// const newImg = (imgSrc, props = {}) => {
+//   let img = document.createElement("img");
+//   for (prop in props) img.setAttribute(prop, props[prop]);
+//   img.setAttribute("src")
+//   img.src = imgSrc + ".jpg";
+//   document.body.append(img);
+// };
+
+//**************************************** */
+// let circle = document.getElementById("circle");
+
+// function setImg(imgId, x, y, d) {
+//   let img = document.getElementById(imgId);
+//   img.setAttribute("x", x);
+//   img.setAttribute("y", y);
+//   img.style.height = d + "px";
+//   img.style.width = d + "px";
+// }
+
+// function getCirDetails(circle) {
+//   let cx = circle.getAttribute("cx");
+//   let cy = circle.getAttribute("cy");
+//   let r = circle.getAttribute("r");
+//   return { cx: cx, cy: cy, r: r };
+// }
+
+// function processData(circle) {
+//   let obj = getCirDetails(circle);
+//   let { cx, cy, r } = obj;
+//   return [cx - r, cy - r, 2 * r];
+// }
+
+// setImg(...processData(circle));
+//********************************************* */
 
 users.forEach((x, i) => newSvgElem("circle", svg, outStyleBig(i)));
 users.forEach((x, i) => newSvgElem("circle", svg, outStyleSmall(i)));
-users.forEach((x, i) => newSvgElem("circle", svg, inStyle(i)));
+
+// users.forEach((x, i) => newSvgElem2("circle", svg, inStyle(i), i));
+
 users.forEach((x, i) => newSvgElem("circle", svg, msgQtyStyle(i)));
 users.forEach((x, i) => newSvgElem("text", svg, textStyle(i), users[i][3]));
+
+users.forEach((x, i) => newSvgElem2("circle", svg, inStyle(i), i));
+
+// users.forEach((x, i) => newElem("img", svg, msgQtyStyle(i)));
+// const newImgElem = (type, appendTo, props = {}, props2 = {}, i) => {
+//   let newElem = document.createElementNS("http://www.w3.org/2000/svg", type);
+//   for (prop in props) newElem.setAttribute(prop, props[prop]);
+
+//   let defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
+//   let clipPath = document.createElementNS(
+//     "http://www.w3.org/2000/svg",
+//     "clipPath"
+//   );
+//   clipPath.setAttribute("id", `clipImg${i}`);
+
+//   let img = document.createElement("img");
+//   for (prop2 in props2) img.setAttribute(prop2, props2[prop2]);
+//   img.setAttribute("clip-path", `url(#clipImg${i})`);
+//   img.setAttribute("src", `${users[i][0]}.jpg`);
+
+//   clipPath.append(newElem);
+//   defs.append(clipPath);
+//   appendTo.append(defs);
+//   return newElem;
+// };
+
+// users.forEach((x, i) =>
+//   newImgElem(
+//     "circle",
+//     svg,
+//     inStyle(i),
+//     { height: inStyle(i)["r"] * 2, width: inStyle(i)["r"] * 2 },
+//     i
+//   )
+// );
+
+// users.forEach((x, i) =>
+//   newImgElem(
+//     "circle",
+//     svg,
+//     inStyle(i),
+//     { height: inStyle(i)["r"] * 2, width: inStyle(i)["r"] * 2 },
+//     i
+//   )
+// );
 
 const setMsgQt2 = (dim, top, left, msgQty) => {
   let circle = document.createElement("div");
