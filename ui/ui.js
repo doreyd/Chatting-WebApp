@@ -35,9 +35,12 @@ console.log(stateCount(data["kayla"], "sender", false));
 
 // users array = [id, top, left, msgQty]
 let users = [
-  ["kayla", 100, 100, 16],
+  ["kayla", 400, 100, 16],
   ["john", 400, 400, 3],
   ["dawn", 200, 500, 2],
+  ["kayla", 300, 100, 5],
+  ["john", 40, 350, 8],
+  ["dawn", 500, 500, 1],
   ["myself", 300, 300, 0]
 ];
 
@@ -56,7 +59,7 @@ let elems = users.map(x => {
 let colorBase = "steelblue";
 let colorSecond = "#f1f1ee";
 let dimBase = 80;
-let dimC = 20;
+let dimC = 30;
 let dimFactor = 4;
 let padding = "4px";
 let mrg = 2;
@@ -128,3 +131,80 @@ const setName = (dim, top, left, name) => {
 };
 
 setUsers();
+
+// Function to create and set up SVG elements
+const newSvgElem = (type, appendTo, props = {}) => {
+  let newElem = document.createElementNS("http://www.w3.org/2000/svg", type);
+  for (prop in props) newElem.setAttribute(prop, props[prop]);
+  appendTo.append(newElem);
+  return newElem;
+};
+
+let circleStyle = {
+  cx: 100,
+  cy: 100,
+  r: 40,
+  fill: "green"
+};
+
+let svg = newSvgElem("svg", document.body, { height: 600, width: 1300 });
+
+const setStyle = i => {
+  let dim = dimBase + users[i][3] * dimFactor,
+    cy = users[i][1],
+    cx = users[i][2],
+    r = Math.round(dim / 2),
+    fill = colorBase;
+  return { cy, cx, r, fill };
+};
+const setStyle2 = i => {
+  let dim = dimBase + users[i][3] * dimFactor,
+    cy = users[i][1],
+    cx = users[i][2],
+    r = Math.round(dim / 2) - 4,
+    fill = colorSecond,
+    strokeWidth = 4,
+    stroke = "white";
+  return { cy, cx, r, fill, stroke, "stroke-width": strokeWidth };
+};
+let msgQtyStyle = i => {
+  let dim = dimBase + users[i][3] * dimFactor,
+    cy = Math.round(users[i][1] - (dim * 1.414) / 4),
+    cx = Math.round(users[i][2] + (dim * 1.414) / 4),
+    r = Math.round(dimC / 2),
+    strokeWidth = mrg,
+    stroke = "white";
+  fill = colorSecond;
+  return { cy, cx, r, fill, stroke, "stroke-width": strokeWidth };
+};
+users.forEach((x, i) => newSvgElem("circle", svg, setStyle(i)));
+users.forEach((x, i) => newSvgElem("circle", svg, setStyle2(i)));
+users.forEach((x, i) => newSvgElem("circle", svg, msgQtyStyle(i)));
+
+const setMsgQt2 = (dim, top, left, msgQty) => {
+  let circle = document.createElement("div");
+  circle.style.position = "absolute";
+  circle.style.height = dimC + "px";
+  circle.style.width = dimC + "px";
+  circle.style.borderRadius = "50%";
+  // circle.style.background = "#e4e4e2";
+  // circle.style.color = colorBase;
+  circle.style.background = colorSecond;
+  circle.style.color = colorBase;
+  circle.style.border = mrg + "px solid white";
+
+  cy = parseInt(top) + dim / 2 - mrg - (dim * 1.414) / 4;
+  cx = parseInt(left) + dim / 2 + mrg + (dim * 1.414) / 4;
+
+  circle.style.top = Math.round(cy - dimC / 2) + "px";
+  circle.style.left = Math.round(cx - (dimC * 7) / 20) + "px";
+
+  circle.style.fontFmily = "verdana";
+  circle.style.fontWeight = "bold";
+  circle.style.textAlign = "center";
+  circle.style.verticalAlign = "middle";
+  circle.style.padding = "2px";
+  circle.innerText = msgQty;
+
+  document.body.append(circle);
+};
