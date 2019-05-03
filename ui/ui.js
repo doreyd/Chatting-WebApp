@@ -169,12 +169,13 @@ const newSvgElem2 = (type, appendTo, props = {}, i) => {
     "clipPath"
   );
   clipPath.setAttribute("id", `circle${i}`);
-  // clipPath.id = `circle${i}`;
-  let img = document.createElementNS("http://www.w3.org/2000/svg", "img");
-  // img.id = `img${i}`;
-  img.setAttribute("xlink:href", `kayla.jpg`);
-  img.setAttribute("clip-path", `url(#circle${i})`);
 
+  let svgHTML = svg.innerHTML;
+  svg.innerHTML =
+    svgHTML +
+    `<image id="img${i}" xlink:href="kayla.jpg" clip-path="url(#circle${i})" />`;
+
+  let img = document.getElementById(`img${i}`);
   for (prop in props) newElem.setAttribute(prop, props[prop]);
 
   // console.log(processData(newElem));
@@ -184,7 +185,7 @@ const newSvgElem2 = (type, appendTo, props = {}, i) => {
   console.log(img);
   clipPath.append(newElem);
   appendTo.append(clipPath);
-  appendTo.append(img);
+  // appendTo.append(img);
   return newElem;
 };
 
