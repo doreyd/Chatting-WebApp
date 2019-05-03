@@ -9,3 +9,6 @@
 .textClass {
   font: bold 10px verdana;
 }
+body {
+  background: lightgrey;
+}
