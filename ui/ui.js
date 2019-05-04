@@ -72,7 +72,6 @@ const newSvgElem = (type, appendTo, props = {}, textContent) => {
 };
 
 function setImg(img, x, y, d) {
-  // let img = document.getElementById(imgId);
   img.setAttribute("x", x);
   img.setAttribute("y", y);
   img.style.height = d + "px";
@@ -94,6 +93,7 @@ function processData(circle) {
 
 const newSvgElemImg = (type, appendTo, props = {}, i) => {
   let newElem = document.createElementNS("http://www.w3.org/2000/svg", type);
+  newElem.setAttribute("id", `elem${i}`);
   let clipPath = document.createElementNS(
     "http://www.w3.org/2000/svg",
     "clipPath"
@@ -107,6 +107,9 @@ const newSvgElemImg = (type, appendTo, props = {}, i) => {
 
   clipPath.append(newElem);
   appendTo.append(clipPath);
+
+  dragSVG(newElem.getAttribute("id"));
+
   return newElem;
 };
 
@@ -173,8 +176,6 @@ let textStyle = i => {
 
 users.forEach((x, i) => newSvgElem("circle", svg, outStyleBig(i)));
 users.forEach((x, i) => newSvgElem("circle", svg, outStyleSmall(i)));
-
 users.forEach((x, i) => newSvgElem("circle", svg, msgQtyStyle(i)));
-
 users.forEach((x, i) => newSvgElemImg("circle", svg, inStyle(i), i));
 users.forEach((x, i) => newSvgElem("text", svg, textStyle(i), users[i][3]));
