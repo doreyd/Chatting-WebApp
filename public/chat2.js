@@ -35,6 +35,7 @@ function getThisUserName() {
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
       $thisUserName = xhttp.responseText;
+
       $chat.src = `files/${$thisUserName}.jpg`;
       chatContainer.innerText = `Welcome ${$thisUserName} !`;
     }
@@ -102,6 +103,7 @@ function loadMessages(sender, receiver) {
   $senderImg.src = "/files/" + sender + ".jpg";
   $messages.innerHTML = "";
   let senderMessages = allMessage[sender];
+
   for (let i = 0; i < senderMessages.length; i++) {
     let msgOrigin = senderMessages[i][0] === "sender" ? sender : receiver;
     addNewMessage(senderMessages[i][0], senderMessages[i][1], msgOrigin);
@@ -268,15 +270,22 @@ function mesgInserting(sender, receiver) {
   }
 }
 
+let msgData;
+
+changeMesgs = d => {
+  msgData = { ...d };
+};
+
 let yy = 0;
 function loadMessageFromDB() {
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
       allMessage = JSON.parse(xhttp.responseText);
-      //   console.log(allMessage);
 
       loadChatStation(allMessage);
+      msgData2 = formatMessages(allMessage);
+      www(msgData2);
     }
   };
   xhttp.open("GET", "/getMessages", true);
@@ -292,6 +301,6 @@ function loadChatStation(allMessage) {
   }
 }
 
-loadMessageFromDB();
+// loadMessageFromDB();
 
-$messageStation.style.display = "none";
+// $messageStation.style.display = "none";
