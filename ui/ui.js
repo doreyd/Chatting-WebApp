@@ -67,7 +67,10 @@ const newSvgElem = (type, appendTo, props = {}, textContent) => {
   let newElem = document.createElementNS("http://www.w3.org/2000/svg", type);
   for (prop in props) newElem.setAttribute(prop, props[prop]);
   if (textContent) newElem.textContent = textContent;
+  // let id = `elem${Math.random()}`;
+  // newElem.setAttribute("id", id);
   appendTo.append(newElem);
+  // dragSVG(id);
   return newElem;
 };
 
@@ -107,8 +110,6 @@ const newSvgElemImg = (type, appendTo, props = {}, i) => {
 
   clipPath.append(newElem);
   appendTo.append(clipPath);
-
-  dragSVG(newElem.getAttribute("id"));
 
   return newElem;
 };

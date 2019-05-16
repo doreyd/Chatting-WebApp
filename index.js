@@ -112,7 +112,8 @@ app.post("/signin", (req, res, next) => {
       } else {
         req.session.user = data;
         userName = data.userName;
-        res.status(200).sendFile(__dirname + "/chatPage.html");
+        // res.status(200).sendFile(__dirname + "/chatPage.html");
+        res.status(200).sendFile(__dirname + "/chatPage2.html");
       }
     }
   );
