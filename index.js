@@ -8,18 +8,60 @@ const socket = require("socket.io");
 
 let conversationZero = {
   kayla: [
-    ["receiver", "this is a response to the test"],
-    ["sender", "this is a test"],
-    ["sender", "this"],
-    ["receiver", "hi"],
-    ["receiver", "how are you"],
-    ["sender", "howdddddddddddddddddddddddddddddddddddddddd"],
-    ["sender", "You wanna grab a coffee sometime next week "]
+    ["receiver", "this is a response to the test", true],
+    ["sender", "this is a test", true],
+    ["sender", "this", true],
+    ["receiver", "hi", true],
+    ["receiver", "how are you", true],
+    ["sender", "howdddddddddddddddddddddddddddddddddddddddd", true],
+    ["sender", "You wanna grab a coffee sometime next week ", true]
   ],
   dawn: [
-    ["sender", "how was the book i gave you"],
-    ["receiver", "I really liked it !! "],
-    ["sender", "I think i will be buying that car we saw last time. "]
+    ["sender", "how was the book i gave you", true],
+    ["receiver", "I really liked it !! ", true],
+    ["sender", "I think i will be buying that car we saw last time. ", true]
+  ],
+  jolie: [
+    ["receiver", "this is a response to the test", true],
+    ["sender", "this is a test", true],
+    ["sender", "this", true],
+    ["receiver", "hi", true],
+    ["receiver", "how are you", true],
+    ["sender", "howdddddddddddddddddddddddddddddddddddddddd", true],
+    ["sender", "You wanna grab a coffee sometime next week ", true]
+  ],
+  john: [
+    ["sender", "how was the book i gave you", true],
+    ["receiver", "I really liked it !! ", true],
+    ["sender", "I think i will be buying that car we saw last time. ", true]
+  ],
+  susan: [
+    ["receiver", "this is a response to the test", true],
+    ["sender", "this is a test", true],
+    ["sender", "this", true],
+    ["receiver", "hi", true],
+    ["receiver", "how are you", true],
+    ["sender", "howdddddddddddddddddddddddddddddddddddddddd", true],
+    ["sender", "You wanna grab a coffee sometime next week ", true]
+  ],
+  mark: [
+    ["sender", "how was the book i gave you", true],
+    ["receiver", "I really liked it !! ", true],
+    ["sender", "I think i will be buying that car we saw last time. ", true]
+  ],
+  steve: [
+    ["receiver", "this is a response to the test", true],
+    ["sender", "this is a test", true],
+    ["sender", "this", true],
+    ["receiver", "hi", true],
+    ["receiver", "how are you", true],
+    ["sender", "howdddddddddddddddddddddddddddddddddddddddd", true],
+    ["sender", "You wanna grab a coffee sometime next week ", true]
+  ],
+  frank: [
+    ["sender", "how was the book i gave you", true],
+    ["receiver", "I really liked it !! ", true],
+    ["sender", "I think i will be buying that car we saw last time. ", true]
   ]
 };
 // initializing variables that will be used to pair session with sockets

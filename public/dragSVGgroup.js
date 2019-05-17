@@ -131,20 +131,14 @@ function www(msgData) {
         idList = [...idList, `text${x[0]}`, `text2${x[0]}`];
       }
 
-      // newElem.onclick = () => {
-      //   $messageStation.style.display = "block";
-      //   $communicateWith = senderNameTemp;
-      //   openMessagingBox(senderNameTemp, $thisUserName);
-      // };
-      // newElem.onclick = () => console.log("ppppo");
-
       let img = setSVGelem("image", imgProps, svg);
-      img.onclick = () => {
-        $messageStation.style.display = "block";
-        $communicateWith = x[4];
-        console.log(x[4]);
-        openMessagingBox(x[4], $thisUserName);
-      };
+      if (x[4] !== $thisUserName) {
+        img.onclick = () => {
+          $messageStation.style.display = "block";
+          $communicateWith = x[4];
+          openMessagingBox(x[4], $thisUserName);
+        };
+      }
 
       dragSVGgroup([...idList], x[5], x[6]);
       return newElem;
@@ -171,14 +165,8 @@ function www(msgData) {
     // ****************************************************************
     // ****************************************************************
 
-    let links = [];
-    // Converting regular coordinates into polar coordinates
-    // based on a given center
-
-    // let center = [400, 500, 140, 40];
-
-    // let qty = 4;
     let nodeRaw = [];
+    let links = [];
 
     const sinCos = a => [Math.sin(a), Math.cos(a)];
 
@@ -200,13 +188,13 @@ function www(msgData) {
       console.log(msgs);
       let qty = msgs.nodes.length;
       for (let i = 0; i < qty; i++) {
-        let alpha = (i * (Math.PI * 2)) / qty;
+        let alpha = Math.PI / 4 + (i * (Math.PI * 2)) / qty;
         let [sin, cos] = sinCos(alpha);
         let [x, y] = netShape(cx, cy, r, sin, cos, i, graphType);
         nodeRaw.push([x, y, r0, msgs.nodes[i]]);
         links.push([qty, i]);
       }
-      nodeRaw.push([cx, cy, r0, "myself"]);
+      nodeRaw.push([cx, cy, r0, $thisUserName]);
     };
 
     graphGen(...center);
@@ -244,7 +232,6 @@ function www(msgData) {
             width: x[3] * 2,
             id: `img${x[0]}`,
             href: `files/${x[4]}.jpg`,
-            // onclick: `console.log("img${x[0]}")`,
             "clip-path": `url(#clipPath${x[0]})`
           },
           {
@@ -263,9 +250,6 @@ function www(msgData) {
           {
             y: x[1] + x[3],
             x: x[2] - x[3],
-            // height: 10,
-            // width: 50,
-            // r: 10,
             id: `unread${x[0]}`,
             fill: "white"
           },
@@ -316,37 +300,6 @@ function www(msgData) {
     linkingNodes();
     nodesGen(nodeList);
 
-    // let textos = document.createElementNS("http://www.w3.org/2000/svg", "text");
-    // textos.textContent = "query";
-    // textos.setAttribute("fill", "white");
-    // textos.setAttribute("text-anchor", "end");
-
-    // textos.setAttribute("font-size", 25);
-    // textos.setAttribute("x", 100);
-    // textos.setAttribute("y", 100);
-    // svg.append(textos);
-
-    let textos = document.createElementNS(
-      "http://www.w3.org/2000/svg",
-      "circle"
-    );
-
-    textos.setAttribute("cx", 100);
-    textos.setAttribute("cy", 100);
-    textos.setAttribute("r", 50);
-    textos.setAttribute("stroke", "white");
-    textos.setAttribute("stroke-width", 2);
-    textos.setAttribute("fill", "none");
-    textos.setAttribute("class", "innerCircle");
-
-    svg.append(textos);
-
     // graphGen(...center);
   })([300, 300, 140, msgData], "star");
-
-  // console.log(svg);
-  // console.log("qqq");
-
-  // let arr = { a: 25, b: 23, c: 58, d: 7, e: 32 };
-  // console.table(arr);
 }

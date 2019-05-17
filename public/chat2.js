@@ -243,7 +243,7 @@ function addSenderToChatStation(senderNameTemp, senderImgTemp, topPos) {
   let senderName = document.createElement("div");
   senderCont.className = "messageSender2";
 
-  senderImg.src = "/files/" + senderImgTemp;
+  senderImg.src = "/files/" + senderImgTemp + ".jpg";
   senderImg.className = "senderImg";
 
   senderName.innerText = senderNameTemp;
@@ -296,7 +296,7 @@ function loadChatStation(allMessage) {
   let i = 0;
   $innerChat.innerHTML = "";
   for (sender in allMessage) {
-    addSenderToChatStation(sender, userDetails[sender][0], i * 40);
+    addSenderToChatStation(sender, sender, i * 40);
     i++;
   }
 }
