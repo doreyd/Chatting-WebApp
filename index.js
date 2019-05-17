@@ -16,11 +16,11 @@ let conversationZero = {
     ["sender", "howdddddddddddddddddddddddddddddddddddddddd", true],
     ["sender", "You wanna grab a coffee sometime next week ", true]
   ],
-  dawn: [
-    ["sender", "how was the book i gave you", true],
-    ["receiver", "I really liked it !! ", true],
-    ["sender", "I think i will be buying that car we saw last time. ", true]
-  ],
+  // dawn: [
+  //   ["sender", "how was the book i gave you", true],
+  //   ["receiver", "I really liked it !! ", true],
+  //   ["sender", "I think i will be buying that car we saw last time. ", true]
+  // ],
   jolie: [
     ["receiver", "this is a response to the test", true],
     ["sender", "this is a test", true],
@@ -62,6 +62,15 @@ let conversationZero = {
     ["sender", "how was the book i gave you", true],
     ["receiver", "I really liked it !! ", true],
     ["sender", "I think i will be buying that car we saw last time. ", true]
+  ],
+  jessica: [
+    ["receiver", "this is a response to the test", true],
+    ["sender", "this is a test", true],
+    ["sender", "this", true],
+    ["receiver", "hi", true],
+    ["receiver", "how are you", true],
+    ["sender", "howdddddddddddddddddddddddddddddddddddddddd", true],
+    ["sender", "You wanna grab a coffee sometime next week ", true]
   ]
 };
 // initializing variables that will be used to pair session with sockets
@@ -85,11 +94,8 @@ app.use(
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+app.use("/images", express.static(__dirname + "/public/images"));
 app.use("/files", express.static(__dirname + "/public"));
-
-// let conversationZero = {
-//   init: []
-// };
 
 // Signing up a new user and adding it to the database
 app.post("/signup", (req, res, next) => {
@@ -155,7 +161,7 @@ app.post("/signin", (req, res, next) => {
         req.session.user = data;
         userName = data.userName;
         // res.status(200).sendFile(__dirname + "/chatPage.html");
-        res.status(200).sendFile(__dirname + "/chatPage2.html");
+        res.status(200).sendFile(__dirname + "/chatPage.html");
       }
     }
   );
@@ -248,7 +254,6 @@ io.on("connection", socket => {
   });
 
   socket.on("nowTyping", objBeingSent => {
-    console.log(objBeingSent);
     realtimeUpdate("otherNowTyping", objBeingSent);
   });
 
