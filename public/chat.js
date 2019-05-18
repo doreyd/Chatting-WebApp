@@ -104,49 +104,39 @@ $messages.scrollTo(0, $messages.scrollHeight);
 const socket = io("http://localhost:5000");
 
 socket.on("otherNowTyping", function(data) {
+  let other = document.getElementById(`typing${data["sender"]}`);
+  other.setAttribute("class", "innerCircle");
+
+  let other3 = document.getElementById(`outer${data["sender"]}`);
+  other3.setAttribute("class", "");
+
+  // let other2 = document.getElementById(`outer${data["sender"]}`);
+  // other2.setAttribute("class", "");
+  // other.setAttribute("class", "neMsg");
+
   if ($communicateWith === data["sender"]) {
     $nowTyping.style.display = "block";
   }
 });
 
 socket.on("otherStoppedTyping", function(data) {
+  let other = document.getElementById(`typing${data["sender"]}`);
+  other.setAttribute("class", "");
   if ($communicateWith === data["sender"]) {
     $nowTyping.style.display = "none";
   }
 });
 
 socket.on("msgBack", function(data) {
-  console.log("0000");
+  let other = document.getElementById(`outer${data["sender"]}`);
+  other.setAttribute("class", "neMsg");
   if ($communicateWith === data["sender"]) {
-    console.log("1111");
     $nowTyping.style.display = "none";
     addNewMessage("sender", data["message"], data["sender"]);
     $messageSender.style.background = "#d0fbcc";
     $messageSender.style.backgroundImage = "linear-gradient(#e4fde2, #b7feb0)";
   } else {
-    console.log("2222");
-    addTempMessage("sender", data["message"], data["sender"]);
-    let sendCont = document.getElementById(data["sender"]);
-    if (sendCont !== null) {
-      console.log("3333");
-      sendCont.style.backgroundImage = "linear-gradient(#e4fde2, #b7feb0)";
-      $tempMsg.style.right = "330px";
-      setTimeout(() => {
-        $tempMsg.style.right = "-300px";
-      }, 3000);
-      allMessage[data["sender"]].push(["sender", data["message"]]);
-    } else {
-      console.log("4444");
-      loadMessageFromDB();
-      $tempMsg.style.right = "330px";
-      setTimeout(() => {
-        $tempMsg.style.right = "-300px";
-      }, 3000);
-      if (!allMessage[data["sender"]]) {
-        allMessage[data["sender"]] = [];
-      }
-      allMessage[data["sender"]].push(["sender", data["message"]]);
-    }
+    allMessage[data["sender"]].push(["sender", data["message"]]);
   }
 });
 
@@ -172,6 +162,7 @@ function sendMessageForm(receiver, message, sender) {
     message: message,
     sender: sender
   };
+  socket.emit("stopTyping", objBeingSent);
   socket.emit("sendMessage", objBeingSent);
 }
 
@@ -444,17 +435,24 @@ function www(msgData) {
       let clipPath = setSVGelem("clipPath", { id: `clipPath${x[0]}` }, svg);
       let newElem = setSVGelem(
         "circle",
-        { id: `node${x[0]}`, ...props },
+        { id: `node${x[4]}`, ...props },
         clipPath
       );
       setSVGelem("circle", outer, svg);
-      let idList = [`node${x[0]}`, `img${x[0]}`, `outer${x[0]}`];
+      setSVGelem("circle", { ...outer, class: "", id: `typing${x[4]}` }, svg);
+      // console.log(x);
+      let idList = [
+        `node${x[4]}`,
+        `img${x[4]}`,
+        `outer${x[4]}`,
+        `typing${x[4]}`
+      ];
 
       if (center[3].msgNew[x[0]] > 0) {
         setSVGelem("circle", newMsg, svg);
         let text2 = setSVGelem("text", newMsg2, svg);
         text2.textContent = center[3].msgNew[x[0]];
-        idList = [...idList, `text${x[0]}`, `text2${x[0]}`];
+        idList = [...idList, `text${x[4]}`, `text2${x[4]}`];
       }
 
       let img = setSVGelem("image", imgProps, svg);
@@ -546,7 +544,7 @@ function www(msgData) {
             cy: x[1],
             cx: x[2],
             r: x[3] + 6,
-            id: `outer${x[0]}`,
+            id: `outer${x[4]}`,
             ...nodeStyle,
             fill: "#006ab4",
             "stroke-width": 2
@@ -556,7 +554,7 @@ function www(msgData) {
             x: x[2] - x[3],
             height: x[3] * 2,
             width: x[3] * 2,
-            id: `img${x[0]}`,
+            id: `img${x[4]}`,
             href: `images/${x[4]}.jpg`,
             "clip-path": `url(#clipPath${x[0]})`
           },
@@ -564,25 +562,25 @@ function www(msgData) {
             cy: x[1] - x[3],
             cx: x[2] + x[3],
             r: 10,
-            id: `text${x[0]}`,
+            id: `text${x[4]}`,
             fill: "white"
           },
           {
             y: x[1] - x[3] + 5,
             x: x[2] + x[3] - 4,
-            id: `text2${x[0]}`,
+            id: `text2${x[4]}`,
             fill: "steelblue"
           },
           {
             y: x[1] + x[3],
             x: x[2] - x[3],
-            id: `unread${x[0]}`,
+            id: `unread${x[4]}`,
             fill: "white"
           },
           {
             y: x[1] + x[3] + 5,
             x: x[2] - x[3] - 4,
-            id: `unread2${x[0]}`,
+            id: `unread2${x[4]}`,
             fill: "steelblue"
           },
           x

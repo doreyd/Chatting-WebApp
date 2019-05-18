@@ -184,9 +184,9 @@ app.get("/getUserName", (req, res) => {
 });
 
 // Route for sending messages
-app.post("/sendmessage", (req, res) => {
-  updateMessages(req, res);
-});
+// app.post("/sendmessage", (req, res) => {
+//   updateMessages(req, res);
+// });
 
 // Route for home page
 app.get("/", (req, res, next) => {
@@ -209,13 +209,16 @@ const server = app.listen(port, () => {
 // recording messages into the database
 function updateOne(sender, receiver, message, type) {
   UserRecord.findOne({ userName: receiver }, (err, d) => {
-    let newArray = [type, message];
+    let newArray = [type, message, true];
     if (typeof d.allMessage[sender] === "undefined") {
       d.allMessage[sender] = [];
     }
     d.allMessage[sender].push(newArray);
     d.markModified("allMessage");
-    d.save();
+    d.save().then((err, d) => {
+      if (err) console.log(err);
+      else console.log(d);
+    });
   });
 }
 
@@ -248,6 +251,7 @@ io.on("connection", socket => {
 
   // Managing realtime communication through socket events handling
   socket.on("sendMessage", objBeingSent => {
+    console.log(objBeingSent);
     updateDB(objBeingSent); // will update the mongodb
     realtimeUpdate("msgBack", objBeingSent);
     realtimeUpdate("otherStoppedTyping", objBeingSent);
