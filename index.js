@@ -16,11 +16,11 @@ let conversationZero = {
     ["sender", "howdddddddddddddddddddddddddddddddddddddddd", true],
     ["sender", "You wanna grab a coffee sometime next week ", true]
   ],
-  // dawn: [
-  //   ["sender", "how was the book i gave you", true],
-  //   ["receiver", "I really liked it !! ", true],
-  //   ["sender", "I think i will be buying that car we saw last time. ", true]
-  // ],
+  dawn: [
+    ["sender", "how was the book i gave you", true],
+    ["receiver", "I really liked it !! ", true],
+    ["sender", "I think i will be buying that car we saw last time. ", true]
+  ],
   jolie: [
     ["receiver", "this is a response to the test", true],
     ["sender", "this is a test", true],
@@ -49,19 +49,19 @@ let conversationZero = {
     ["receiver", "I really liked it !! ", true],
     ["sender", "I think i will be buying that car we saw last time. ", true]
   ],
-  steve: [
-    ["receiver", "this is a response to the test", true],
-    ["sender", "this is a test", true],
-    ["sender", "this", true],
-    ["receiver", "hi", true],
-    ["receiver", "how are you", true],
-    ["sender", "howdddddddddddddddddddddddddddddddddddddddd", true],
-    ["sender", "You wanna grab a coffee sometime next week ", true]
-  ],
+  // steve: [
+  //   ["receiver", "this is a response to the test", true],
+  //   ["sender", "this is a test", true],
+  //   ["sender", "this", true],
+  //   ["receiver", "hi", true],
+  //   ["receiver", "how are you", true],
+  //   ["sender", "howdddddddddddddddddddddddddddddddddddddddd", true],
+  //   ["sender", "You wanna grab a coffee sometime next week ", true]
+  // ],
   frank: [
     ["sender", "how was the book i gave you", true],
     ["receiver", "I really liked it !! ", true],
-    ["sender", "I think i will be buying that car we saw last time. ", true]
+    ["sender", "I think i will be buying that car we saw last time. ", false]
   ],
   jessica: [
     ["receiver", "this is a response to the test", true],
@@ -69,8 +69,8 @@ let conversationZero = {
     ["sender", "this", true],
     ["receiver", "hi", true],
     ["receiver", "how are you", true],
-    ["sender", "howdddddddddddddddddddddddddddddddddddddddd", true],
-    ["sender", "You wanna grab a coffee sometime next week ", true]
+    ["sender", "howdddddddddddddddddddddddddddddddddddddddd", false],
+    ["sender", "You wanna grab a coffee sometime next week ", false]
   ]
 };
 // initializing variables that will be used to pair session with sockets
@@ -253,8 +253,9 @@ io.on("connection", socket => {
   socket.on("sendMessage", objBeingSent => {
     console.log(objBeingSent);
     updateDB(objBeingSent); // will update the mongodb
-    realtimeUpdate("msgBack", objBeingSent);
+    // realtimeUpdate("msgBack", objBeingSent);
     realtimeUpdate("otherStoppedTyping", objBeingSent);
+    realtimeUpdate("msgBack", objBeingSent);
   });
 
   socket.on("nowTyping", objBeingSent => {

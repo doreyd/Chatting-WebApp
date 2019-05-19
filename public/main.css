@@ -46,6 +46,7 @@ body {
   top: 1px;
   left: 2px;
   padding: 3px;
+  border-width: 2px;
   position: absolute;
   display: block;
 }
@@ -359,13 +360,11 @@ body {
 /* Animation used for when typing */
 @keyframes buttonTransition {
   from {
-    /* transform: scale(0); */
     r: 0;
     opacity: 1;
-    stroke-width: 3;
+    stroke-width: 10;
   }
   to {
-    /* transform: scale(1); */
     r: 50;
     stroke-width: 3;
     opacity: 0;
@@ -389,8 +388,10 @@ body {
   }
   50% {
     r: 50;
-    stroke: rgb(8, 201, 111);
-    fill: rgb(8, 201, 111);
+    /* stroke: rgb(8, 201, 111);
+    fill: rgb(8, 201, 111); */
+    stroke: white;
+    fill: white;
   }
   100% {
     r: 36;
@@ -401,11 +402,14 @@ body {
 
 .neMsg {
   animation-duration: 1s;
-  /* animation-iteration-count: infinite; */
   animation-name: newMsg;
-  /* r: 50;
-  stroke: red;
-  fill: red; */
 }
 /* ******************************** */
 /* ******************************** */
+
+.show {
+  display: block;
+}
+.hide {
+  display: none;
+}

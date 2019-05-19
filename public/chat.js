@@ -19,6 +19,11 @@ const $leftAnchor = document.getElementById("leftAnchor");
 
 let $thisUserName = "";
 
+// Changing the state of messages from read (state=true) to unread (state=false) and vice versa
+const stateChange = (messages, type, state) => {
+  return messages.map(x => (x = x[0] === type ? [x[0], x[1], state] : x));
+};
+
 function getThisUserName() {
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
@@ -130,13 +135,22 @@ socket.on("otherStoppedTyping", function(data) {
 socket.on("msgBack", function(data) {
   let other = document.getElementById(`outer${data["sender"]}`);
   other.setAttribute("class", "neMsg");
+
+  let text = document.getElementById(`text${data["sender"]}`);
+  let text2 = document.getElementById(`text2${data["sender"]}`);
+  let count = parseInt(text2.textContent);
+  text2.textContent = count + 1;
+  text.setAttribute("class", "show");
+  text2.setAttribute("class", "show");
+  // console.log(count);
+
   if ($communicateWith === data["sender"]) {
     $nowTyping.style.display = "none";
     addNewMessage("sender", data["message"], data["sender"]);
     $messageSender.style.background = "#d0fbcc";
     $messageSender.style.backgroundImage = "linear-gradient(#e4fde2, #b7feb0)";
   } else {
-    allMessage[data["sender"]].push(["sender", data["message"]]);
+    allMessage[data["sender"]].push(["sender", data["message"], false]);
   }
 });
 
@@ -162,7 +176,7 @@ function sendMessageForm(receiver, message, sender) {
     message: message,
     sender: sender
   };
-  socket.emit("stopTyping", objBeingSent);
+  // socket.emit("stopTyping", objBeingSent);
   socket.emit("sendMessage", objBeingSent);
 }
 
@@ -203,6 +217,19 @@ $messageSender.onclick = () => {
   } else {
     $messageStation.style.bottom = "0px";
     $sendBox.style.bottom = "0px";
+    let text = document.getElementById(`text${$communicateWith}`);
+    let text2 = document.getElementById(`text2${$communicateWith}`);
+    text.setAttribute("class", "hide");
+    text2.setAttribute("class", "hide");
+    text2.textContent = 0;
+    console.log(allMessage[$communicateWith]);
+    allMessage[$communicateWith] = stateChange(
+      allMessage[$communicateWith],
+      "sender",
+      true
+    );
+    console.log("--------------------------");
+    console.log(allMessage[$communicateWith]);
   }
 };
 
@@ -297,10 +324,10 @@ const formatMessages = messages => {
   const msgType = (msgs, type = "sender") =>
     msgs.reduce((sum, x) => (sum = x[0] === type ? ++sum : --sum), 0);
 
-  // Changing the state of messages from read (state=true) to unread (state=false) and vice versa
-  const stateChange = (messages, type, state) => {
-    return messages.map(x => (x = x[0] === type ? [x[0], x[1], state] : x));
-  };
+  // // Changing the state of messages from read (state=true) to unread (state=false) and vice versa
+  // const stateChange = (messages, type, state) => {
+  //   return messages.map(x => (x = x[0] === type ? [x[0], x[1], state] : x));
+  // };
   // console.log(msgType(messages["dawn"], "receiver"));
   let keyList = Object.keys(messages);
   // console.log(keyList);
@@ -441,19 +468,32 @@ function www(msgData) {
       setSVGelem("circle", outer, svg);
       setSVGelem("circle", { ...outer, class: "", id: `typing${x[4]}` }, svg);
       // console.log(x);
+
+      let txtCircle = setSVGelem("circle", newMsg, svg);
+      let text2 = setSVGelem("text", newMsg2, svg);
+      text2.textContent = center[3].msgNew[x[0]];
+      if (center[3].msgNew[x[0]] > 0) {
+        txtCircle.setAttribute("class", "show");
+        text2.setAttribute("class", "show");
+      } else {
+        txtCircle.setAttribute("class", "hide");
+        text2.setAttribute("class", "hide");
+      }
       let idList = [
         `node${x[4]}`,
         `img${x[4]}`,
         `outer${x[4]}`,
-        `typing${x[4]}`
+        `typing${x[4]}`,
+        `text${x[4]}`,
+        `text2${x[4]}`
       ];
 
-      if (center[3].msgNew[x[0]] > 0) {
-        setSVGelem("circle", newMsg, svg);
-        let text2 = setSVGelem("text", newMsg2, svg);
-        text2.textContent = center[3].msgNew[x[0]];
-        idList = [...idList, `text${x[4]}`, `text2${x[4]}`];
-      }
+      // if (center[3].msgNew[x[0]] > 0) {
+      //   setSVGelem("circle", newMsg, svg);
+      //   let text2 = setSVGelem("text", newMsg2, svg);
+      //   text2.textContent = center[3].msgNew[x[0]];
+      //   idList = [...idList, `text${x[4]}`, `text2${x[4]}`];
+      // }
 
       let img = setSVGelem("image", imgProps, svg);
       if (x[4] !== $thisUserName) {
