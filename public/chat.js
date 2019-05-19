@@ -209,6 +209,20 @@ function openMessagingBox(sender, receiver) {
   loadMessages(sender, receiver);
 }
 
+$messageStation.onclick = () => {
+  let text = document.getElementById(`text${$communicateWith}`);
+  let text2 = document.getElementById(`text2${$communicateWith}`);
+  text.setAttribute("class", "hide");
+  text2.setAttribute("class", "hide");
+  text2.textContent = 0;
+  console.log(allMessage[$communicateWith]);
+  allMessage[$communicateWith] = stateChange(
+    allMessage[$communicateWith],
+    "sender",
+    true
+  );
+};
+
 $messageSender.onclick = () => {
   let posY = parseInt(window.getComputedStyle($messageStation).bottom);
   if (posY === 0) {
@@ -217,17 +231,17 @@ $messageSender.onclick = () => {
   } else {
     $messageStation.style.bottom = "0px";
     $sendBox.style.bottom = "0px";
-    let text = document.getElementById(`text${$communicateWith}`);
-    let text2 = document.getElementById(`text2${$communicateWith}`);
-    text.setAttribute("class", "hide");
-    text2.setAttribute("class", "hide");
-    text2.textContent = 0;
-    console.log(allMessage[$communicateWith]);
-    allMessage[$communicateWith] = stateChange(
-      allMessage[$communicateWith],
-      "sender",
-      true
-    );
+    // let text = document.getElementById(`text${$communicateWith}`);
+    // let text2 = document.getElementById(`text2${$communicateWith}`);
+    // text.setAttribute("class", "hide");
+    // text2.setAttribute("class", "hide");
+    // text2.textContent = 0;
+    // console.log(allMessage[$communicateWith]);
+    // allMessage[$communicateWith] = stateChange(
+    //   allMessage[$communicateWith],
+    //   "sender",
+    //   true
+    // );
     console.log("--------------------------");
     console.log(allMessage[$communicateWith]);
   }
