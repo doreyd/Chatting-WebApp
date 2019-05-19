@@ -163,6 +163,14 @@ function nowIsTyping(receiver, sender) {
   socket.emit("nowTyping", objBeingSent);
 }
 
+function nowRead(receiver, sender) {
+  let objBeingSent = {
+    receiver: receiver,
+    sender: sender
+  };
+  socket.emit("nowRead", objBeingSent);
+}
+
 function stopTyping(receiver, sender) {
   let objBeingSent = {
     receiver: receiver,
@@ -221,6 +229,7 @@ $messageStation.onclick = () => {
     "sender",
     true
   );
+  nowRead($thisUserName, $communicateWith);
 };
 
 $messageSender.onclick = () => {
@@ -231,19 +240,6 @@ $messageSender.onclick = () => {
   } else {
     $messageStation.style.bottom = "0px";
     $sendBox.style.bottom = "0px";
-    // let text = document.getElementById(`text${$communicateWith}`);
-    // let text2 = document.getElementById(`text2${$communicateWith}`);
-    // text.setAttribute("class", "hide");
-    // text2.setAttribute("class", "hide");
-    // text2.textContent = 0;
-    // console.log(allMessage[$communicateWith]);
-    // allMessage[$communicateWith] = stateChange(
-    //   allMessage[$communicateWith],
-    //   "sender",
-    //   true
-    // );
-    console.log("--------------------------");
-    console.log(allMessage[$communicateWith]);
   }
 };
 

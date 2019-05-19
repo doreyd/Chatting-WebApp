@@ -49,15 +49,15 @@ let conversationZero = {
     ["receiver", "I really liked it !! ", true],
     ["sender", "I think i will be buying that car we saw last time. ", true]
   ],
-  // steve: [
-  //   ["receiver", "this is a response to the test", true],
-  //   ["sender", "this is a test", true],
-  //   ["sender", "this", true],
-  //   ["receiver", "hi", true],
-  //   ["receiver", "how are you", true],
-  //   ["sender", "howdddddddddddddddddddddddddddddddddddddddd", true],
-  //   ["sender", "You wanna grab a coffee sometime next week ", true]
-  // ],
+  steve: [
+    ["receiver", "this is a response to the test", true],
+    ["sender", "this is a test", true],
+    ["sender", "this", true],
+    ["receiver", "hi", true],
+    ["receiver", "how are you", true],
+    ["sender", "howdddddddddddddddddddddddddddddddddddddddd", true],
+    ["sender", "You wanna grab a coffee sometime next week ", true]
+  ],
   frank: [
     ["sender", "how was the book i gave you", true],
     ["receiver", "I really liked it !! ", true],
@@ -209,7 +209,7 @@ const server = app.listen(port, () => {
 // recording messages into the database
 function updateOne(sender, receiver, message, type) {
   UserRecord.findOne({ userName: receiver }, (err, d) => {
-    let newArray = [type, message, true];
+    let newArray = [type, message, false];
     if (typeof d.allMessage[sender] === "undefined") {
       d.allMessage[sender] = [];
     }
@@ -221,7 +221,6 @@ function updateOne(sender, receiver, message, type) {
     });
   });
 }
-
 // recording messages into the database
 function updateDB(obj) {
   let receiver = obj["receiver"];
@@ -230,6 +229,39 @@ function updateDB(obj) {
   updateOne(sender, receiver, message, "sender"); // save to the sender
   updateOne(receiver, sender, message, "receiver"); // save to the receiver
 }
+// *********************************************************************
+//======================================================================
+const stateChange = (messages, type, state) => {
+  return messages.map(x => (x = x[0] === type ? [x[0], x[1], state] : x));
+};
+
+// recording messages into the database
+function nowReadOne(sender, receiver, type) {
+  UserRecord.findOne({ userName: receiver }, (err, d) => {
+    // let newArray = [type, message, false];
+    // if (typeof d.allMessage[sender] === "undefined") {
+    //   d.allMessage[sender] = [];
+    // }
+    d.allMessage[sender] = stateChange(d.allMessage[sender], type, true);
+    d.markModified("allMessage");
+    d.save().then((err, d) => {
+      if (err) console.log(err);
+      else console.log(d);
+    });
+  });
+}
+
+// recording messages into the database
+function updateRead(obj) {
+  let receiver = obj["receiver"];
+  // let message = obj["message"];
+  let sender = obj["sender"];
+  nowReadOne(sender, receiver, "sender"); // save to the sender
+  nowReadOne(receiver, sender, "receiver"); // save to the receiver
+}
+
+//======================================================================
+// *********************************************************************
 
 // Start the WebSocket on this server
 const io = socket(server);
@@ -248,6 +280,16 @@ io.on("connection", socket => {
       }
     });
   };
+
+  // Message just got Read now
+  socket.on("nowRead", objBeingSent => {
+    // console.log(objBeingSent);
+    updateRead(objBeingSent); // will update the mongodb
+    // realtimeUpdate("msgBack", objBeingSent);
+
+    // realtimeUpdate("otherStoppedTyping", objBeingSent);
+    // realtimeUpdate("msgBack", objBeingSent);
+  });
 
   // Managing realtime communication through socket events handling
   socket.on("sendMessage", objBeingSent => {
