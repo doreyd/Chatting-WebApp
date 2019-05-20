@@ -14,6 +14,7 @@ const $mesg = document.getElementById("mesg");
 const $mesgImg = document.getElementById("mesgImg");
 const $mesgCore = document.getElementById("mesgCore");
 const $tempMsg = document.getElementById("tempMsg");
+const $newMsgsReceived = document.getElementById("newMsgsReceived");
 
 const $leftAnchor = document.getElementById("leftAnchor");
 
@@ -95,6 +96,14 @@ function addNewMessage(msgType, msgContent, sender) {
 function loadMessages(sender, receiver) {
   $senderName.innerText = sender;
   $senderImg.src = "/images/" + sender + ".jpg";
+  $newMsgsReceived.id = "newMsgsReceived" + sender;
+  let msgCounter = document.getElementById(`msgCounter${$communicateWith}`);
+
+  if (msgCounter.innerText > 0) {
+    $newMsgsReceived.innerText = msgCounter.innerText;
+    $newMsgsReceived.classList.add("newMsg");
+  }
+
   $messages.innerHTML = "";
   let senderMessages = allMessage[sender];
 
@@ -142,6 +151,22 @@ socket.on("msgBack", function(data) {
   text2.textContent = count + 1;
   text.setAttribute("class", "show");
   text2.setAttribute("class", "show");
+
+  let msgCounter = document.getElementById(`msgCounter${data["sender"]}`);
+  msgCounter.innerText = text2.textContent;
+  // msgCounter.innerText = 50;
+  msgCounter.classList.remove("hide");
+  msgCounter.classList.add("show");
+
+  let newMsgsReceived = document.getElementById(
+    `newMsgsReceived${data["sender"]}`
+  );
+  if (newMsgsReceived) {
+    newMsgsReceived.innerText = text2.textContent;
+    msgCounter.classList.remove("hide");
+    msgCounter.classList.add("show");
+  }
+
   // console.log(count);
 
   if ($communicateWith === data["sender"]) {
@@ -195,7 +220,6 @@ function initializeSendBox(thisUser) {
     $sendBox.onblur = () => {
       stopTyping(senderName, thisUser);
     };
-
     if (event.key === "Enter") {
       if ($sendBox.value !== "") {
         if (senderName.includes("@")) {
@@ -223,6 +247,12 @@ $messageStation.onclick = () => {
   text.setAttribute("class", "hide");
   text2.setAttribute("class", "hide");
   text2.textContent = 0;
+  let msgCounter = document.getElementById(`msgCounter${$communicateWith}`);
+  msgCounter.innerText = 0;
+  // msgCounter.innerText = 50;
+  msgCounter.classList.remove("show");
+  msgCounter.classList.add("hide");
+
   console.log(allMessage[$communicateWith]);
   allMessage[$communicateWith] = stateChange(
     allMessage[$communicateWith],
@@ -253,7 +283,19 @@ function addSenderToChatStation(senderNameTemp, senderImgTemp, topPos) {
   let senderCont = document.createElement("div");
   let senderImg = document.createElement("img");
   let senderName = document.createElement("div");
+  let newMsg = document.createElement("p");
+  newMsg.id = "msgCounter" + senderNameTemp;
+  newMsg.innerText = 0;
+  newMsg.classList.add("newMsg");
+  newMsg.classList.add("hide");
   senderCont.className = "messageSender2";
+
+  senderCont.onmouseover = () => {
+    // console.log("msgCounter" + senderNameTemp);
+  };
+
+  // senderCont.classList.add("newMsgReceived");
+  senderCont.onmouseout = () => senderCont.classList.remove("newMsgReceived");
 
   senderImg.src = "/images/" + senderImgTemp + ".jpg";
   senderImg.className = "senderImg";
@@ -268,6 +310,7 @@ function addSenderToChatStation(senderNameTemp, senderImgTemp, topPos) {
   senderCont.appendChild(senderImg);
   senderCont.appendChild(senderName);
   $innerChat.appendChild(senderCont);
+  senderCont.appendChild(newMsg);
 }
 
 function mesgInserting(sender, receiver) {
@@ -485,6 +528,12 @@ function www(msgData) {
       if (center[3].msgNew[x[0]] > 0) {
         txtCircle.setAttribute("class", "show");
         text2.setAttribute("class", "show");
+        let msgCounter = document.getElementById("msgCounter" + x[4]);
+        console.log(msgCounter);
+        msgCounter.innerText = center[3].msgNew[x[0]];
+        // msgCounter.innerText = 50;
+        msgCounter.classList.remove("hide");
+        msgCounter.classList.add("show");
       } else {
         txtCircle.setAttribute("class", "hide");
         text2.setAttribute("class", "hide");

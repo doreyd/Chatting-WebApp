@@ -70,7 +70,8 @@ body {
   position: fixed;
   top: 50px;
   left: 10px;
-  width: 200px;
+  /* width: 200px; */
+  width: 225px;
   height: 250px;
   display: block;
   overflow: hidden;
@@ -86,7 +87,8 @@ body {
 #innerChat {
   overflow-x: hidden;
   overflow-y: scroll;
-  width: 200px;
+  /* width: 200px; */
+  width: 225px;
   height: 250px;
   top: 0px;
   right: 0px;
@@ -118,17 +120,20 @@ body {
 }
 
 .messageSender2 {
-  left: 5px;
-  width: 175px;
+  /* left: 5px; */
+  /* width: 175px; */
+  left: 0px;
+  /* width: 200px; */
+  width: 215px;
   height: 44px;
   z-index: 202;
   position: relative;
   border-bottom: 1px solid #cecec8;
 }
 
-.messageSender2:hover {
+/* .messageSender2:hover {
   background: #f9f9f9;
-}
+} */
 
 #messageSender:hover {
   background: #f3f3f3;
@@ -412,4 +417,47 @@ body {
 }
 .hide {
   display: none;
+}
+
+/* chatStation width: 225px;
+
+innerChat width: 225px;
+
+messageSender2 :  width: 200px; */
+
+@keyframes blinking {
+  0% {
+    background: white;
+  }
+  50% {
+    background: #6abaf2;
+  }
+  100% {
+    background: white;
+  }
+}
+
+.blink {
+  animation-duration: 0.3s;
+  animation-iteration-count: infinite;
+  animation-name: blinking;
+}
+
+.newMsg {
+  position: absolute;
+  left: 36px;
+  top: 14px;
+  background: white;
+  border: 1px solid steelblue;
+  color: steelblue;
+  font-family: verdana;
+  font-size: 10px;
+  font-weight: bold;
+  padding: 2px 6px 2px 6px;
+  border-radius: 50%;
+  z-index: 300;
+}
+
+.newMsgReceived {
+  background: #006ab4;
 }

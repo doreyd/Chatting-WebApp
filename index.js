@@ -16,11 +16,11 @@ let conversationZero = {
     ["sender", "howdddddddddddddddddddddddddddddddddddddddd", true],
     ["sender", "You wanna grab a coffee sometime next week ", true]
   ],
-  dawn: [
-    ["sender", "how was the book i gave you", true],
-    ["receiver", "I really liked it !! ", true],
-    ["sender", "I think i will be buying that car we saw last time. ", true]
-  ],
+  // dawn: [
+  //   ["sender", "how was the book i gave you", true],
+  //   ["receiver", "I really liked it !! ", true],
+  //   ["sender", "I think i will be buying that car we saw last time. ", true]
+  // ],
   jolie: [
     ["receiver", "this is a response to the test", true],
     ["sender", "this is a test", true],
@@ -242,12 +242,14 @@ function nowReadOne(sender, receiver, type) {
     // if (typeof d.allMessage[sender] === "undefined") {
     //   d.allMessage[sender] = [];
     // }
-    d.allMessage[sender] = stateChange(d.allMessage[sender], type, true);
-    d.markModified("allMessage");
-    d.save().then((err, d) => {
-      if (err) console.log(err);
-      else console.log(d);
-    });
+    if (typeof d.allMessage[sender] !== "undefined") {
+      d.allMessage[sender] = stateChange(d.allMessage[sender], type, true);
+      d.markModified("allMessage");
+      d.save().then((err, d) => {
+        if (err) console.log(err);
+        else console.log(d);
+      });
+    }
   });
 }
 
