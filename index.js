@@ -298,7 +298,7 @@ io.on("connection", socket => {
     console.log(objBeingSent);
     updateDB(objBeingSent); // will update the mongodb
     // realtimeUpdate("msgBack", objBeingSent);
-    realtimeUpdate("otherStoppedTyping", objBeingSent);
+    // realtimeUpdate("otherStoppedTyping", objBeingSent);
     realtimeUpdate("msgBack", objBeingSent);
   });
 

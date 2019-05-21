@@ -385,7 +385,7 @@ body {
 /* ******************************** */
 /* ******************************** */
 /* Animation used for when receiving new message */
-@keyframes newMsg {
+@keyframes newMsg2 {
   0% {
     r: 36;
     stroke: white;
@@ -393,8 +393,6 @@ body {
   }
   50% {
     r: 50;
-    /* stroke: rgb(8, 201, 111);
-    fill: rgb(8, 201, 111); */
     stroke: white;
     fill: white;
   }
@@ -407,7 +405,8 @@ body {
 
 .neMsg {
   animation-duration: 1s;
-  animation-name: newMsg;
+  animation-iteration-count: 1;
+  animation-name: newMsg2;
 }
 /* ******************************** */
 /* ******************************** */

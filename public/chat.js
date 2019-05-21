@@ -1,75 +1,82 @@
-const $nowTyping = document.getElementById("nowTyping");
-const $messages = document.getElementById("messages");
-const $senderName = document.getElementById("senderName");
-const $senderImg = document.getElementById("senderImg");
-const $sendBox = document.getElementById("sendBox");
-const $messageStation = document.getElementById("messageStation");
-const $messageSender = document.getElementById("messageSender");
-const $chat = document.getElementById("chat");
-const $chatContainer = document.getElementById("chatContainer");
-const $chatStation = document.getElementById("chatStation");
-const $innerChat = document.getElementById("innerChat");
+const getElem = id => document.getElementById(id);
+const getElems = (...ids) => ids.map(id => getElem(id));
 
-const $mesg = document.getElementById("mesg");
-const $mesgImg = document.getElementById("mesgImg");
-const $mesgCore = document.getElementById("mesgCore");
-const $tempMsg = document.getElementById("tempMsg");
-const $newMsgsReceived = document.getElementById("newMsgsReceived");
+const createElem = type => document.createElement(type);
+const createElems = (...types) => types.map(type => createElem(type));
 
-const $leftAnchor = document.getElementById("leftAnchor");
+const createSvg = type =>
+  document.createElementNS("http://www.w3.org/2000/svg", type);
 
-let $thisUserName = "";
+const getAttr = (elem, attr) => elem.getAttribute(attr);
 
-// Changing the state of messages from read (state=true) to unread (state=false) and vice versa
-const stateChange = (messages, type, state) => {
-  return messages.map(x => (x = x[0] === type ? [x[0], x[1], state] : x));
+const setAttr = (elem, style) => {
+  for (key in style) elem.setAttribute(key, style[key]);
 };
 
-function getThisUserName() {
+const setAttrId = (id, style) => {
+  let elem = getElem(id);
+  setAttr(elem, style);
+};
+
+const [
+  $nowTyping,
+  $messages,
+  $senderName,
+  $senderImg,
+  $sendBox,
+  $messageStation,
+  $messageSender,
+  $chat,
+  $chatContainer,
+  $chatStation,
+  $innerChat,
+  $mesg,
+  $mesgImg,
+  $mesgCore,
+  $tempMsg,
+  $newMsgsReceived
+] = getElems(
+  "nowTyping",
+  "messages",
+  "senderName",
+  "senderImg",
+  "sendBox",
+  "messageStation",
+  "messageSender",
+  "chat",
+  "chatContainer",
+  "chatStation",
+  "innerChat",
+  "mesg",
+  "mesgImg",
+  "mesgCore",
+  "tempMsg",
+  "newMsgsReceived"
+);
+
+let $user = "";
+
+// Changing the state of messages from read (state=true) to unread (state=false) and vice versa
+const stateChange = (messages, type, state) =>
+  messages.map(x => (x = x[0] === type ? [x[0], x[1], state] : x));
+
+function getUser() {
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
-      $thisUserName = xhttp.responseText;
-
-      $chat.src = `images/${$thisUserName}.jpg`;
-      chatContainer.innerText = `Welcome ${$thisUserName} !`;
+      $user = xhttp.responseText;
+      $chat.src = `images/${$user}.jpg`;
+      chatContainer.innerText = `Welcome ${$user} !`;
     }
   };
   xhttp.open("GET", "/getUserName", true);
   xhttp.send();
 }
 
-getThisUserName();
-
-function addTempMessage(msgType, msgCOntent, sender) {
-  mesg.className = msgType;
-  mesgImg.className = msgType + "Img";
-  mesgCore.className = msgType + "Message";
-
-  if (msgCOntent.length > 15) {
-    mesgCore.style.wordWrap = "break-word";
-    mesgCore.style.width = "150px";
-  } else {
-    mesgCore.style.width = (msgCOntent.length * 140) / 17 + "px";
-  }
-
-  mesgCore.innerText = msgCOntent;
-
-  let sender2 = "";
-  if (sender.includes("@")) {
-    sender2 = "default";
-  } else {
-    sender2 = sender;
-  }
-
-  mesgImg.src = `/images/${sender2}.jpg`;
-  mesg.style.height = mesgCore.offsetHeight + 5 + "px";
-}
+getUser();
 
 function addNewMessage(msgType, msgContent, sender) {
-  let mesg = document.createElement("div");
-  let mesgImg = document.createElement("img");
-  let mesgCore = document.createElement("div");
+  let [mesg, mesgImg, mesgCore] = createElems("div", "img", "div");
 
   mesg.className = msgType;
   mesgImg.className = msgType + "Img";
@@ -95,122 +102,108 @@ function addNewMessage(msgType, msgContent, sender) {
 
 function loadMessages(sender, receiver) {
   $senderName.innerText = sender;
-  $senderImg.src = "/images/" + sender + ".jpg";
-  $newMsgsReceived.id = "newMsgsReceived" + sender;
-  let msgCounter = document.getElementById(`msgCounter${$communicateWith}`);
-
-  if (msgCounter.innerText > 0) {
-    $newMsgsReceived.innerText = msgCounter.innerText;
-    $newMsgsReceived.classList.add("newMsg");
-  }
+  $senderImg.src = `/images/${sender}.jpg`;
+  $newMsgsReceived.id = `newMsgsReceived${sender}`;
 
   $messages.innerHTML = "";
   let senderMessages = allMessage[sender];
 
-  for (let i = 0; i < senderMessages.length; i++) {
-    let msgOrigin = senderMessages[i][0] === "sender" ? sender : receiver;
-    addNewMessage(senderMessages[i][0], senderMessages[i][1], msgOrigin);
-  }
+  senderMessages.forEach(x =>
+    addNewMessage(x[0], x[1], x[0] === "sender" ? sender : receiver)
+  );
 }
 
 $messages.scrollTo(0, $messages.scrollHeight);
 
+let cc = createSvg("circle");
+setAttr(cc, { id: "bubble" });
+svg.append(cc);
+
 const socket = io("http://localhost:5000");
 
-socket.on("otherNowTyping", function(data) {
-  let other = document.getElementById(`typing${data["sender"]}`);
-  other.setAttribute("class", "innerCircle");
-
-  let other3 = document.getElementById(`outer${data["sender"]}`);
-  other3.setAttribute("class", "");
-
-  // let other2 = document.getElementById(`outer${data["sender"]}`);
-  // other2.setAttribute("class", "");
-  // other.setAttribute("class", "neMsg");
-
-  if ($communicateWith === data["sender"]) {
-    $nowTyping.style.display = "block";
-  }
+socket.on("otherNowTyping", d => {
+  // setAttrId("bubble", { class: "" });
+  // setAttrId("bubble", { class: "hide" });
+  setAttrId(`typing${d["sender"]}`, { class: "innerCircle" });
+  // setAttrId(`outer${d["sender"]}`, { class: "" });
+  if ($comWith === d["sender"]) $nowTyping.style.display = "block";
 });
 
-socket.on("otherStoppedTyping", function(data) {
-  let other = document.getElementById(`typing${data["sender"]}`);
-  other.setAttribute("class", "");
-  if ($communicateWith === data["sender"]) {
-    $nowTyping.style.display = "none";
-  }
+socket.on("otherStoppedTyping", d => {
+  // setAttrId("bubble", { class: "" });
+  setAttrId(`typing${d["sender"]}`, { class: "" });
+
+  if ($comWith === d["sender"]) $nowTyping.style.display = "none";
 });
 
-socket.on("msgBack", function(data) {
-  let other = document.getElementById(`outer${data["sender"]}`);
-  other.setAttribute("class", "neMsg");
+socket.on("msgBack", d => {
+  let cc = getElem("bubble");
+  let ccx = getAttr(getElem(`node${d["sender"]}`), "cx");
+  let ccy = getAttr(getElem(`node${d["sender"]}`), "cy");
+  setAttr(cc, { cx: ccx, cy: ccy, class: "neMsg" });
+  setTimeout(() => {
+    setAttrId(`typing${d["sender"]}`, { class: "" });
+  }, 200);
+  setTimeout(() => {
+    setAttrId("bubble", { class: "hide" });
+  }, 1010);
+  // setAttrId(`typing${d["sender"]}`, { class: "" });
+  // console.log(getAttr(getElem(`node${d["sender"]}`), "cx"));
 
-  let text = document.getElementById(`text${data["sender"]}`);
-  let text2 = document.getElementById(`text2${data["sender"]}`);
-  let count = parseInt(text2.textContent);
-  text2.textContent = count + 1;
-  text.setAttribute("class", "show");
-  text2.setAttribute("class", "show");
+  // setAttrId(`outer${d["sender"]}`, { class: "neMsg" });
+  let text2 = getElem(`text2${d["sender"]}`);
+  text2.textContent++;
 
-  let msgCounter = document.getElementById(`msgCounter${data["sender"]}`);
+  setAttrId(`text${d["sender"]}`, { class: "show" });
+  setAttrId(`text2${d["sender"]}`, { class: "show" });
+
+  let msgCounter = getElem(`msgCounter${d["sender"]}`);
   msgCounter.innerText = text2.textContent;
-  // msgCounter.innerText = 50;
   msgCounter.classList.remove("hide");
   msgCounter.classList.add("show");
 
-  let newMsgsReceived = document.getElementById(
-    `newMsgsReceived${data["sender"]}`
-  );
-  if (newMsgsReceived) {
-    newMsgsReceived.innerText = text2.textContent;
-    msgCounter.classList.remove("hide");
-    msgCounter.classList.add("show");
-  }
+  // setAttrId(`outer${d["sender"]}`, { class: "neMsg" });
 
-  // console.log(count);
+  // let outer = getElem(`outer${d["sender"]}`);
+  // outer.classList.add("neMsg");
 
-  if ($communicateWith === data["sender"]) {
+  if ($comWith === d["sender"]) {
     $nowTyping.style.display = "none";
-    addNewMessage("sender", data["message"], data["sender"]);
+    addNewMessage("sender", d["message"], d["sender"]);
     $messageSender.style.background = "#d0fbcc";
     $messageSender.style.backgroundImage = "linear-gradient(#e4fde2, #b7feb0)";
   } else {
-    allMessage[data["sender"]].push(["sender", data["message"], false]);
+    allMessage[d["sender"]].push(["sender", d["message"], false]);
   }
 });
 
 function nowIsTyping(receiver, sender) {
-  console.log(receiver, sender);
-  let objBeingSent = {
-    receiver: receiver,
-    sender: sender
-  };
-  socket.emit("nowTyping", objBeingSent);
+  socket.emit("nowTyping", {
+    receiver,
+    sender
+  });
 }
 
 function nowRead(receiver, sender) {
-  let objBeingSent = {
-    receiver: receiver,
-    sender: sender
-  };
-  socket.emit("nowRead", objBeingSent);
+  socket.emit("nowRead", {
+    receiver,
+    sender
+  });
 }
 
 function stopTyping(receiver, sender) {
-  let objBeingSent = {
-    receiver: receiver,
-    sender: sender
-  };
-  socket.emit("stopTyping", objBeingSent);
+  socket.emit("stopTyping", {
+    receiver,
+    sender
+  });
 }
+
 function sendMessageForm(receiver, message, sender) {
-  let objBeingSent = {
-    receiver: receiver,
-    message: message,
-    sender: sender
-  };
-  // socket.emit("stopTyping", objBeingSent);
-  socket.emit("sendMessage", objBeingSent);
+  socket.emit("sendMessage", {
+    receiver,
+    message,
+    sender
+  });
 }
 
 function initializeSendBox(thisUser) {
@@ -222,13 +215,13 @@ function initializeSendBox(thisUser) {
     };
     if (event.key === "Enter") {
       if ($sendBox.value !== "") {
-        if (senderName.includes("@")) {
-          addNewMessage("receiver", "XXX", thisUser);
-        } else {
-          addNewMessage("receiver", $sendBox.value, thisUser);
-          sendMessageForm(senderName, $sendBox.value, thisUser);
-          allMessage[senderName].push(["receiver", $sendBox.value]);
-        }
+        // if (senderName.includes("@")) {
+        //   addNewMessage("receiver", "XXX", thisUser);
+        // } else {
+        addNewMessage("receiver", $sendBox.value, thisUser);
+        sendMessageForm(senderName, $sendBox.value, thisUser);
+        allMessage[senderName].push(["receiver", $sendBox.value]);
+        // }
         $sendBox.value = "";
         $messages.scrollTo(0, $messages.scrollHeight);
       }
@@ -242,24 +235,21 @@ function openMessagingBox(sender, receiver) {
 }
 
 $messageStation.onclick = () => {
-  let text = document.getElementById(`text${$communicateWith}`);
-  let text2 = document.getElementById(`text2${$communicateWith}`);
-  text.setAttribute("class", "hide");
-  text2.setAttribute("class", "hide");
+  let text = getElem(`text${$comWith}`);
+  let text2 = getElem(`text2${$comWith}`);
+
+  setAttr(text, { class: "hide" });
+  setAttr(text2, { class: "hide" });
+
   text2.textContent = 0;
-  let msgCounter = document.getElementById(`msgCounter${$communicateWith}`);
+  let msgCounter = getElem(`msgCounter${$comWith}`);
   msgCounter.innerText = 0;
-  // msgCounter.innerText = 50;
+
   msgCounter.classList.remove("show");
   msgCounter.classList.add("hide");
 
-  console.log(allMessage[$communicateWith]);
-  allMessage[$communicateWith] = stateChange(
-    allMessage[$communicateWith],
-    "sender",
-    true
-  );
-  nowRead($thisUserName, $communicateWith);
+  allMessage[$comWith] = stateChange(allMessage[$comWith], "sender", true);
+  nowRead($user, $comWith);
 };
 
 $messageSender.onclick = () => {
@@ -277,40 +267,37 @@ $chat.onclick = () =>
   ($chatStation.style.display =
     $chatStation.style.display === "none" ? "block" : "none");
 
-$communicateWith = "";
+$comWith = "";
 
-function addSenderToChatStation(senderNameTemp, senderImgTemp, topPos) {
-  let senderCont = document.createElement("div");
-  let senderImg = document.createElement("img");
-  let senderName = document.createElement("div");
-  let newMsg = document.createElement("p");
-  newMsg.id = "msgCounter" + senderNameTemp;
+function addSenderToChatStation(sndTmp, sender) {
+  let [sendCont, sendImg, sendName, newMsg] = createElems(
+    "div",
+    "img",
+    "div",
+    "p"
+  );
+
+  newMsg.id = "msgCounter" + sndTmp;
   newMsg.innerText = 0;
   newMsg.classList.add("newMsg");
   newMsg.classList.add("hide");
-  senderCont.className = "messageSender2";
+  sendCont.className = "messageSender2";
 
-  senderCont.onmouseover = () => {
-    // console.log("msgCounter" + senderNameTemp);
-  };
+  sendImg.src = "/images/" + sender + ".jpg";
+  sendImg.className = "senderImg";
 
-  // senderCont.classList.add("newMsgReceived");
-  senderCont.onmouseout = () => senderCont.classList.remove("newMsgReceived");
-
-  senderImg.src = "/images/" + senderImgTemp + ".jpg";
-  senderImg.className = "senderImg";
-
-  senderName.innerText = senderNameTemp;
-  senderName.className = "senderName2";
-  senderCont.onclick = () => {
+  sendName.innerText = sndTmp;
+  sendName.className = "senderName2";
+  sendCont.onclick = () => {
     $messageStation.style.display = "block";
-    $communicateWith = senderNameTemp;
-    openMessagingBox(senderNameTemp, $thisUserName);
+    $comWith = sndTmp;
+
+    openMessagingBox(sndTmp, $user);
   };
-  senderCont.appendChild(senderImg);
-  senderCont.appendChild(senderName);
-  $innerChat.appendChild(senderCont);
-  senderCont.appendChild(newMsg);
+  sendCont.appendChild(sendImg);
+  sendCont.appendChild(sendName);
+  $innerChat.appendChild(sendCont);
+  sendCont.appendChild(newMsg);
 }
 
 function mesgInserting(sender, receiver) {
@@ -324,14 +311,6 @@ function mesgInserting(sender, receiver) {
     );
   }
 }
-
-let msgData;
-
-changeMesgs = d => {
-  msgData = { ...d };
-};
-
-let yy = 0;
 
 function loadMessageFromDB() {
   var xhttp = new XMLHttpRequest();
@@ -350,37 +329,22 @@ function loadMessageFromDB() {
 }
 
 function loadChatStation(allMessage) {
-  let i = 0;
   $innerChat.innerHTML = "";
-  for (sender in allMessage) {
-    addSenderToChatStation(sender, sender, i * 40);
-    i++;
-  }
+  for (sender in allMessage) addSenderToChatStation(sender, sender);
 }
 
-// loadMessageFromDB();
-
-// $messageStation.style.display = "none";
-
 const formatMessages = messages => {
-  console.log(messages);
   // Counting how many messages correspond to a certain type and a certain state
   const stateCount = (messages, type, state) => {
-    console.log(messages);
     return messages.reduce((sum, x) => {
       return (sum = x[0] === type && x[2] === state ? ++sum : sum);
     }, 0);
   };
 
-  // console.log(stateCount(messages["kayla"], "receiver", false));
   // Check if messages are more of a "sender" or "receiver" type
   const msgType = (msgs, type = "sender") =>
     msgs.reduce((sum, x) => (sum = x[0] === type ? ++sum : --sum), 0);
 
-  // // Changing the state of messages from read (state=true) to unread (state=false) and vice versa
-  // const stateChange = (messages, type, state) => {
-  //   return messages.map(x => (x = x[0] === type ? [x[0], x[1], state] : x));
-  // };
   // console.log(msgType(messages["dawn"], "receiver"));
   let keyList = Object.keys(messages);
   // console.log(keyList);
@@ -391,17 +355,15 @@ const formatMessages = messages => {
     msgUnread: keyList.map(x => stateCount(messages[x], "receiver", false))
   };
 
-  console.log(msgData.nodes);
   return msgData;
 };
 
 function www(msgData) {
   const dragSVGgroup = (elemGroupId, linkStart = [], linkEnd = []) => {
-    // console.log(linkStart, linkEnd);
-    let stElem = linkStart.map(x => document.getElementById(x));
-    let enElem = linkEnd.map(x => document.getElementById(x));
-    let elemGroup = elemGroupId.map(x => document.getElementById(x));
-    elemGroup.forEach(x => dragSVG(x, elemGroup, stElem, enElem));
+    let [a, b, elemGroup] = [linkStart, linkEnd, elemGroupId].map(y =>
+      y.map(x => getElem(x))
+    );
+    elemGroup.forEach(x => dragSVG(x, elemGroup, a, b));
   };
 
   // This is a module for drag and drop SVG elements
@@ -413,68 +375,52 @@ function www(msgData) {
     let elemDragged;
 
     const coord = (e, elem) => {
-      let cursX = e.pageX;
-      let cursY = e.pageY;
+      let elemX = elem.x ? getAttr(elem, "x") : getAttr(elem, "cx");
+      let elemY = elem.y ? getAttr(elem, "y") : getAttr(elem, "cy");
 
-      let elemX = elem.x ? elem.getAttribute("x") : elem.getAttribute("cx");
-      let elemY = elem.y ? elem.getAttribute("y") : elem.getAttribute("cy");
-
-      return [cursX, cursY, elemX, elemY];
+      return [e.pageX, e.pageY, elemX, elemY];
     };
 
     const getDelta = (e, elem, i) => {
       let d2 = coord(e, elem);
       if (elem.cx) {
-        elem.setAttribute("cx", d2[0] - delta[i][0]);
-        elem.setAttribute("cy", d2[1] - delta[i][1]);
+        setAttr(elem, { cx: d2[0] - delta[i][0] });
+        setAttr(elem, { cy: d2[1] - delta[i][1] });
       } else if (elem.x) {
-        elem.setAttribute("x", d2[0] - delta[i][0]);
-        elem.setAttribute("y", d2[1] - delta[i][1]);
+        setAttr(elem, { x: d2[0] - delta[i][0] });
+        setAttr(elem, { y: d2[1] - delta[i][1] });
       }
       deltaSt.forEach(arr => {
-        arr[0].setAttribute("x1", d2[0] - arr[1]);
-        arr[0].setAttribute("y1", d2[1] - arr[2]);
+        setAttr(arr[0], { x1: d2[0] - arr[1] });
+        setAttr(arr[0], { y1: d2[1] - arr[2] });
       });
       deltaEn.forEach(arr => {
-        arr[0].setAttribute("x2", d2[0] - arr[1]);
-        arr[0].setAttribute("y2", d2[1] - arr[2]);
+        setAttr(arr[0], { x2: d2[0] - arr[1] });
+        setAttr(arr[0], { y2: d2[1] - arr[2] });
       });
     };
 
-    const newPos = e => {
-      elemGroup.forEach((x, i) => {
-        getDelta(e, x, i);
-      });
-    };
+    const newPos = e => elemGroup.forEach((x, i) => getDelta(e, x, i));
 
     const setDelta = (e, elem) => {
       let d = coord(e, elem);
-      // console.log(d);
-      delta.push([
-        // parseInt(d[0]) - parseInt(d[2]),
-        // parseInt(d[1]) - parseInt(d[3])
-        d[0] - d[2],
-        d[1] - d[3]
-      ]);
+      delta.push([d[0] - d[2], d[1] - d[3]]);
       deltaSt = stElem.map(elem => [
         elem,
-        d[0] - elem.x1.animVal.value,
-        d[1] - elem.y1.animVal.value
+        d[0] - getAttr(elem, "x1"),
+        d[1] - getAttr(elem, "y1")
       ]);
 
       deltaEn = enElem.map(elem => [
         elem,
-        d[0] - elem.x2.animVal.value,
-        d[1] - elem.y2.animVal.value
+        d[0] - getAttr(elem, "x2"),
+        d[1] - getAttr(elem, "y2")
       ]);
-      // console.log(delta);
     };
 
     elem.onmousedown = e => {
       elemDragged = e.target;
-      elemGroup.forEach(x => {
-        setDelta(e, x);
-      });
+      elemGroup.forEach(x => setDelta(e, x));
       svg.onmousemove = e => newPos(e);
     };
 
@@ -492,27 +438,18 @@ function www(msgData) {
 
   !(function(center, graphType) {
     // Dom selection
-    let svg = document.getElementById("svg");
+    let svg = getElem("svg");
 
     const setSVGelem = (type, style = {}, appendTo) => {
-      let elem = document.createElementNS("http://www.w3.org/2000/svg", type);
-      for (let prop in style) elem.setAttribute(prop, style[prop]);
+      let elem = createSvg(type);
+      setAttr(elem, style);
       appendTo.append(elem);
       return elem;
     };
 
     // Function to create and set up SVG elements
-    const nodeGenerator = (
-      props = {},
-      outer,
-      imgProps,
-      newMsg,
-      newMsg2,
-      unreadMsg,
-      unreadMsg2,
-      x
-    ) => {
-      let clipPath = setSVGelem("clipPath", { id: `clipPath${x[0]}` }, svg);
+    const nodeGenerator = (props = {}, outer, imgProps, newMsg, newMsg2, x) => {
+      let clipPath = setSVGelem("clipPath", { id: `clip${x[4]}` }, svg);
       let newElem = setSVGelem(
         "circle",
         { id: `node${x[4]}`, ...props },
@@ -520,18 +457,18 @@ function www(msgData) {
       );
       setSVGelem("circle", outer, svg);
       setSVGelem("circle", { ...outer, class: "", id: `typing${x[4]}` }, svg);
-      // console.log(x);
 
       let txtCircle = setSVGelem("circle", newMsg, svg);
       let text2 = setSVGelem("text", newMsg2, svg);
+
       text2.textContent = center[3].msgNew[x[0]];
       if (center[3].msgNew[x[0]] > 0) {
         txtCircle.setAttribute("class", "show");
         text2.setAttribute("class", "show");
-        let msgCounter = document.getElementById("msgCounter" + x[4]);
-        console.log(msgCounter);
+        let msgCounter = getElem("msgCounter" + x[4]);
+
         msgCounter.innerText = center[3].msgNew[x[0]];
-        // msgCounter.innerText = 50;
+
         msgCounter.classList.remove("hide");
         msgCounter.classList.add("show");
       } else {
@@ -547,42 +484,18 @@ function www(msgData) {
         `text2${x[4]}`
       ];
 
-      // if (center[3].msgNew[x[0]] > 0) {
-      //   setSVGelem("circle", newMsg, svg);
-      //   let text2 = setSVGelem("text", newMsg2, svg);
-      //   text2.textContent = center[3].msgNew[x[0]];
-      //   idList = [...idList, `text${x[4]}`, `text2${x[4]}`];
-      // }
-
       let img = setSVGelem("image", imgProps, svg);
-      if (x[4] !== $thisUserName) {
+      if (x[4] !== $user) {
         img.onclick = () => {
           $messageStation.style.display = "block";
-          $communicateWith = x[4];
-          openMessagingBox(x[4], $thisUserName);
+          $comWith = x[4];
+          openMessagingBox(x[4], $user);
         };
       }
 
       dragSVGgroup([...idList], x[5], x[6]);
       return newElem;
     };
-
-    // ****************************************************************
-    // ****** This section allows for random generation of node********
-    // ****************************************************************
-
-    // Function generating random numbers between 0 and the picked base
-    const ran = base => Math.round(20 + Math.random() * base);
-
-    // Function to generate a random nodes list
-    const nodeslistGen = qty => {
-      let nodes = [];
-      for (let i = 0; i < qty; i++)
-        nodes.push([i, ran(800), ran(1300), ran(30), [], []]);
-      return nodes;
-    };
-
-    // let nodeList = nodeslistGen(30);
 
     // ****************************************************************
     // ****************************************************************
@@ -608,7 +521,6 @@ function www(msgData) {
     let r0 = 30;
 
     const graphGen = (cx, cy, r, msgs) => {
-      console.log(msgs);
       let qty = msgs.nodes.length;
       for (let i = 0; i < qty; i++) {
         let alpha = Math.PI / 6 + (i * (Math.PI * 2)) / qty;
@@ -617,7 +529,7 @@ function www(msgData) {
         nodeRaw.push([x, y, r0, msgs.nodes[i]]);
         links.push([qty, i]);
       }
-      nodeRaw.push([cx, cy, r0, $thisUserName]);
+      nodeRaw.push([cx, cy, r0, $user]);
     };
 
     graphGen(...center);
@@ -655,7 +567,7 @@ function www(msgData) {
             width: x[3] * 2,
             id: `img${x[4]}`,
             href: `images/${x[4]}.jpg`,
-            "clip-path": `url(#clipPath${x[0]})`
+            "clip-path": `url(#clip${x[4]})`
           },
           {
             cy: x[1] - x[3],
@@ -670,45 +582,28 @@ function www(msgData) {
             id: `text2${x[4]}`,
             fill: "steelblue"
           },
-          {
-            y: x[1] + x[3],
-            x: x[2] - x[3],
-            id: `unread${x[4]}`,
-            fill: "white"
-          },
-          {
-            y: x[1] + x[3] + 5,
-            x: x[2] - x[3] - 4,
-            id: `unread2${x[4]}`,
-            fill: "steelblue"
-          },
           x
         );
       });
     };
 
     const createLink = id => {
-      let newLink = document.createElementNS(
-        "http://www.w3.org/2000/svg",
-        "line"
-      );
-      //   for (prop in linkProps) newLink.setAttribute(prop, linkProps[prop]);
-      newLink.setAttribute("id", id);
-      newLink.setAttribute("style", "stroke:white;stroke-width:2px;");
-      // newLink.setAttribute("style", "stroke:white;stroke-width:3px;");
-      newLink.setAttribute("x1", nodeList[links[id]["start"]][2]);
-      newLink.setAttribute("y1", nodeList[links[id]["start"]][1]);
-      newLink.setAttribute("x2", nodeList[links[id]["end"]][2]);
-      newLink.setAttribute("y2", nodeList[links[id]["end"]][1]);
+      let newLink = createSvg("line");
+
+      setAttr(newLink, {
+        id,
+        style: "stroke:white;stroke-width:2px;",
+        x1: nodeList[links[id]["start"]][2],
+        y1: nodeList[links[id]["start"]][1],
+        x2: nodeList[links[id]["end"]][2],
+        y2: nodeList[links[id]["end"]][1]
+      });
+
       svg.append(newLink);
       return newLink;
     };
 
-    const linkingNodes = () => {
-      links.forEach((x, i) => {
-        createLink(i);
-      });
-    };
+    const linkingNodes = () => links.forEach((x, i) => createLink(i));
 
     const attachNodeLinks = () => {
       links.forEach((x, i) => {
