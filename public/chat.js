@@ -50,12 +50,58 @@ const $mesgCore = getElem("mesgCore");
 const $tempMsg = getElem("tempMsg");
 const $newMsgsReceived = getElem("newMsgsReceived");
 const $nameHover = getElem("nameHover");
+const $left = getElem("left");
 
 const svg = getElem("svg");
 
 let $comWith = "";
 let $user = "";
 
+// Color settings
+// let bubbleColor = "green";
+// let newMsgGradient = "linear-gradient(#0d72b8, #9cd6fe)";
+// let newMsgDefault = "white";
+// let graphType = "star";
+// let nodeBackColor = "#006ab4";
+// let newMsgTxtColor = "steelblue";
+// let r0 = 30;
+// let linkStyle = "stroke:white;stroke-width:2px;";
+// let initPos = [300, 500, 140];
+
+// blue
+// let lineBase = "white";
+// let backBase = "#006ab4";
+// let backSecond = "#0d72b8";
+
+// pink
+// let lineBase = "white";
+// let backBase = "#d50877";
+// let backSecond = "#ff64b8";
+
+// grey
+let lineBase = "#bcbcbc";
+let backBase = "#e7e3e3";
+let backSecond = "#fefafa";
+let newMsgDefault = "white";
+let msgSendBack = "#0084ff";
+// let namesColor = "#060153";
+let namesColor = "#354060";
+let bubbleColor = lineBase;
+// let newMsgGradient = "linear-gradient(#0d72b8, #9cd6fe)";
+let newMsgGradient = `linear-gradient(${lineBase}, ${backBase})`;
+
+let graphType = "star";
+let nodeBackColor = backBase;
+
+// let newMsgTxtColor = "steelblue";
+let newMsgTxtColor = namesColor;
+let r0 = 30;
+let linkStyle = `stroke:${lineBase};stroke-width:2px;`;
+let initPos = [300, 500, 140];
+document.body.style.background = backBase;
+$left.style.background = backSecond;
+$chatContainer.style.color = namesColor;
+$nameHover.style.color = namesColor;
 // Changing the state of messages from read (state=true) to unread (state=false) and vice versa
 const stateChange = (messages, type, state) =>
   messages.map(x => (x = x[0] === type ? [x[0], x[1], state] : x));
@@ -93,7 +139,8 @@ function addNewMessage(msgType, msg, sender) {
   mesgImg["src"] = `/images/${sender}.jpg`;
 
   append([mesgImg, mesgCore, mesg], [mesg, mesg, $messages]);
-
+  //"#0084ff"
+  mesgCore.style.background = msgType === "receiver" ? msgSendBack : "#e7e7e7";
   mesg.style.height = mesgCore.offsetHeight + 5 + "px";
   $messages.scrollTo(0, $messages.scrollHeight);
 }
@@ -123,7 +170,7 @@ function loadMessages(sender, receiver) {
       data: { props: ["innerHTML"], values: [""] }
     }
   );
-
+  $senderName.style["color"] = namesColor;
   allMessage[sender].forEach(x =>
     addNewMessage(x[0], x[1], x[0] === "sender" ? sender : receiver)
   );
@@ -143,7 +190,13 @@ const hideBubble = () => setAttrId("bubble", { class: "hide" });
 const buubbleUp = d => {
   let [bubble, node] = getElems(`bubble`, `node${d["sender"]}`);
   let [cx, cy] = getAttrs(node, "cx", "cy");
-  setAttr(bubble, { cx, cy, class: "neMsg" });
+  setAttr(bubble, {
+    cx,
+    cy,
+    stroke: bubbleColor,
+    fill: bubbleColor,
+    class: "neMsg"
+  });
 
   setTimeout(() => hideTyping(d), 200);
   setTimeout(() => hideBubble(), 1010);
@@ -154,6 +207,7 @@ const socket = io("http://localhost:5000");
 
 // Socket Events handling
 socket.on("otherNowTyping", d => {
+  getElem(`typing${d["sender"]}`).style.stroke = lineBase;
   setAttrId(`typing${d["sender"]}`, { class: "circlePulsing" });
   getElem(`typing2${d["sender"]}`).style.display = "block";
   if ($comWith === d["sender"]) $nowTyping.style.display = "block";
@@ -186,8 +240,7 @@ const updateLocalMsgs = d =>
   allMessage[d["sender"]].push(["sender", d["message"], false]);
 
 socket.on("newMessage", d => {
-  getElem(`container${d["sender"]}`).style.backgroundImage =
-    "linear-gradient(#0d72b8, #9cd6fe)";
+  getElem(`container${d["sender"]}`).style.backgroundImage = newMsgGradient;
   getElem(`typing2${d["sender"]}`).style.display = "none";
   buubbleUp(d);
   msgCountUp(1, d);
@@ -249,8 +302,8 @@ function openMessagingBox(sender, receiver) {
 }
 
 $msgStation.onclick = () => {
-  getElem(`container${$comWith}`).style.background = "white";
-  getElem(`messageSender`).style.background = "white";
+  getElem(`container${$comWith}`).style.background = newMsgDefault;
+  getElem(`messageSender`).style.background = newMsgDefault;
   msgCountUp(0);
   allMessage[$comWith] = stateChange(allMessage[$comWith], "sender", true);
   nowRead($user, $comWith);
@@ -277,7 +330,7 @@ const showMesgs = (sender, thisUser) => {
   $comWith = sender;
   openMessagingBox(sender, thisUser);
   if (getElem(`text2${sender}`).textContent > 0)
-    $messageSender.style.backgroundImage = "linear-gradient(#0d72b8, #9cd6fe)";
+    $messageSender.style.backgroundImage = newMsgGradient;
   else $messageSender.style.backgroundImage = "";
 };
 
@@ -300,9 +353,16 @@ function addSender(sender) {
   container.id = `container${sender}`;
   typing.id = `typing2${sender}`;
   typing.innerText = "is now typing...";
+  msg.style.color = backBase;
+  msg.style.border = `1px solid {$backBase}`;
+  // border: 1px solid steelblue;
+  // color: steelblue;
+
   msg.id = `msgCounter${sender}`;
   msg.innerText = 0;
+  msg.style.color = namesColor;
   name.innerText = sender;
+  name.style.color = namesColor;
   img.src = `/images/${sender}.jpg`;
   container.onclick = () => showMesgs(sender, $user);
 
@@ -342,7 +402,6 @@ const formatMessages = messages => {
 
 let msgData;
 let center = [];
-let graphType = "star";
 
 // function www(msgData) {
 const chainSVGgroup = (elemGroupId, linkStart = [], linkEnd = []) => {
@@ -461,8 +520,7 @@ const nodeGenerator = (x, ...styles) => {
     msgCounter.innerText = newMsgQty;
     msgCounter.classList.remove("hide");
     msgCounter.classList.add("show");
-    getElem("container" + user).style.backgroundImage =
-      "linear-gradient(#0d72b8, #9cd6fe)";
+    getElem("container" + user).style.backgroundImage = newMsgGradient;
   } else {
     setAttr($msgSt, { class: "hide" });
     setAttr($msgTextSt, { class: "hide" });
@@ -505,10 +563,10 @@ const outerSt = x => {
     cx: x[2],
     r: x[3] + 6,
     id: `outer${x[4]}`,
-    fill: "white",
+    fill: newMsgDefault,
     "stroke-width": 3,
-    stroke: "white",
-    fill: "#006ab4",
+    stroke: lineBase,
+    fill: nodeBackColor,
     "stroke-width": 2
   };
 };
@@ -539,7 +597,7 @@ const msgSt = x => {
     cx: x[2] + x[3],
     r: 10,
     id: `text${x[4]}`,
-    fill: "white"
+    fill: newMsgDefault
   };
 };
 
@@ -548,7 +606,7 @@ const msgTextSt = x => {
     y: x[1] - x[3] + 5,
     x: x[2] + x[3] - 4,
     id: `text2${x[4]}`,
-    fill: "steelblue"
+    fill: namesColor
   };
 };
 
@@ -562,7 +620,6 @@ const clipSt = x => {
 
 let nodeRaw = [];
 let links = [];
-let r0 = 30;
 
 const sinCos = a => [Math.sin(a), Math.cos(a)];
 
@@ -615,7 +672,7 @@ function generateGraph(center) {
     let newLink = createSvg("line");
     setAttr(newLink, {
       id,
-      style: "stroke:white;stroke-width:2px;",
+      style: linkStyle,
       y1: nodeList[links[id]["start"]][1],
       x1: nodeList[links[id]["start"]][2],
       y2: nodeList[links[id]["end"]][1],
@@ -643,6 +700,6 @@ ajaxGET("/getMessages", result => {
   allMessage = JSON.parse(result);
   loadChatStation(allMessage);
   msgData = formatMessages(allMessage);
-  center = [300, 500, 140, msgData];
+  center = [...initPos, msgData];
   generateGraph(center);
 });

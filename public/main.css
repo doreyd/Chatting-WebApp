@@ -3,13 +3,6 @@
   height: 27px;
 }
 
-body {
-  background: white;
-  margin: 0px;
-  padding: 0px;
-  overflow: auto;
-}
-
 #leftAnchor {
   position: absolute;
   top: 100px;
@@ -34,7 +27,7 @@ body {
   font-family: verdana;
   font-size: 14px;
   /* color: #060153; */
-  color: white;
+  /* color: white; */
   top: 0px;
   left: 50px;
   z-index: 202;
@@ -217,7 +210,7 @@ body {
   position: absolute;
   font-family: verdana;
   font-size: 14px;
-  color: #060153;
+  /* color: #060153; */
   top: 10px;
   right: 20px;
   z-index: 202;
@@ -229,7 +222,7 @@ body {
   position: absolute;
   font-family: verdana;
   font-size: 14px;
-  color: #060153;
+  /* color: #060153; */
   font-weight: bold;
   top: 13px;
   right: 7px;
@@ -242,7 +235,7 @@ body {
   font-family: verdana;
   font-size: 12px;
   color: #444950;
-  background: #e7e7e7;
+  /* background: #e7e7e7; */
   border-radius: 10px;
   padding: 10px;
   bottom: 0px;
@@ -253,12 +246,13 @@ body {
   display: block;
   word-wrap: break-word;
 }
+
 .receiverMessage {
   position: absolute;
   font-family: verdana;
   font-size: 12px;
   color: white;
-  background: #0084ff;
+  /* background: #0084ff; */
   border-radius: 10px;
   padding: 10px;
   text-align: right;
@@ -358,9 +352,6 @@ svg {
   height: 100%;
   width: 100%;
 }
-body {
-  background: #006ab4;
-}
 
 #left {
   position: absolute;
@@ -368,7 +359,6 @@ body {
   left: 0px;
   width: 50%;
   height: 100%;
-  background: #0d72b8;
   z-index: -1;
 }
 
@@ -376,13 +366,13 @@ body {
 /* Animation used for when typing */
 @keyframes buttonTransition {
   from {
-    r: 0;
+    r: 36;
     opacity: 1;
-    stroke-width: 10;
+    stroke-width: 1;
   }
   to {
-    r: 50;
-    stroke-width: 3;
+    r: 60;
+    stroke-width: 5;
     opacity: 0;
   }
 }
@@ -399,18 +389,18 @@ body {
 @keyframes newMsg2 {
   0% {
     r: 36;
-    stroke: white;
-    fill: white;
+    /* stroke: white;
+    fill: white; */
   }
   50% {
     r: 50;
-    stroke: white;
-    fill: white;
+    /* stroke: white;
+    fill: white; */
   }
   100% {
     r: 36;
-    stroke: white;
-    fill: white;
+    /* stroke: white;
+    fill: white; */
   }
 }
 
@@ -458,8 +448,6 @@ messageSender2 :  width: 200px; */
   left: 36px;
   top: 14px;
   background: white;
-  border: 1px solid steelblue;
-  color: steelblue;
   font-family: verdana;
   font-size: 10px;
   font-weight: bold;
@@ -480,6 +468,6 @@ messageSender2 :  width: 200px; */
   padding: 2px 4px 2px 4px;
   font-family: verdana;
   font-size: 14px;
-  color: #060153;
+  /* color: #060153; */
   font-weight: bold;
 }
