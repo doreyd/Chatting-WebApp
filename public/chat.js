@@ -78,17 +78,62 @@ let $user = "";
 // let backBase = "#d50877";
 // let backSecond = "#ff64b8";
 
+// Color Initialization
 // grey
-let lineBase = "#bcbcbc";
-let backBase = "#e7e3e3";
-let backSecond = "#fefafa";
-let newMsgDefault = "white";
-let msgSendBack = "#0084ff";
-// let namesColor = "#060153";
-let namesColor = "#354060";
+
+let colorSuits = {
+  grey: [
+    "#bcbcbc",
+    "#eeeded",
+    "#fefafa",
+    "white",
+    "#0084ff",
+    "#354060",
+    "#354060",
+    "#e8e6e6",
+    "white"
+  ],
+  blue: [
+    "white",
+    "#006ab4",
+    "#0d72b8",
+    "white",
+    "#0084ff",
+    "#354060",
+    "white",
+    "#e8e6e6",
+    "white"
+  ]
+};
+let lineBase,
+  backBase,
+  backSecond,
+  newMsgDefault,
+  msgSendBack,
+  namesColor,
+  welcomeColor,
+  gradientOne,
+  gradientTwo;
+
+const setColors = colors => {
+  [
+    lineBase,
+    backBase,
+    backSecond,
+    newMsgDefault,
+    msgSendBack,
+    namesColor,
+    welcomeColor,
+    gradientOne,
+    gradientTwo
+  ] = colors;
+};
+
+setColors(colorSuits["blue"]);
+
 let bubbleColor = lineBase;
 // let newMsgGradient = "linear-gradient(#0d72b8, #9cd6fe)";
-let newMsgGradient = `linear-gradient(${lineBase}, ${backBase})`;
+let newMsgGradient = `linear-gradient(${gradientOne}, ${gradientTwo})`;
 
 let graphType = "star";
 let nodeBackColor = backBase;
@@ -100,8 +145,9 @@ let linkStyle = `stroke:${lineBase};stroke-width:2px;`;
 let initPos = [300, 500, 140];
 document.body.style.background = backBase;
 $left.style.background = backSecond;
-$chatContainer.style.color = namesColor;
+$chatContainer.style.color = welcomeColor;
 $nameHover.style.color = namesColor;
+
 // Changing the state of messages from read (state=true) to unread (state=false) and vice versa
 const stateChange = (messages, type, state) =>
   messages.map(x => (x = x[0] === type ? [x[0], x[1], state] : x));
@@ -242,6 +288,7 @@ const updateLocalMsgs = d =>
 socket.on("newMessage", d => {
   getElem(`container${d["sender"]}`).style.backgroundImage = newMsgGradient;
   getElem(`typing2${d["sender"]}`).style.display = "none";
+  getElem(`nowTyping`).style.display = "none";
   buubbleUp(d);
   msgCountUp(1, d);
   updateLocalMsgs(d);
