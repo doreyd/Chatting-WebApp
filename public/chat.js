@@ -33,23 +33,25 @@ const setClasses = (...list) => list.forEach(x => setClass(x[0], x[1]));
 const append = (elems, anchors) =>
   elems.forEach((elem, i) => anchors[i].append(elem));
 
-$nowTyping = getElem("nowTyping");
-$messages = getElem("messages");
-$senderName = getElem("senderName");
-$senderImg = getElem("senderImg");
-$sendBox = getElem("sendBox");
-$msgStation = getElem("msgStation");
-$messageSender = getElem("messageSender");
-$chat = getElem("chat");
-$chatContainer = getElem("chatContainer");
-$chatStation = getElem("chatStation");
-$innerChat = getElem("innerChat");
-$mesg = getElem("mesg");
-$mesgImg = getElem("mesgImg");
-$mesgCore = getElem("mesgCore");
-$tempMsg = getElem("tempMsg");
-$newMsgsReceived = getElem("newMsgsReceived");
-let svg = getElem("svg");
+const $nowTyping = getElem("nowTyping");
+const $messages = getElem("messages");
+const $senderName = getElem("senderName");
+const $senderImg = getElem("senderImg");
+const $sendBox = getElem("sendBox");
+const $msgStation = getElem("msgStation");
+const $messageSender = getElem("messageSender");
+const $chat = getElem("chat");
+const $chatContainer = getElem("chatContainer");
+const $chatStation = getElem("chatStation");
+const $innerChat = getElem("innerChat");
+const $mesg = getElem("mesg");
+const $mesgImg = getElem("mesgImg");
+const $mesgCore = getElem("mesgCore");
+const $tempMsg = getElem("tempMsg");
+const $newMsgsReceived = getElem("newMsgsReceived");
+const $nameHover = getElem("nameHover");
+
+const svg = getElem("svg");
 
 let $comWith = "";
 let $user = "";
@@ -153,37 +155,20 @@ const socket = io("http://localhost:5000");
 // Socket Events handling
 socket.on("otherNowTyping", d => {
   setAttrId(`typing${d["sender"]}`, { class: "circlePulsing" });
+  getElem(`typing2${d["sender"]}`).style.display = "block";
   if ($comWith === d["sender"]) $nowTyping.style.display = "block";
 });
 
 socket.on("otherStoppedTyping", d => {
   hideTyping(d);
+  getElem(`typing2${d["sender"]}`).style.display = "none";
   if ($comWith === d["sender"]) $nowTyping.style.display = "none";
 });
 
-const msgCountUp2 = d => {
-  let name = `text${d !== 0 ? d["sender"] : $comWith}`;
-  let [text, text2] = getElems(`text${name}`, `text2${name}`);
-
-  let display = d !== 0 ? "show" : "hide";
-
-  setAttr(text, { class: "show" });
-  setAttr(text2, { class: "show" });
-
-  text2.textContent++;
-
-  let msgCounter = getElem(`msgCounter${name}`);
-  msgCounter.innerText = text2.textContent;
-  msgCounter.classList.remove("hide");
-  msgCounter.classList.add("show");
-};
-
-const msgCountUp = d => {
-  let name = d === 0 ? $comWith : d["sender"];
+const msgCountUp = (n, d) => {
+  let [name, display] = n === 0 ? [$comWith, "hide"] : [d["sender"], "show"];
 
   let [text, text2] = getElems(`text${name}`, `text2${name}`);
-
-  let display = "show";
 
   setAttr(text, { class: display });
   setAttr(text2, { class: display });
@@ -197,28 +182,15 @@ const msgCountUp = d => {
   msgCounter.classList.add(display);
 };
 
-const clearMsgCounters = () => {
-  let [text, text2] = getElems(`text${$comWith}`, `text2${$comWith}`);
-
-  setAttr(text, { class: "hide" });
-  setAttr(text2, { class: "hide" });
-
-  $messageSender.style.backgroundImage = "";
-  text2.textContent = 0;
-
-  let msgCounter = getElem(`msgCounter${$comWith}`);
-  msgCounter.innerText = text2.textContent;
-  msgCounter.classList.remove("show");
-  msgCounter.classList.add("hide");
-};
-
 const updateLocalMsgs = d =>
   allMessage[d["sender"]].push(["sender", d["message"], false]);
 
 socket.on("newMessage", d => {
+  getElem(`container${d["sender"]}`).style.backgroundImage =
+    "linear-gradient(#0d72b8, #9cd6fe)";
+  getElem(`typing2${d["sender"]}`).style.display = "none";
   buubbleUp(d);
-  msgCountUp(d);
-  console.log(d);
+  msgCountUp(1, d);
   updateLocalMsgs(d);
 
   if ($comWith === d["sender"]) {
@@ -277,8 +249,9 @@ function openMessagingBox(sender, receiver) {
 }
 
 $msgStation.onclick = () => {
-  clearMsgCounters();
-
+  getElem(`container${$comWith}`).style.background = "white";
+  getElem(`messageSender`).style.background = "white";
+  msgCountUp(0);
   allMessage[$comWith] = stateChange(allMessage[$comWith], "sender", true);
   nowRead($user, $comWith);
 };
@@ -308,26 +281,25 @@ const showMesgs = (sender, thisUser) => {
   else $messageSender.style.backgroundImage = "";
 };
 
-// const addClass = (elem, ...classes) =>
-//   classes.forEach(oneClass => {
-//     elem.classList.add(oneClass);
-//   });
-
-// const addClasses = (...list) =>
-//   list.forEach(item => {
-//     addClass(...item);
-//   });
-
 function addSender(sender) {
-  let [container, img, name, msg] = createElems("div", "img", "div", "p");
+  let [container, img, name, msg, typing] = createElems(
+    "div",
+    "img",
+    "div",
+    "p",
+    "p"
+  );
 
   addClasses(
     [msg, "newMsg", "hide"],
     [img, "senderImg"],
     [name, "senderName2"],
+    [typing, "typing"],
     [container, "messageSender2"]
   );
-
+  container.id = `container${sender}`;
+  typing.id = `typing2${sender}`;
+  typing.innerText = "is now typing...";
   msg.id = `msgCounter${sender}`;
   msg.innerText = 0;
   name.innerText = sender;
@@ -335,8 +307,8 @@ function addSender(sender) {
   container.onclick = () => showMesgs(sender, $user);
 
   append(
-    [img, name, msg, container],
-    [container, container, container, $innerChat]
+    [img, name, msg, typing, container],
+    [container, container, container, container, $innerChat]
   );
 }
 
@@ -457,6 +429,16 @@ const setSVGelem = (type, style, appendTo) => {
   return elem;
 };
 
+const showName = e => {
+  $nameHover.innerText = e.target.id.split("img")[1];
+  $nameHover.style.display = "block";
+  $nameHover.style.top = e.pageY + 40 + "px";
+  $nameHover.style.left = e.pageX + "px";
+};
+
+const hideName = () => {
+  $nameHover.style.display = "none";
+};
 // Function to create and set up SVG elements
 const nodeGenerator = (x, ...styles) => {
   let [nodeSt, outerSt, imgSt, typingSt, msgSt, msgTextSt, clipSt] = styles;
@@ -479,6 +461,8 @@ const nodeGenerator = (x, ...styles) => {
     msgCounter.innerText = newMsgQty;
     msgCounter.classList.remove("hide");
     msgCounter.classList.add("show");
+    getElem("container" + user).style.backgroundImage =
+      "linear-gradient(#0d72b8, #9cd6fe)";
   } else {
     setAttr($msgSt, { class: "hide" });
     setAttr($msgTextSt, { class: "hide" });
@@ -493,16 +477,14 @@ const nodeGenerator = (x, ...styles) => {
     `text2${user}`
   ];
 
-  setSVGelem("image", imgSt, svg).onclick =
-    user !== $user ? () => showMesgs(user, $user) : "";
+  let img = setSVGelem("image", imgSt, svg);
+  img.onclick = user !== $user ? () => showMesgs(user, $user) : "";
+  img.onmouseover = showName;
+  img.onmouseout = hideName;
 
   chainSVGgroup([...idList], x[5], x[6]);
   return newElem;
 };
-
-// ****************************************************************
-// ****************************************************************
-// ****************************************************************
 
 // *********************************************
 // *********** Graph Style Formatting **********

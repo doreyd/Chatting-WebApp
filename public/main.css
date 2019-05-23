@@ -230,10 +230,10 @@ body {
   font-family: verdana;
   font-size: 14px;
   color: #060153;
+  font-weight: bold;
   top: 13px;
   right: 7px;
   z-index: 202;
-  font-weight: bold;
   display: block;
 }
 
@@ -328,6 +328,17 @@ div::-webkit-scrollbar-thumb:hover {
   left: 2px;
   border-radius: 30px;
   z-index: 200;
+}
+
+.typing {
+  font-size: 10px;
+  color: #040049;
+  font-family: verdana;
+  position: absolute;
+  top: 20px;
+  right: 6px;
+  z-index: 250;
+  display: none;
 }
 
 #nowTyping {
@@ -459,4 +470,16 @@ messageSender2 :  width: 200px; */
 
 .newMsgReceived {
   background: #006ab4;
+}
+
+#nameHover {
+  position: absolute;
+  display: none;
+  background: white;
+  border-radius: 4px;
+  padding: 2px 4px 2px 4px;
+  font-family: verdana;
+  font-size: 14px;
+  color: #060153;
+  font-weight: bold;
 }
