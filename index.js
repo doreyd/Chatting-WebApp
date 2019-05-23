@@ -275,31 +275,23 @@ io.on("connection", socket => {
 
   // Realtime updating by looping through the connected sockets
   // & checking if the receiver of the message is currently connected
-  const realtimeUpdate = (eventEmitted, obj) => {
+  const realtimeUpdate = (newEvent, obj) => {
     Object.keys(io.sockets.sockets).forEach(id => {
       if (id === sess_sock[obj["receiver"]]) {
-        io.sockets.sockets[id].emit(eventEmitted, obj);
+        io.sockets.sockets[id].emit(newEvent, obj);
       }
     });
   };
 
   // Message just got Read now
   socket.on("nowRead", objBeingSent => {
-    // console.log(objBeingSent);
     updateRead(objBeingSent); // will update the mongodb
-    // realtimeUpdate("msgBack", objBeingSent);
-
-    // realtimeUpdate("otherStoppedTyping", objBeingSent);
-    // realtimeUpdate("msgBack", objBeingSent);
   });
 
   // Managing realtime communication through socket events handling
   socket.on("sendMessage", objBeingSent => {
-    console.log(objBeingSent);
     updateDB(objBeingSent); // will update the mongodb
-    // realtimeUpdate("msgBack", objBeingSent);
-    // realtimeUpdate("otherStoppedTyping", objBeingSent);
-    realtimeUpdate("msgBack", objBeingSent);
+    realtimeUpdate("newMessage", objBeingSent);
   });
 
   socket.on("nowTyping", objBeingSent => {
