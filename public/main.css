@@ -332,7 +332,7 @@ div::-webkit-scrollbar-thumb:hover {
   top: 20px;
   right: 6px;
   z-index: 250;
-  display: none;
+  /* display: none; */
 }
 
 #nowTyping {

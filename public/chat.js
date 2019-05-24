@@ -134,6 +134,7 @@ setColors(colorSuits["blue"]);
 let bubbleColor = lineBase;
 // let newMsgGradient = "linear-gradient(#0d72b8, #9cd6fe)";
 let newMsgGradient = `linear-gradient(${gradientOne}, ${gradientTwo})`;
+let newMsgGradient2 = `linear-gradient(#c4c5c6, ${gradientTwo})`;
 
 let graphType = "star";
 let nodeBackColor = backBase;
@@ -245,7 +246,14 @@ const buubbleUp = d => {
   });
 
   setTimeout(() => hideTyping(d), 200);
+  setTimeout(() => stopType(d), 50);
   setTimeout(() => hideBubble(), 1010);
+};
+
+const stopType = d => {
+  hideTyping(d);
+  getElem(`typing2${d["sender"]}`).style.display = "none";
+  if ($comWith === d["sender"]) $nowTyping.style.display = "none";
 };
 
 // Socket connection
@@ -260,9 +268,7 @@ socket.on("otherNowTyping", d => {
 });
 
 socket.on("otherStoppedTyping", d => {
-  hideTyping(d);
-  getElem(`typing2${d["sender"]}`).style.display = "none";
-  if ($comWith === d["sender"]) $nowTyping.style.display = "none";
+  stopType(d);
 });
 
 const msgCountUp = (n, d) => {
@@ -287,12 +293,12 @@ const updateLocalMsgs = d =>
 
 socket.on("newMessage", d => {
   getElem(`container${d["sender"]}`).style.backgroundImage = newMsgGradient;
-  getElem(`typing2${d["sender"]}`).style.display = "none";
-  getElem(`nowTyping`).style.display = "none";
+  // stopType(d);
   buubbleUp(d);
   msgCountUp(1, d);
   updateLocalMsgs(d);
-
+  // getElem(`typing2${d["sender"]}`).style.color = "none";
+  console.log(getElem(`typing2${d["sender"]}`));
   if ($comWith === d["sender"]) {
     $nowTyping.style.display = "none";
     showMesgs($comWith, $user);
@@ -333,6 +339,7 @@ function initializeSendBox(thisUser) {
 
     if (event.key === "Enter") {
       if ($sendBox.value !== "") {
+        // stopTyping(senderName, thisUser);
         addNewMessage("receiver", $sendBox.value, thisUser);
         sendMessage(senderName, $sendBox.value, thisUser);
         allMessage[senderName].push(["receiver", $sendBox.value]);
@@ -377,7 +384,7 @@ const showMesgs = (sender, thisUser) => {
   $comWith = sender;
   openMessagingBox(sender, thisUser);
   if (getElem(`text2${sender}`).textContent > 0)
-    $messageSender.style.backgroundImage = newMsgGradient;
+    $messageSender.style.backgroundImage = newMsgGradient2;
   else $messageSender.style.backgroundImage = "";
 };
 
@@ -400,6 +407,7 @@ function addSender(sender) {
   container.id = `container${sender}`;
   typing.id = `typing2${sender}`;
   typing.innerText = "is now typing...";
+  typing.style.display = "none";
   msg.style.color = backBase;
   msg.style.border = `1px solid {$backBase}`;
   // border: 1px solid steelblue;
