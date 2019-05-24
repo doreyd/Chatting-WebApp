@@ -61,7 +61,8 @@
 
 #chatStation {
   position: fixed;
-  top: 50px;
+  /* top: 50px; */
+  top: 80px;
   left: 10px;
   /* width: 200px; */
   width: 225px;
@@ -470,4 +471,44 @@ messageSender2 :  width: 200px; */
   font-size: 14px;
   /* color: #060153; */
   font-weight: bold;
+}
+
+.colors {
+  position: absolute;
+  top: 0px;
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  border: 1px solid white;
+}
+
+#red {
+  background: red;
+  left: 10px;
+}
+#purple {
+  background: purple;
+  left: 40px;
+}
+#blue {
+  background: blue;
+  left: 70px;
+}
+#green {
+  background: green;
+  left: 100px;
+}
+#orange {
+  background: orange;
+  left: 130px;
+}
+#grey {
+  background: grey;
+  left: 160px;
+}
+
+#colorSuits {
+  position: absolute;
+  top: 50px;
+  left: 30px;
 }

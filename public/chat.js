@@ -33,6 +33,8 @@ const setClasses = (...list) => list.forEach(x => setClass(x[0], x[1]));
 const append = (elems, anchors) =>
   elems.forEach((elem, i) => anchors[i].append(elem));
 
+let allMessage;
+
 const $nowTyping = getElem("nowTyping");
 const $messages = getElem("messages");
 const $senderName = getElem("senderName");
@@ -57,30 +59,6 @@ const svg = getElem("svg");
 let $comWith = "";
 let $user = "";
 
-// Color settings
-// let bubbleColor = "green";
-// let newMsgGradient = "linear-gradient(#0d72b8, #9cd6fe)";
-// let newMsgDefault = "white";
-// let graphType = "star";
-// let nodeBackColor = "#006ab4";
-// let newMsgTxtColor = "steelblue";
-// let r0 = 30;
-// let linkStyle = "stroke:white;stroke-width:2px;";
-// let initPos = [300, 500, 140];
-
-// blue
-// let lineBase = "white";
-// let backBase = "#006ab4";
-// let backSecond = "#0d72b8";
-
-// pink
-// let lineBase = "white";
-// let backBase = "#d50877";
-// let backSecond = "#ff64b8";
-
-// Color Initialization
-// grey
-
 let colorSuits = {
   grey: [
     "#bcbcbc",
@@ -93,15 +71,59 @@ let colorSuits = {
     "#e8e6e6",
     "white"
   ],
+  orange: [
+    "white",
+    "#a03e09",
+    "#bc5720",
+    "white",
+    "#b2653c",
+    "#9e3a04",
+    "white",
+    "#e5a887",
+    "white"
+  ],
+  green: [
+    "white",
+    "#249b20",
+    "#38ba34",
+    "white",
+    "#136011",
+    "#136011",
+    "white",
+    "#95e59b",
+    "white"
+  ],
+  red: [
+    "white",
+    "#8c1014",
+    "#ad1a1e",
+    "white",
+    "#68070a",
+    "#68070a",
+    "white",
+    "#e89b9c",
+    "white"
+  ],
+  purple: [
+    "white",
+    "#72085d",
+    "#93147a",
+    "white",
+    "#630851",
+    "#630851",
+    "white",
+    "#e5a5d8",
+    "white"
+  ],
   blue: [
     "white",
     "#006ab4",
     "#0d72b8",
     "white",
-    "#0084ff",
-    "#354060",
+    "#006ab4",
+    "#040049",
     "white",
-    "#e8e6e6",
+    "#99a2e5",
     "white"
   ]
 };
@@ -113,7 +135,12 @@ let lineBase,
   namesColor,
   welcomeColor,
   gradientOne,
-  gradientTwo;
+  gradientTwo,
+  newMsgGradient,
+  linkStyle,
+  bubbleColor,
+  nodeBackColor,
+  newMsgTxtColor;
 
 const setColors = colors => {
   [
@@ -127,27 +154,43 @@ const setColors = colors => {
     gradientOne,
     gradientTwo
   ] = colors;
+
+  newMsgGradient = `linear-gradient(${gradientOne}, ${gradientTwo})`;
+  linkStyle = `stroke:${lineBase};stroke-width:2px;`;
+  bubbleColor = lineBase;
+  nodeBackColor = backBase;
+  newMsgTxtColor = namesColor;
+  document.body.style.background = backBase;
+  $left.style.background = backSecond;
+  $chatContainer.style.color = welcomeColor;
+  $nameHover.style.color = namesColor;
+
+  if (allMessage) {
+    loadChatStation(allMessage);
+    msgData = formatMessages(allMessage);
+    center = [...initPos, msgData];
+    nodeRaw = [];
+    links = [];
+    generateGraph(center);
+  }
 };
 
-setColors(colorSuits["blue"]);
+const $blue = getElem("blue");
+const $purple = getElem("purple");
+const $red = getElem("red");
+const $green = getElem("green");
+const $orange = getElem("orange");
+const $grey = getElem("grey");
 
-let bubbleColor = lineBase;
-// let newMsgGradient = "linear-gradient(#0d72b8, #9cd6fe)";
-let newMsgGradient = `linear-gradient(${gradientOne}, ${gradientTwo})`;
-let newMsgGradient2 = `linear-gradient(#c4c5c6, ${gradientTwo})`;
+[$blue, $purple, $red, $green, $orange, $grey].forEach(
+  elem => (elem.onclick = () => setColors(colorSuits[elem.id]))
+);
+
+setColors(colorSuits["orange"]);
 
 let graphType = "star";
-let nodeBackColor = backBase;
-
-// let newMsgTxtColor = "steelblue";
-let newMsgTxtColor = namesColor;
 let r0 = 30;
-let linkStyle = `stroke:${lineBase};stroke-width:2px;`;
 let initPos = [300, 500, 140];
-document.body.style.background = backBase;
-$left.style.background = backSecond;
-$chatContainer.style.color = welcomeColor;
-$nameHover.style.color = namesColor;
 
 // Changing the state of messages from read (state=true) to unread (state=false) and vice versa
 const stateChange = (messages, type, state) =>
@@ -298,7 +341,7 @@ socket.on("newMessage", d => {
   msgCountUp(1, d);
   updateLocalMsgs(d);
   // getElem(`typing2${d["sender"]}`).style.color = "none";
-  console.log(getElem(`typing2${d["sender"]}`));
+  // console.log(getElem(`typing2${d["sender"]}`));
   if ($comWith === d["sender"]) {
     $nowTyping.style.display = "none";
     showMesgs($comWith, $user);
@@ -384,7 +427,7 @@ const showMesgs = (sender, thisUser) => {
   $comWith = sender;
   openMessagingBox(sender, thisUser);
   if (getElem(`text2${sender}`).textContent > 0)
-    $messageSender.style.backgroundImage = newMsgGradient2;
+    $messageSender.style.backgroundImage = newMsgGradient;
   else $messageSender.style.backgroundImage = "";
 };
 
@@ -409,7 +452,7 @@ function addSender(sender) {
   typing.innerText = "is now typing...";
   typing.style.display = "none";
   msg.style.color = backBase;
-  msg.style.border = `1px solid {$backBase}`;
+  msg.style.border = `1px solid ${backBase}`;
   // border: 1px solid steelblue;
   // color: steelblue;
 
