@@ -480,33 +480,61 @@ messageSender2 :  width: 200px; */
   width: 20px;
   border-radius: 50%;
   border: 1px solid white;
+  transform: all linear 0.5s;
+}
+
+.colors:hover {
+  position: absolute;
+  top: -2px;
+  height: 24px;
+  width: 24px;
+  border-radius: 50%;
+  border: 1px solid white;
 }
 
 #red {
-  background: red;
+  background: #8c1014;
   left: 10px;
 }
 #purple {
-  background: purple;
+  background: #72085d;
   left: 40px;
 }
 #blue {
-  background: blue;
+  background: #006ab4;
   left: 70px;
 }
 #green {
-  background: green;
+  background: #249b20;
   left: 100px;
 }
 #orange {
-  background: orange;
+  background: #a03e09;
   left: 130px;
 }
 #grey {
-  background: grey;
+  background: #eeeded;
   left: 160px;
 }
 
+#red:hover {
+  left: 8px;
+}
+#purple:hover {
+  left: 38px;
+}
+#blue:hover {
+  left: 68px;
+}
+#green:hover {
+  left: 98px;
+}
+#orange:hover {
+  left: 128px;
+}
+#grey:hover {
+  left: 158px;
+}
 #colorSuits {
   position: absolute;
   top: 50px;
