@@ -172,6 +172,7 @@ const setColors = colors => {
     nodeRaw = [];
     links = [];
     generateGraph(center);
+    if ($comWith !== "") showMesgs($comWith, $user);
   }
 };
 
