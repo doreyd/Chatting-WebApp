@@ -166,12 +166,30 @@ const setColors = colors => {
   $nameHover.style.color = namesColor;
 
   if (allMessage) {
+    links.forEach((x, i) => setAttrId(i, { style: linkStyle }));
+
     loadChatStation(allMessage);
-    msgData = formatMessages(allMessage);
-    center = [...initPos, msgData];
-    nodeRaw = [];
-    links = [];
-    generateGraph(center);
+
+    let usersList = Object.keys(allMessage);
+    setAttrId(`typing${$user}`, { fill: nodeBackColor, stroke: lineBase });
+    setAttrId(`outer${$user}`, { fill: nodeBackColor });
+
+    usersList.forEach(user => {
+      let elem = getElem(`outer${user}`);
+
+      setAttrId(`typing${user}`, { fill: nodeBackColor, stroke: lineBase });
+      setAttrId(`outer${user}`, { fill: nodeBackColor });
+      setAttrId(`text2${user}`, { fill: namesColor });
+      setAttrId(`text${user}`, { stroke: lineBase });
+
+      if (getElem(`text2${user}`).textContent > 0) {
+        getElem(`container${user}`).style.background = newMsgGradient;
+        getElem(`msgCounter${user}`).innerText = getElem(
+          `text2${user}`
+        ).textContent;
+        getElem(`msgCounter${user}`).style.display = "block";
+      }
+    });
     if ($comWith !== "") showMesgs($comWith, $user);
   }
 };
@@ -187,7 +205,7 @@ const $grey = getElem("grey");
   elem => (elem.onclick = () => setColors(colorSuits[elem.id]))
 );
 
-setColors(colorSuits["orange"]);
+setColors(colorSuits["blue"]);
 
 let graphType = "star";
 let r0 = 30;
@@ -337,12 +355,9 @@ const updateLocalMsgs = d =>
 
 socket.on("newMessage", d => {
   getElem(`container${d["sender"]}`).style.backgroundImage = newMsgGradient;
-  // stopType(d);
   buubbleUp(d);
   msgCountUp(1, d);
   updateLocalMsgs(d);
-  // getElem(`typing2${d["sender"]}`).style.color = "none";
-  // console.log(getElem(`typing2${d["sender"]}`));
   if ($comWith === d["sender"]) {
     $nowTyping.style.display = "none";
     showMesgs($comWith, $user);
@@ -383,7 +398,6 @@ function initializeSendBox(thisUser) {
 
     if (event.key === "Enter") {
       if ($sendBox.value !== "") {
-        // stopTyping(senderName, thisUser);
         addNewMessage("receiver", $sendBox.value, thisUser);
         sendMessage(senderName, $sendBox.value, thisUser);
         allMessage[senderName].push(["receiver", $sendBox.value]);
@@ -454,8 +468,6 @@ function addSender(sender) {
   typing.style.display = "none";
   msg.style.color = backBase;
   msg.style.border = `1px solid ${backBase}`;
-  // border: 1px solid steelblue;
-  // color: steelblue;
 
   msg.id = `msgCounter${sender}`;
   msg.innerText = 0;
@@ -472,6 +484,7 @@ function addSender(sender) {
 }
 
 function loadChatStation(allMessage) {
+  console.log(allMessage);
   $innerChat.innerHTML = "";
   for (sender in allMessage) addSender(sender);
 }
@@ -662,7 +675,7 @@ const outerSt = x => {
     cx: x[2],
     r: x[3] + 6,
     id: `outer${x[4]}`,
-    fill: newMsgDefault,
+    // fill: newMsgDefault,
     "stroke-width": 3,
     stroke: lineBase,
     fill: nodeBackColor,
