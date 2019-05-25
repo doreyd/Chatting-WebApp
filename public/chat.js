@@ -127,6 +127,7 @@ let colorSuits = {
     "white"
   ]
 };
+
 let lineBase,
   backBase,
   backSecond,
@@ -175,8 +176,6 @@ const setColors = colors => {
     setAttrId(`outer${$user}`, { fill: nodeBackColor });
 
     usersList.forEach(user => {
-      let elem = getElem(`outer${user}`);
-
       setAttrId(`typing${user}`, { fill: nodeBackColor, stroke: lineBase });
       setAttrId(`outer${user}`, { fill: nodeBackColor });
       setAttrId(`text2${user}`, { fill: namesColor });
@@ -209,7 +208,9 @@ setColors(colorSuits["blue"]);
 
 let graphType = "star";
 let r0 = 30;
-let initPos = [300, 500, 140];
+let XX = Math.floor(parseInt(window.screen.width) / 2);
+let YY = Math.floor(parseInt(window.screen.height) / 2);
+let initPos = [YY - 100, XX, 140];
 
 // Changing the state of messages from read (state=true) to unread (state=false) and vice versa
 const stateChange = (messages, type, state) =>
@@ -484,7 +485,6 @@ function addSender(sender) {
 }
 
 function loadChatStation(allMessage) {
-  console.log(allMessage);
   $innerChat.innerHTML = "";
   for (sender in allMessage) addSender(sender);
 }
@@ -815,3 +815,38 @@ ajaxGET("/getMessages", result => {
   center = [...initPos, msgData];
   generateGraph(center);
 });
+
+// To recenter the SVG graph everytime the window is resized
+// document.body.onresize = () => {
+// elem.onmousedown = e => {
+//   elemDragged = e.target;
+//   elemGroup.forEach(x => setDelta(e, x));
+//   svg.onmousemove = e => newPos(e);
+// };
+// elem.onmouseup = e => {
+//   delta = [];
+//   deltaSt = [];
+//   deltaEn = [];
+//   elemDragged = "";
+//   svg.onmousemove = e => {};
+// };
+// document.body.clientWidth;
+// };
+
+const rePos = val => {
+  svg.style.left = `-${val}px`;
+  svg.setAttribute("width", document.body.clientWidth + val);
+};
+// rePos(0);
+
+const changeSVGpos = () => {
+  let XX = Math.floor(650 - document.body.clientWidth / 2);
+  // let YY = Math.floor(parseInt(window.screen.height) / 2);
+  console.log(XX);
+  rePos(XX);
+};
+
+document.body.onresize = () => {
+  changeSVGpos();
+};
+changeSVGpos();

@@ -350,12 +350,13 @@ div::-webkit-scrollbar-thumb:hover {
 /* *********************** */
 
 svg {
-  height: 100%;
-  width: 100%;
+  position: fixed;
+  /* height: 100%;
+  width: 100%; */
 }
 
 #left {
-  position: absolute;
+  position: fixed;
   top: 0px;
   left: 0px;
   width: 50%;
@@ -419,12 +420,6 @@ svg {
 .hide {
   display: none;
 }
-
-/* chatStation width: 225px;
-
-innerChat width: 225px;
-
-messageSender2 :  width: 200px; */
 
 @keyframes blinking {
   0% {
