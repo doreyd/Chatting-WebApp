@@ -16,11 +16,11 @@ let conversationZero = {
     ["sender", "howdddddddddddddddddddddddddddddddddddddddd", true],
     ["sender", "You wanna grab a coffee sometime next week ", true]
   ],
-  // dawn: [
-  //   ["sender", "how was the book i gave you", true],
-  //   ["receiver", "I really liked it !! ", true],
-  //   ["sender", "I think i will be buying that car we saw last time. ", true]
-  // ],
+  dawn: [
+    ["sender", "how was the book i gave you", true],
+    ["receiver", "I really liked it !! ", true],
+    ["sender", "I think i will be buying that car we saw last time. ", true]
+  ],
   jolie: [
     ["receiver", "this is a response to the test", true],
     ["sender", "this is a test", true],
@@ -62,16 +62,16 @@ let conversationZero = {
     ["sender", "how was the book i gave you", true],
     ["receiver", "I really liked it !! ", true],
     ["sender", "I think i will be buying that car we saw last time. ", false]
-  ],
-  jessica: [
-    ["receiver", "this is a response to the test", true],
-    ["sender", "this is a test", true],
-    ["sender", "this", true],
-    ["receiver", "hi", true],
-    ["receiver", "how are you", true],
-    ["sender", "howdddddddddddddddddddddddddddddddddddddddd", false],
-    ["sender", "You wanna grab a coffee sometime next week ", false]
   ]
+  // jessica: [
+  //   ["receiver", "this is a response to the test", true],
+  //   ["sender", "this is a test", true],
+  //   ["sender", "this", true],
+  //   ["receiver", "hi", true],
+  //   ["receiver", "how are you", true],
+  //   ["sender", "howdddddddddddddddddddddddddddddddddddddddd", false],
+  //   ["sender", "You wanna grab a coffee sometime next week ", false]
+  // ]
 };
 // initializing variables that will be used to pair session with sockets
 let sess_sock = {};

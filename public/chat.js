@@ -204,13 +204,13 @@ const $grey = getElem("grey");
   elem => (elem.onclick = () => setColors(colorSuits[elem.id]))
 );
 
-setColors(colorSuits["blue"]);
+setColors(colorSuits["green"]);
 
 let graphType = "star";
 let r0 = 30;
-let XX = Math.floor(parseInt(window.screen.width) / 2);
-let YY = Math.floor(parseInt(window.screen.height) / 2);
-let initPos = [YY - 100, XX, 140];
+let xPos = Math.floor(parseInt(window.screen.width) / 2);
+let yPos = Math.floor(parseInt(window.screen.height) / 2);
+let initPos = [yPos - 100, xPos, 140];
 
 // Changing the state of messages from read (state=true) to unread (state=false) and vice versa
 const stateChange = (messages, type, state) =>
@@ -840,13 +840,26 @@ const rePos = val => {
 // rePos(0);
 
 const changeSVGpos = () => {
-  let XX = Math.floor(650 - document.body.clientWidth / 2);
-  // let YY = Math.floor(parseInt(window.screen.height) / 2);
-  console.log(XX);
-  rePos(XX);
+  // let newPos = Math.floor(650 - document.body.clientWidth / 2);
+  let newPos = Math.floor(675 - document.body.clientWidth / 2);
+  console.log(document.body.clientWidth);
+  rePos(newPos);
 };
 
 document.body.onresize = () => {
+  // console.log("resize");
   changeSVGpos();
 };
 changeSVGpos();
+
+$chatStation.style.display = "none";
+
+// console.log(document);
+
+// document.addEventListener("fullscreenChange", function() {
+//   if (fullscreenElement != null) {
+//     console.info("Went full screen");
+//   } else {
+//     console.info("Exited full screen");
+//   }
+// });
