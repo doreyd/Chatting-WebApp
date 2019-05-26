@@ -35,15 +35,15 @@ let conversationZero = {
     ["receiver", "I really liked it !! ", true],
     ["sender", "I think i will be buying that car we saw last time. ", true]
   ],
-  susan: [
-    ["receiver", "this is a response to the test", true],
-    ["sender", "this is a test", true],
-    ["sender", "this", true],
-    ["receiver", "hi", true],
-    ["receiver", "how are you", true],
-    ["sender", "howdddddddddddddddddddddddddddddddddddddddd", true],
-    ["sender", "You wanna grab a coffee sometime next week ", true]
-  ],
+  // susan: [
+  //   ["receiver", "this is a response to the test", true],
+  //   ["sender", "this is a test", true],
+  //   ["sender", "this", true],
+  //   ["receiver", "hi", true],
+  //   ["receiver", "how are you", true],
+  //   ["sender", "howdddddddddddddddddddddddddddddddddddddddd", true],
+  //   ["sender", "You wanna grab a coffee sometime next week ", true]
+  // ],
   mark: [
     ["sender", "how was the book i gave you", true],
     ["receiver", "I really liked it !! ", true],
@@ -62,16 +62,16 @@ let conversationZero = {
     ["sender", "how was the book i gave you", true],
     ["receiver", "I really liked it !! ", true],
     ["sender", "I think i will be buying that car we saw last time. ", false]
+  ],
+  jessica: [
+    ["receiver", "this is a response to the test", true],
+    ["sender", "this is a test", true],
+    ["sender", "this", true],
+    ["receiver", "hi", true],
+    ["receiver", "how are you", true],
+    ["sender", "howdddddddddddddddddddddddddddddddddddddddd", false],
+    ["sender", "You wanna grab a coffee sometime next week ", false]
   ]
-  // jessica: [
-  //   ["receiver", "this is a response to the test", true],
-  //   ["sender", "this is a test", true],
-  //   ["sender", "this", true],
-  //   ["receiver", "hi", true],
-  //   ["receiver", "how are you", true],
-  //   ["sender", "howdddddddddddddddddddddddddddddddddddddddd", false],
-  //   ["sender", "You wanna grab a coffee sometime next week ", false]
-  // ]
 };
 // initializing variables that will be used to pair session with sockets
 let sess_sock = {};
@@ -253,14 +253,15 @@ function nowReadOne(sender, receiver, type) {
   });
 }
 
-// recording messages into the database
-function updateRead(obj) {
-  let receiver = obj["receiver"];
-  // let message = obj["message"];
-  let sender = obj["sender"];
-  nowReadOne(sender, receiver, "sender"); // save to the sender
-  nowReadOne(receiver, sender, "receiver"); // save to the receiver
-}
+// // recording messages into the database
+// function updateRead(obj) {
+//   let receiver = obj["receiver"];
+//   // let message = obj["message"];
+//   let sender = obj["sender"];
+//   nowReadOne(sender, receiver, "sender"); // save to the sender
+//   nowReadOne(receiver, sender, "receiver"); // save to the receiver
+//   realtimeUpdate("messageRead", obj);
+// }
 
 //======================================================================
 // *********************************************************************
@@ -282,6 +283,19 @@ io.on("connection", socket => {
       }
     });
   };
+
+  // recording messages into the database
+  function updateRead(obj) {
+    let receiver = obj["receiver"];
+    // let message = obj["message"];
+    let sender = obj["sender"];
+    nowReadOne(sender, receiver, "sender"); // save to the sender
+    nowReadOne(receiver, sender, "receiver"); // save to the receiver
+    realtimeUpdate("messageRead", {
+      receiver: obj["sender"],
+      sender: obj["receiver"]
+    });
+  }
 
   // Message just got Read now
   socket.on("nowRead", objBeingSent => {

@@ -535,3 +535,12 @@ svg {
   top: 50px;
   left: 30px;
 }
+
+#seen {
+  position: absolute;
+  bottom: 50px;
+  left: 20px;
+  font-style: verdana;
+  font-weight: bold;
+  display: none;
+}

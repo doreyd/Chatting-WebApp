@@ -53,6 +53,7 @@ const $tempMsg = getElem("tempMsg");
 const $newMsgsReceived = getElem("newMsgsReceived");
 const $nameHover = getElem("nameHover");
 const $left = getElem("left");
+const $seen = getElem("seen");
 
 const svg = getElem("svg");
 
@@ -334,6 +335,17 @@ socket.on("otherStoppedTyping", d => {
   stopType(d);
 });
 
+const showSeen = d => {
+  if (d["sender"] === $comWith) $seen.style.display = "block";
+  allMessage[$comWith] = stateChange(allMessage[$comWith], "receiver", true);
+  // console.log(stateCount(allMessage[$comWith], "receiver", false));
+  // console.log(allMessage[$comWith]);
+};
+
+socket.on("messageRead", d => {
+  showSeen(d);
+});
+
 const msgCountUp = (n, d) => {
   let [name, display] = n === 0 ? [$comWith, "hide"] : [d["sender"], "show"];
 
@@ -355,6 +367,7 @@ const updateLocalMsgs = d =>
   allMessage[d["sender"]].push(["sender", d["message"], false]);
 
 socket.on("newMessage", d => {
+  if (d["sender"] === $comWith) $seen.style.display = "none";
   getElem(`container${d["sender"]}`).style.backgroundImage = newMsgGradient;
   buubbleUp(d);
   msgCountUp(1, d);
@@ -384,12 +397,14 @@ const stopTyping = (receiver, sender) =>
     sender
   });
 
-const sendMessage = (receiver, message, sender) =>
+const sendMessage = (receiver, message, sender) => {
+  $seen.style.display = "none";
   socket.emit("sendMessage", {
     receiver,
     message,
     sender
   });
+};
 
 function initializeSendBox(thisUser) {
   $sendBox.addEventListener("keyup", event => {
@@ -401,7 +416,7 @@ function initializeSendBox(thisUser) {
       if ($sendBox.value !== "") {
         addNewMessage("receiver", $sendBox.value, thisUser);
         sendMessage(senderName, $sendBox.value, thisUser);
-        allMessage[senderName].push(["receiver", $sendBox.value]);
+        allMessage[senderName].push(["receiver", $sendBox.value, false]);
         $sendBox.value = "";
         $messages.scrollTo(0, $messages.scrollHeight);
       }
@@ -418,8 +433,10 @@ $msgStation.onclick = () => {
   getElem(`container${$comWith}`).style.background = newMsgDefault;
   getElem(`messageSender`).style.background = newMsgDefault;
   msgCountUp(0);
+
+  let unread = stateCount(allMessage[$comWith], "sender", false);
+  if (unread > 0) nowRead($user, $comWith);
   allMessage[$comWith] = stateChange(allMessage[$comWith], "sender", true);
-  nowRead($user, $comWith);
 };
 
 const setBottom = (pos, ...elems) =>
@@ -439,6 +456,19 @@ $chat.onclick = () => {
 };
 
 const showMesgs = (sender, thisUser) => {
+  // let newm = stateCount(allMessage[sender], "sender", false);
+  let unread = stateCount(allMessage[sender], "receiver", false);
+
+  // console.log("new messages is : " + newm);
+  // console.log("unread is : " + unread2);
+
+  let lastMsgType = allMessage[sender][allMessage[sender].length - 1][0];
+  if (unread === 0 && lastMsgType === "receiver") $seen.style.display = "block";
+  else $seen.style.display = "none";
+
+  // console.log(allMessage[sender][allMessage[sender].length - 1][0]);
+  // console.log(allMessage[sender]);
+  $seen.style.color = msgSendBack;
   $msgStation.style.display = "block";
   $comWith = sender;
   openMessagingBox(sender, thisUser);
@@ -840,9 +870,7 @@ const rePos = val => {
 // rePos(0);
 
 const changeSVGpos = () => {
-  // let newPos = Math.floor(650 - document.body.clientWidth / 2);
   let newPos = Math.floor(675 - document.body.clientWidth / 2);
-  console.log(document.body.clientWidth);
   rePos(newPos);
 };
 
