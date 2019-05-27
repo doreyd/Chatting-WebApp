@@ -74,3 +74,22 @@ let $signIn = svgInit(signInStyle, "circle");
 let $signUp = svgInit(signUpStyle, "circle");
 let $about = svgInit(aboutStyle, "circle");
 let $center = svgInit(centerStyle, "circle");
+
+let text2 = {
+  // x: signUpStyle.cx,
+  // y: signUpStyle.cy,
+  fill: "white",
+  "text-anchor": "middle",
+  "alignment-baseline": "middle",
+  style: "font-size:24px;font-family:verdana"
+};
+
+const createText = (text, style) => {
+  let $text = svgInit({ x: style.cx, y: style.cy, ...text2 }, "text");
+  $text.textContent = text;
+  return $text;
+};
+
+createText("Sign Up", signUpStyle);
+createText("Sign In", signInStyle);
+createText("About", aboutStyle);
