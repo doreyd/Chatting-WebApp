@@ -1,0 +1,36 @@
+/* #signIn {
+  position: absolute;
+  top: 20%;
+  left: 30%;
+  height: 20vh;
+  width: 20vh;
+  border-radius: 50%;
+  background: red;
+}
+#signUp {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  height: 5vh;
+  width: 5vh;
+  border-radius: 50%;
+  background: green;
+}
+#about {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  height: 5vh;
+  width: 5vh;
+  border-radius: 50%;
+  background: blue;
+}
+#center {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  height: 5vh;
+  width: 5vh;
+  border-radius: 50%;
+  background: grey;
+} */
