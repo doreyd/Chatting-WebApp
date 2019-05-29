@@ -31,6 +31,7 @@ body {
   /* border: 1px solid white; */
   transform: all linear 0.5s;
 }
+
 #dot {
   height: 10px;
   width: 10px;
@@ -38,7 +39,10 @@ body {
   position: absolute;
   display: none;
   transition: all linear 0.5s;
+  /* inner-margin: 5px;
+  border: 3px solid red; */
 }
+
 #dotContainer {
   position: absolute;
   display: block;
@@ -95,6 +99,7 @@ body {
   position: absolute;
   left: 5px;
   font-size: 1rem;
+  opacity: 0.8;
 }
 
 .signUp {
@@ -115,6 +120,7 @@ body {
   position: absolute;
   left: 5px;
   font-size: 1rem;
+  opacity: 0.8;
 }
 #signUp {
   top: 40px;
@@ -169,6 +175,7 @@ body {
 #aboutPart {
   background: transparent;
   left: 60px;
+  border-radius: 50%;
   color: white;
   position: absolute;
   font-size: 1rem;
