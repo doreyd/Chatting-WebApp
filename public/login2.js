@@ -18,6 +18,16 @@ const getCSS = (elem, prop) => window.getComputedStyle(elem, prop);
 const $svg = getElem("svg");
 const $dotCont = getElem("dotContainer");
 const $dot = getElem("dot");
+
+const $signInPart = getElem("signInPart");
+const $signUpPart = getElem("signUpPart");
+
+const $submit = getElem("submit");
+const $underSubmit = getElem("underSubmit");
+const $submit2 = getElem("submit2");
+const $underSubmit2 = getElem("underSubmit2");
+const $aboutPart = getElem("aboutPart");
+
 let svgStyle = {
   // width: 500
   width: 600
@@ -36,7 +46,7 @@ let centerStyle = {
 let signUpStyle = {
   cx: 350,
   cy: 150,
-  r: 70,
+  r: 60,
   id: "signUp-circle",
   fill: "#324ea9"
 };
@@ -249,6 +259,21 @@ const showSection = (elem, svgElem) => {
 
   setTimeout(() => expandDiv(elem, 2, cx, cy, r, col), 10);
   $dot.style.display = "block";
+  let svgId = getAttr(svgElem, "id");
+
+  if (svgId === "signIn-circle") {
+    $signInPart.style.display = "block";
+    $signUpPart.style.display = "none";
+    $aboutPart.style.display = "none";
+  } else if (svgId === "signUp-circle") {
+    $signInPart.style.display = "none";
+    $signUpPart.style.display = "block";
+    $aboutPart.style.display = "none";
+  } else if (svgId === "about-circle") {
+    $signInPart.style.display = "none";
+    $signUpPart.style.display = "none";
+    $aboutPart.style.display = "block";
+  }
 };
 
 const expandDiv = (elem, f, cx, cy, r, col) => {
@@ -259,16 +284,22 @@ const expandDiv = (elem, f, cx, cy, r, col) => {
   elem.style.height = f * r * 2 + "px";
 };
 
-const $submit = getElem("submit");
-const $underSubmit = getElem("underSubmit");
-
 const hoverSubmit = () => {
-  $underSubmit.style.display = "block";
-  $submit.style.color = "#f58a0c";
+  $underSubmit.style.background = "#40a932";
+  $submit.style.color = "white";
 };
 const hoverOut = () => {
-  $underSubmit.style.display = "none";
-  $submit.style.color = "white";
+  $underSubmit.style.background = "white ";
+  $submit.style.color = "#40a932";
+};
+
+const hoverSubmit2 = () => {
+  $underSubmit2.style.background = "#40a932";
+  $submit2.style.color = "white";
+};
+const hoverOut2 = () => {
+  $underSubmit2.style.background = "white";
+  $submit2.style.color = "#40a932";
 };
 
 const pushSubmit = () => {
@@ -283,5 +314,17 @@ $submit.onmouseout = hoverOut;
 $underSubmit.onmouseover = hoverSubmit;
 $underSubmit.onmouseout = hoverOut;
 
-$underSubmit.onmousedown = pushSubmit;
-$underSubmit.onmousedown = pushSubmit;
+$submit2.onmouseover = hoverSubmit2;
+$submit2.onmouseout = hoverOut2;
+
+$underSubmit2.onmouseover = hoverSubmit2;
+$underSubmit2.onmouseout = hoverOut2;
+
+$aboutPart.innerText = `
+      ChitChat is a chatting WebApp built using
+pure javascript on both the front and back end.
+No framework, nor any library was used in building
+the front-end. Just Javascript, CSS3 & HTML5.
+The back end was developed using NodeJS and mongodb.
+Please enjoy !!
+`;

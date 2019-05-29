@@ -73,6 +73,8 @@ body {
   top: 165px;
   left: 130px;
   padding: 5px 5px 5px 5px;
+  font-size: 1.2rem;
+  color: #40a932;
   transition: all linear 0.3s;
 }
 
@@ -80,27 +82,96 @@ body {
   position: absolute;
   top: 150px;
   left: 125px;
-  width: 75px;
+  width: 80px;
   height: 50px;
   border-radius: 50% 60% 40% 50%;
   background: white;
   transform: rotate(15deg);
-  transition: all linear 1s;
-  display: none;
+  transition: all linear 0.7s;
+  display: block;
 }
 .signIn::placeholder {
   color: white;
-  padding: 0px 5px 0px 0px;
+  position: absolute;
+  left: 5px;
   font-size: 1rem;
 }
-.signIn {
+
+.signUp {
   border-width: 0px 0px 1px 0px;
   border-color: white;
   background: transparent;
-  width: 180px;
-  left: 30px;
+  left: 60px;
+  width: 300px;
   color: white;
   position: absolute;
   font-size: 1rem;
   outline: none;
+  font-family: verdana;
+}
+
+.signUp::placeholder {
+  color: white;
+  position: absolute;
+  left: 5px;
+  font-size: 1rem;
+}
+#signUp {
+  top: 40px;
+  left: 120px;
+  font-size: 1.2rem;
+}
+#user2 {
+  top: 120px;
+  width: 175px;
+}
+#email {
+  top: 80px;
+  width: 175px;
+}
+#password2 {
+  top: 160px;
+  width: 175px;
+}
+#password3 {
+  top: 200px;
+  width: 175px;
+}
+#submit2 {
+  top: 250px;
+  left: 180px;
+  font-size: 1.2rem;
+  color: #40a932;
+  padding: 5px 5px 5px 5px;
+  transition: all linear 0.3s;
+}
+
+#underSubmit2 {
+  position: absolute;
+  top: 235px;
+  left: 178px;
+  width: 78px;
+  height: 50px;
+  border-radius: 50% 60% 40% 50%;
+  background: white;
+  transform: rotate(15deg);
+  transition: all linear 0.7s;
+  display: block;
+}
+
+#signInPart {
+  display: none;
+}
+#signUpPart {
+  display: none;
+}
+
+#aboutPart {
+  background: transparent;
+  left: 60px;
+  color: white;
+  position: absolute;
+  font-size: 1rem;
+  outline: none;
+  font-family: verdana;
 }
