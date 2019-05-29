@@ -175,10 +175,35 @@ body {
 #aboutPart {
   background: transparent;
   left: 60px;
-  border-radius: 50%;
+  border-radius: 10%;
   color: white;
   position: absolute;
   font-size: 1rem;
   outline: none;
   font-family: verdana;
+}
+
+#about {
+  position: absolute;
+  top: 20px;
+  left: 50px;
+  font-size: 1.2rem;
+}
+
+#text {
+  position: absolute;
+  top: 70px;
+  left: -50px;
+  width: 250px;
+  text-indent: 10px;
+  text-align: center;
+}
+#text2 {
+  position: absolute;
+  top: 160px;
+  left: -50px;
+  width: 280px;
+  text-indent: 10px;
+  text-align: left;
+  font-size: 0.9rem;
 }

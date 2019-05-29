@@ -91,34 +91,6 @@ const sizeDown = id => {
   thisText.style["font-size"] = `${size0 / 1.4}px`;
 };
 
-// const fillUp = elem => {
-//   let r = 100;
-//   if (elem.id === "signIn-circle") r = 90;
-//   else if (elem.id === "signUp-circle") r = 110;
-//   else if (elem.id === "about-circle") r = 120;
-
-//   let color = elem.getAttribute("fill");
-//   let cx = elem.getAttribute("cx");
-//   let cy = elem.getAttribute("cy");
-
-//   setAttr($topCircle, topStyle(cx, cy, r, color, "block"));
-// };
-
-const fillUp = elem => {
-  // let r = 100;
-  // if (elem.id === "signIn-circle") r = 90;
-  // else if (elem.id === "signUp-circle") r = 110;
-  // else if (elem.id === "about-circle") r = 120;
-
-  let color = elem.getAttribute("fill");
-  // let cx = elem.getAttribute("cx");
-  // let cy = elem.getAttribute("cy");
-
-  // setAttr($topCircle, topStyle(cx, cy, r, color, "block"));
-};
-
-// let dot = getElem("dot");
-
 const svgInit = (style, type) => {
   let $elem = createSvg(type);
   $svg.append($elem);
@@ -262,14 +234,17 @@ const showSection = (elem, svgElem) => {
   let svgId = getAttr(svgElem, "id");
 
   if (svgId === "signIn-circle") {
+    $dot.style.borderRadius = "50%";
     $signInPart.style.display = "block";
     $signUpPart.style.display = "none";
     $aboutPart.style.display = "none";
   } else if (svgId === "signUp-circle") {
+    $dot.style.borderRadius = "50%";
     $signInPart.style.display = "none";
     $signUpPart.style.display = "block";
     $aboutPart.style.display = "none";
   } else if (svgId === "about-circle") {
+    $dot.style.borderRadius = "50%";
     $signInPart.style.display = "none";
     $signUpPart.style.display = "none";
     $aboutPart.style.display = "block";
@@ -320,12 +295,23 @@ $submit2.onmouseout = hoverOut2;
 $underSubmit2.onmouseover = hoverSubmit2;
 $underSubmit2.onmouseout = hoverOut2;
 
-$aboutPart.innerText = `
-About 
-      ChitChat is a chatting WebApp built using
-javascript on both the front and back end.
-No framework, nor any library was used in the building
-of the front-end, just Javascript, CSS3 & HTML5.
-The back end was developed using NodeJS and mongodb.
-Please enjoy !!
-`;
+// $aboutPart.innerText = `
+// About
+//       ChitChat is a chatting WebApp built using
+// javascript on both the front and back end.
+// No framework, nor any library was used in the building
+// of the front-end, just Javascript, CSS3 & HTML5.
+// The back end was developed using NodeJS and mongodb.
+// Please enjoy !!
+// `;
+let $text = getElem("text");
+$text.innerText = `ChitChat is a chatting WebApp built using pure JavaScript, CSS3 & HTML5 on the front end, NodeJs and mongodb on the back.
+The instant messaging itself was accomplished using 
+WebSockets. 
+
+Enjoy!`;
+
+// let $text2 = getElem("text2");
+// $text2.innerText = `No framework, nor any library
+// was used in the building
+// of the front-end, just Javascript, CSS3 & HTML5.`;
