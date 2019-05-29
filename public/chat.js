@@ -846,28 +846,10 @@ ajaxGET("/getMessages", result => {
   generateGraph(center);
 });
 
-// To recenter the SVG graph everytime the window is resized
-// document.body.onresize = () => {
-// elem.onmousedown = e => {
-//   elemDragged = e.target;
-//   elemGroup.forEach(x => setDelta(e, x));
-//   svg.onmousemove = e => newPos(e);
-// };
-// elem.onmouseup = e => {
-//   delta = [];
-//   deltaSt = [];
-//   deltaEn = [];
-//   elemDragged = "";
-//   svg.onmousemove = e => {};
-// };
-// document.body.clientWidth;
-// };
-
 const rePos = val => {
   svg.style.left = `-${val}px`;
   svg.setAttribute("width", document.body.clientWidth + val);
 };
-// rePos(0);
 
 const changeSVGpos = () => {
   let newPos = Math.floor(675 - document.body.clientWidth / 2);
@@ -875,19 +857,8 @@ const changeSVGpos = () => {
 };
 
 document.body.onresize = () => {
-  // console.log("resize");
   changeSVGpos();
 };
 changeSVGpos();
 
 $chatStation.style.display = "none";
-
-// console.log(document);
-
-// document.addEventListener("fullscreenChange", function() {
-//   if (fullscreenElement != null) {
-//     console.info("Went full screen");
-//   } else {
-//     console.info("Exited full screen");
-//   }
-// });

@@ -1,36 +1,106 @@
-/* #signIn {
+#left {
   position: absolute;
-  top: 20%;
-  left: 30%;
-  height: 20vh;
-  width: 20vh;
-  border-radius: 50%;
-  background: red;
+  left: 0px;
+  top: 0px;
+  width: 50%;
+  height: 100%;
+  background: #fefafa;
+  z-index: -1;
 }
-#signUp {
-  position: absolute;
-  top: 40%;
-  left: 50%;
-  height: 5vh;
-  width: 5vh;
-  border-radius: 50%;
-  background: green;
+body {
+  background: #eeeded;
 }
-#about {
+#svg {
   position: absolute;
-  top: 40%;
-  left: 50%;
-  height: 5vh;
-  width: 5vh;
-  border-radius: 50%;
-  background: blue;
+  top: 0px;
+  height: 100%;
+  /* width: 100%; */
 }
-#center {
-  position: absolute;
-  top: 40%;
-  left: 50%;
-  height: 5vh;
-  width: 5vh;
-  border-radius: 50%;
-  background: grey;
+/* .change {
+  transform: all linear 1s;
 } */
+
+#bigger {
+  position: absolute;
+  top: 150px;
+  left: 100px;
+  height: 200px;
+  width: 200px;
+  background: red;
+  border-radius: 50%;
+  /* border: 1px solid white; */
+  transform: all linear 0.5s;
+}
+#dot {
+  height: 10px;
+  width: 10px;
+  border-radius: 50%;
+  position: absolute;
+  display: none;
+  transition: all linear 0.5s;
+}
+#dotContainer {
+  position: absolute;
+  display: block;
+}
+
+.signIn {
+  border-width: 0px 0px 1px 0px;
+  border-color: white;
+  background: transparent;
+  left: 30px;
+  color: white;
+  position: absolute;
+  font-size: 1rem;
+  outline: none;
+  font-family: verdana;
+}
+
+#signIn {
+  top: 40px;
+  left: 80px;
+  font-size: 1.2rem;
+}
+#user {
+  top: 80px;
+  width: 175px;
+}
+#password {
+  top: 120px;
+  width: 175px;
+}
+#submit {
+  top: 165px;
+  left: 130px;
+  padding: 5px 5px 5px 5px;
+  transition: all linear 0.3s;
+}
+
+#underSubmit {
+  position: absolute;
+  top: 150px;
+  left: 125px;
+  width: 75px;
+  height: 50px;
+  border-radius: 50% 60% 40% 50%;
+  background: white;
+  transform: rotate(15deg);
+  transition: all linear 1s;
+  display: none;
+}
+.signIn::placeholder {
+  color: white;
+  padding: 0px 5px 0px 0px;
+  font-size: 1rem;
+}
+.signIn {
+  border-width: 0px 0px 1px 0px;
+  border-color: white;
+  background: transparent;
+  width: 180px;
+  left: 30px;
+  color: white;
+  position: absolute;
+  font-size: 1rem;
+  outline: none;
+}
