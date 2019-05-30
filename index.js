@@ -190,7 +190,8 @@ app.get("/getUserName", (req, res) => {
 
 // Route for home page
 app.get("/", (req, res, next) => {
-  res.status(200).sendFile(__dirname + "/loginPage.html");
+  // res.status(200).sendFile(__dirname + "/loginPage.html");
+  res.status(200).sendFile(__dirname + "/login2.html");
   // res.status(200).sendFile(__dirname + "/signintest.html");
 });
 
@@ -201,7 +202,7 @@ mongoose.connection
   .on("error", err => console.log(`Connection error : ${err}`));
 
 // Start the server
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 3000;
 const server = app.listen(port, () => {
   console.log(`Listening on port ${port} .....`);
 });

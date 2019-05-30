@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <link rel="stylesheet" href="public/login2.css" />
+    <link rel="stylesheet" href="files/login2.css" />
     <title>Document</title>
   </head>
   <body>
@@ -13,56 +13,81 @@
     <div id="dotContainer">
       <div id="dot">
         <div id="signInPart">
-          <div id="signIn" class="signIn">Sign In</div>
-          <input
-            type="text"
-            id="user"
-            class="signIn"
-            placeholder="username"
-            spellcheck="false"
-          />
-          <input
-            type="text"
-            id="password"
-            class="signIn"
-            placeholder="password"
-            spellcheck="false"
-          />
-          <div id="underSubmit"></div>
-          <div id="submit" class="signIn">Submit</div>
+          <form
+            method="POST"
+            action="/signin"
+            name="formSignIn"
+            id="formSignIn"
+          >
+            <div id="signIn" class="signIn">Sign In</div>
+            <input
+              type="text"
+              id="email2"
+              spellcheck="false"
+              name="email"
+              value=""
+              class="signIn"
+              placeholder="email"
+            />
+            <input
+              type="password"
+              id="password2"
+              name="password"
+              background="transparent"
+              value=""
+              class="signIn"
+              spellcheck="false"
+              placeholder="password"
+            />
+            <div id="underSubmit2"></div>
+
+            <input type="submit" class="signIn" value="Sign In" id="submit2" />
+          </form>
         </div>
         <div id="signUpPart">
-          <div id="signUp" class="signUp">Sign Up</div>
-          <input
-            type="text"
-            id="user2"
-            class="signUp"
-            placeholder="username"
-            spellcheck="false"
-          />
-          <input
-            type="text"
-            id="email"
-            class="signUp"
-            placeholder="email"
-            spellcheck="false"
-          />
-          <input
-            type="text"
-            id="password2"
-            class="signUp"
-            placeholder="password"
-            spellcheck="false"
-          />
-          <input
-            type="text"
-            id="password3"
-            class="signUp"
-            placeholder="password"
-            spellcheck="false"
-          />
-          <div id="underSubmit2"></div>
-          <div id="submit2" class="signIn">Submit</div>
+          <form
+            method="POST"
+            action="/signup"
+            name="formSignUp"
+            id="formSignUp"
+          >
+            <div id="signUp" class="signUp">Sign Up</div>
+
+            <input
+              type="text"
+              id="email"
+              spellcheck="false"
+              name="email"
+              class="signUp"
+              placeholder="email"
+            />
+            <input
+              type="password"
+              id="password"
+              name="password"
+              spellcheck="false"
+              class="signUp"
+              placeholder="password"
+            />
+            <input
+              type="text"
+              id="userName"
+              name="userName"
+              spellcheck="false"
+              class="signUp"
+              placeholder="username"
+            />
+            <input
+              type="text"
+              id="password3"
+              class="signUp"
+              name="password3"
+              placeholder="password"
+              spellcheck="false"
+            />
+            <div id="underSubmit"></div>
+            <input type="submit" value="Sign Up" id="submit" class="signUp" />
+          </form>
         </div>
         <div id="aboutPart">
           <div id="about" class="about">About</div>
@@ -72,7 +97,6 @@
       </div>
     </div>
 
-    <!-- <div id="bigger"></div> -->
-    <script src="public/login2.js"></script>
+    <script src="files/login2.js"></script>
   </body>
 </html>

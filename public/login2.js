@@ -295,23 +295,9 @@ $submit2.onmouseout = hoverOut2;
 $underSubmit2.onmouseover = hoverSubmit2;
 $underSubmit2.onmouseout = hoverOut2;
 
-// $aboutPart.innerText = `
-// About
-//       ChitChat is a chatting WebApp built using
-// javascript on both the front and back end.
-// No framework, nor any library was used in the building
-// of the front-end, just Javascript, CSS3 & HTML5.
-// The back end was developed using NodeJS and mongodb.
-// Please enjoy !!
-// `;
 let $text = getElem("text");
 $text.innerText = `ChitChat is a chatting WebApp built using pure JavaScript, CSS3 & HTML5 on the front end, NodeJs and mongodb on the back.
 The instant messaging itself was accomplished using 
 WebSockets. 
 
 Enjoy!`;
-
-// let $text2 = getElem("text2");
-// $text2.innerText = `No framework, nor any library
-// was used in the building
-// of the front-end, just Javascript, CSS3 & HTML5.`;

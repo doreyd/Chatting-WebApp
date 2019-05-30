@@ -205,7 +205,7 @@ const $grey = getElem("grey");
   elem => (elem.onclick = () => setColors(colorSuits[elem.id]))
 );
 
-setColors(colorSuits["green"]);
+setColors(colorSuits["grey"]);
 
 let graphType = "star";
 let r0 = 30;
