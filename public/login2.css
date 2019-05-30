@@ -63,8 +63,10 @@ input:focus {
   outline: none;
   font-family: verdana;
   box-shadow: none;
+  display: none;
+  /* transition: all linear 0.3s; */
 }
-
+/* 
 .signIn:focus {
   background: transparent;
   outline: none;
@@ -72,7 +74,7 @@ input:focus {
 .signIn:active {
   background: transparent;
   outline: none;
-}
+} */
 
 #signIn {
   top: 40px;
@@ -110,6 +112,15 @@ input:focus {
   transition: all linear 0.7s;
   display: block;
 }
+
+.signIn:-webkit-autofill,
+.signIn:-webkit-autofill:hover,
+.signIn:-webkit-autofill:focus {
+  /* border: 0px solid blue; */
+  -webkit-text-fill-color: white;
+  -webkit-box-shadow: 0 0 0px 1000px #f58a0c inset;
+}
+
 .signIn::placeholder {
   color: white;
   position: absolute;
@@ -130,6 +141,16 @@ input:focus {
   font-size: 1rem;
   outline: none;
   font-family: verdana;
+  display: none;
+  transition: all linear 0.3s;
+}
+
+.signUp:-webkit-autofill,
+.signUp:-webkit-autofill:hover,
+.signUp:-webkit-autofill:focus {
+  /* border: 0px solid blue; */
+  -webkit-text-fill-color: white;
+  -webkit-box-shadow: 0 0 0px 1000px #324ea9 inset;
 }
 
 .signUp::placeholder {
@@ -226,8 +247,8 @@ input:focus {
   text-align: left;
   font-size: 0.9rem;
 }
-/* 
-input:-webkit-autofill,
+
+/* input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 textarea:-webkit-autofill,
@@ -235,8 +256,16 @@ textarea:-webkit-autofill:hover,
 textarea:-webkit-autofill:focus,
 select:-webkit-autofill,
 select:-webkit-autofill:hover,
-select:-webkit-autofill:focus {
-  border: 0px solid blue;
-  -webkit-text-fill-color: white;
+select:-webkit-autofill:focus  */
+
+/* input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus { */
+/* border: 0px solid blue; */
+/* -webkit-text-fill-color: white;
   -webkit-box-shadow: 0 0 0px 1000px #f58a0c inset; */
 /* } */
+
+/* input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0px 0px green inset;
+} */

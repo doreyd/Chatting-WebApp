@@ -112,9 +112,13 @@ app.post("/signup", (req, res, next) => {
       });
       newUser
         .save()
-        .then(data =>
-          res.status(201).json({ message: "user added", data: data })
-        )
+        .then(data => {
+          // res.status(201).json({ message: "user added", data: data })
+          req.session.user = data;
+          userName = data.userName;
+          // res.status(200).sendFile(__dirname + "/chatPage.html");
+          res.status(200).sendFile(__dirname + "/chatPage.html");
+        })
         .catch(err => res.status(500).json({ error: err }));
     }
   });
@@ -183,11 +187,6 @@ app.get("/getUserName", (req, res) => {
   });
 });
 
-// Route for sending messages
-// app.post("/sendmessage", (req, res) => {
-//   updateMessages(req, res);
-// });
-
 // Route for home page
 app.get("/", (req, res, next) => {
   // res.status(200).sendFile(__dirname + "/loginPage.html");
@@ -202,7 +201,7 @@ mongoose.connection
   .on("error", err => console.log(`Connection error : ${err}`));
 
 // Start the server
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 5000;
 const server = app.listen(port, () => {
   console.log(`Listening on port ${port} .....`);
 });
@@ -239,10 +238,6 @@ const stateChange = (messages, type, state) => {
 // recording messages into the database
 function nowReadOne(sender, receiver, type) {
   UserRecord.findOne({ userName: receiver }, (err, d) => {
-    // let newArray = [type, message, false];
-    // if (typeof d.allMessage[sender] === "undefined") {
-    //   d.allMessage[sender] = [];
-    // }
     if (typeof d.allMessage[sender] !== "undefined") {
       d.allMessage[sender] = stateChange(d.allMessage[sender], type, true);
       d.markModified("allMessage");
@@ -253,16 +248,6 @@ function nowReadOne(sender, receiver, type) {
     }
   });
 }
-
-// // recording messages into the database
-// function updateRead(obj) {
-//   let receiver = obj["receiver"];
-//   // let message = obj["message"];
-//   let sender = obj["sender"];
-//   nowReadOne(sender, receiver, "sender"); // save to the sender
-//   nowReadOne(receiver, sender, "receiver"); // save to the receiver
-//   realtimeUpdate("messageRead", obj);
-// }
 
 //======================================================================
 // *********************************************************************

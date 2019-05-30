@@ -238,11 +238,19 @@ const showSection = (elem, svgElem) => {
     $signInPart.style.display = "block";
     $signUpPart.style.display = "none";
     $aboutPart.style.display = "none";
+    let listElem = document.querySelectorAll(".signIn");
+    setTimeout(() => {
+      listElem.forEach(elem => (elem.style.display = "block"));
+    }, 300);
   } else if (svgId === "signUp-circle") {
     $dot.style.borderRadius = "50%";
     $signInPart.style.display = "none";
     $signUpPart.style.display = "block";
     $aboutPart.style.display = "none";
+    let listElem = document.querySelectorAll(".signUp");
+    setTimeout(() => {
+      listElem.forEach(elem => (elem.style.display = "block"));
+    }, 600);
   } else if (svgId === "about-circle") {
     $dot.style.borderRadius = "50%";
     $signInPart.style.display = "none";
