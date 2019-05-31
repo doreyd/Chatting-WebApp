@@ -222,6 +222,9 @@ const getData = elem => {
     getAttr(elem, "fill")
   ];
 };
+const $close = getElem("close");
+
+$close.onclick = () => ($dot.style.display = "none");
 
 const showSection = (elem, svgElem) => {
   $dot.style.display = "none";
@@ -238,6 +241,7 @@ const showSection = (elem, svgElem) => {
     $signInPart.style.display = "block";
     $signUpPart.style.display = "none";
     $aboutPart.style.display = "none";
+    $close.style.background = $dot.style.background;
     let listElem = document.querySelectorAll(".signIn");
     setTimeout(() => {
       listElem.forEach(elem => (elem.style.display = "block"));
@@ -247,6 +251,7 @@ const showSection = (elem, svgElem) => {
     $signInPart.style.display = "none";
     $signUpPart.style.display = "block";
     $aboutPart.style.display = "none";
+    $close.style.background = $dot.style.background;
     let listElem = document.querySelectorAll(".signUp");
     setTimeout(() => {
       listElem.forEach(elem => (elem.style.display = "block"));
@@ -256,6 +261,7 @@ const showSection = (elem, svgElem) => {
     $signInPart.style.display = "none";
     $signUpPart.style.display = "none";
     $aboutPart.style.display = "block";
+    $close.style.background = $dot.style.background;
   }
 };
 

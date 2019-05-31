@@ -14,11 +14,7 @@ body {
   position: absolute;
   top: 0px;
   height: 100%;
-  /* width: 100%; */
 }
-/* .change {
-  transform: all linear 1s;
-} */
 
 #bigger {
   position: absolute;
@@ -28,7 +24,6 @@ body {
   width: 200px;
   background: red;
   border-radius: 50%;
-  /* border: 1px solid white; */
   transform: all linear 0.5s;
 }
 
@@ -39,8 +34,6 @@ body {
   position: absolute;
   display: none;
   transition: all linear 0.5s;
-  /* inner-margin: 5px;
-  border: 3px solid red; */
 }
 
 #dotContainer {
@@ -64,17 +57,7 @@ input:focus {
   font-family: verdana;
   box-shadow: none;
   display: none;
-  /* transition: all linear 0.3s; */
 }
-/* 
-.signIn:focus {
-  background: transparent;
-  outline: none;
-}
-.signIn:active {
-  background: transparent;
-  outline: none;
-} */
 
 #signIn {
   top: 40px;
@@ -248,24 +231,19 @@ input:focus {
   font-size: 0.9rem;
 }
 
-/* input:-webkit-autofill,
-input:-webkit-autofill:hover,
-input:-webkit-autofill:focus,
-textarea:-webkit-autofill,
-textarea:-webkit-autofill:hover,
-textarea:-webkit-autofill:focus,
-select:-webkit-autofill,
-select:-webkit-autofill:hover,
-select:-webkit-autofill:focus  */
+#close {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  font-family: verdana;
+  font-size: 1rem;
+  padding: 2px 5px 3px 7px;
+  border-radius: 50%;
+  color: white;
+  text-align: middle;
+  transition: all linear 0.3s;
+}
 
-/* input:-webkit-autofill,
-input:-webkit-autofill:hover,
-input:-webkit-autofill:focus { */
-/* border: 0px solid blue; */
-/* -webkit-text-fill-color: white;
-  -webkit-box-shadow: 0 0 0px 1000px #f58a0c inset; */
-/* } */
-
-/* input:-webkit-autofill {
-  -webkit-box-shadow: 0 0 0px 0px green inset;
-} */
+#close:hover {
+  transform: rotate(180deg);
+}
