@@ -221,15 +221,59 @@ const ajaxGET = (url, callback) => {
   let xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200)
-      callback(xhttp.responseText);
+      callback(JSON.parse(xhttp.responseText));
   };
   xhttp.open("GET", url, true);
   xhttp.send();
 };
 
+const setImg = (elem, url) => {
+  elem.src = url;
+  elem.onerror = () => {
+    elem.onerror = null;
+    elem.src = "http://localhost:5000/images/steve.jpg";
+  };
+};
+
+const setImgH = url => {
+  let ss = url;
+  let img = new Image();
+  img.src = url;
+  img.onerror = () => {
+    img.onerror = null;
+    img.src = "http://localhost:5000/images/steve.jpg";
+    ss = "http://localhost:5000/images/steve.jpg";
+  };
+  return ss;
+};
+
+const checkImage = (elem, imageSrc) => {
+  let img = new Image();
+  img.onload = () => (elem.src = imageSrc);
+  img.onerror = () => (elem.src = `/images/steve.jpg`);
+  img.src = imageSrc;
+};
+
+const checkImageH = (elem, imageSrc) => {
+  let img = new Image();
+  img.onload = () => elem.setAttribute("href", imageSrc);
+  img.onerror = () => elem.setAttribute("href", `/images/steve.jpg`);
+  img.src = imageSrc;
+};
+
 ajaxGET("/getUserName", result => {
-  $user = result;
-  $chat.src = `images/${$user}.jpg`;
+  // let aa = JSON.parse(result);
+  $user = result.userName;
+
+  // let exist = checkImage(`/images/${$user}.jpg`);
+  // console.log(exist);
+  // setImg($chat, `/images/${$user}.jpg`);
+  checkImage($chat, `/images/${$user}.jpg`);
+  // $chat.src = `images/${$user}.jpg`;
+  // $chat.onerror = () => {
+  //   $chat.onerror = null;
+  //   $chat.src = "http://localhost:5000/images/steve.jpg";
+  // };
   chatContainer.innerText = `Welcome ${$user} !`;
 });
 
@@ -247,7 +291,9 @@ function addNewMessage(msgType, msg, sender) {
   else mesgCore.style.width = (msg.length * 140) / 17 + "px";
 
   mesgCore["innerText"] = msg;
-  mesgImg["src"] = `/images/${sender}.jpg`;
+  // mesgImg["src"] = `/images/${sender}.jpg`;
+
+  setImg(mesgImg, `/images/${sender}.jpg`);
 
   append([mesgImg, mesgCore, mesg], [mesg, mesg, $messages]);
   //"#0084ff"
@@ -505,7 +551,14 @@ function addSender(sender) {
   msg.style.color = namesColor;
   name.innerText = sender;
   name.style.color = namesColor;
-  img.src = `/images/${sender}.jpg`;
+
+  setImg(img, `/images/${sender}.jpg`);
+
+  // img.src = `/images/${sender}.jpg`;
+  // img.onerror = () => {
+  //   img.onerror = null;
+  //   img.src = "http://localhost:5000/images/steve.jpg";
+  // };
   container.onclick = () => showMesgs(sender, $user);
 
   append(
@@ -679,6 +732,18 @@ const nodeGenerator = (x, ...styles) => {
 
   let img = setSVGelem("image", imgSt, svg);
   img.onclick = user !== $user ? () => showMesgs(user, $user) : "";
+  // img.href = `images/${user}.jpg`;
+
+  checkImageH(img, `images/${user}.jpg`);
+
+  // let aa = setImgH(`images/${user}.jpg`);
+
+  // console.log(aa);
+  // img.href = `images/${user}.jpg`;
+  // img.onerror = () => {
+  //   img.onerror = null;
+  //   img.href = "http://localhost:5000/images/steve.jpg";
+  // };
   img.onmouseover = showName;
   img.onmouseout = hideName;
 
@@ -720,7 +785,6 @@ const imgSt = x => {
     height: x[3] * 2,
     width: x[3] * 2,
     id: `img${x[4]}`,
-    href: `images/${x[4]}.jpg`,
     "clip-path": `url(#clip${x[4]})`
   };
 };
@@ -839,7 +903,7 @@ function generateGraph(center) {
 }
 
 ajaxGET("/getMessages", result => {
-  allMessage = JSON.parse(result);
+  allMessage = result;
   loadChatStation(allMessage);
   msgData = formatMessages(allMessage);
   center = [...initPos, msgData];

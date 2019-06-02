@@ -75,7 +75,6 @@ let linkStyle = {
 };
 
 const sizeUp = id => {
-  console.log(id);
   let elem = getElem(id);
   let r0 = elem.getAttribute("r");
   elem.setAttribute("r", r0 * 1.3);
@@ -98,17 +97,10 @@ const svgInit = (style, type) => {
   $svg.append($elem);
   setAttr($elem, style);
   setAttr($elem, { class: "change" });
-  // if (style.id !== "center-circle" && type === "circle") {
   if (type === "circle") {
     $elem.onmouseover = () => sizeUp($elem.id);
     $elem.onmouseout = () => sizeDown($elem.id);
-
-    // $elem.onmouseover = e => sizeUp(e.target.getAttribute("id"));
-    // $elem.onmouseout = e => sizeDown(e.target.getAttribute("id"));
-    $elem.onclick = e => {
-      // dot.style.display = "none";
-      showSection($dot, $elem);
-    };
+    $elem.onclick = () => showSection($dot, $elem);
   }
 
   return $elem;
@@ -127,8 +119,6 @@ let $signIn = svgInit(signInStyle, "circle");
 let $signUp = svgInit(signUpStyle, "circle");
 let $about = svgInit(aboutStyle, "circle");
 let $center = svgInit(centerStyle, "circle");
-
-// const sizeUp = e => console.log(e.target);
 
 const basicStyle = size => {
   return {
@@ -156,7 +146,7 @@ const createText = (text, style, size, id) => {
 createText("Sign Up", signUpStyle, 20, "signUp");
 createText("Sign In", signInStyle, 16, "signIn");
 createText("About", aboutStyle, 18, "about");
-createText(`ChitChat`, centerStyle, 12, "center");
+createText(`Quick login`, centerStyle, 10, "center");
 
 const rePos = val => {
   svg.style.left = `${val}px`;
@@ -213,8 +203,6 @@ let $topCircle = svgInit(topStyle(100, 100, 0, "purple", "none"), "circle");
 
 createText2("Welcome to ChitChat !", welcomeStyle, 34, "welcome");
 createText2("The instant messaging WebApp", lineStyle, 24, "line");
-
-// let $topCircle = svgInit(topStyle(100, 100, 0, "purple", "none"), "circle");
 
 const getData = elem => {
   return [
@@ -298,7 +286,6 @@ const hoverOut2 = () => {
 };
 
 const pushSubmit = () => {
-  onmouseleave.log("ddd");
   $underSubmit.style.color = "#fcb158";
   $submit.style.color = "#b36c19";
 };
@@ -325,7 +312,7 @@ Enjoy!`;
 let $howText = getElem("howText");
 $howText.innerText = `
 For simplicity,
-you can login using
+you can log in using
 any of these usernames:
 
 steve, jessica, kayla,

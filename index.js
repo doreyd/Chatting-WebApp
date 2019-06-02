@@ -3,7 +3,6 @@ const mongoose = require("mongoose");
 const UserRecord = require("./models");
 const bodyParser = require("body-parser");
 const session = require("express-session");
-const { updateMessages, signin } = require("./controller/updateMessages");
 const socket = require("socket.io");
 
 let conversationZero = {
@@ -113,10 +112,8 @@ app.post("/signup", (req, res, next) => {
       newUser
         .save()
         .then(data => {
-          // res.status(201).json({ message: "user added", data: data })
           req.session.user = data;
           userName = data.userName;
-          // res.status(200).sendFile(__dirname + "/chatPage.html");
           res.status(200).sendFile(__dirname + "/chatPage.html");
         })
         .catch(err => res.status(500).json({ error: err }));
@@ -152,8 +149,6 @@ app.post("/removeuser", (req, res, next) => {
 
 // Route for signing in
 app.post("/signin", (req, res, next) => {
-  console.log(`email: ${req.body.email}, password: ${req.body.password} `);
-  // signin(req, res);
   UserRecord.findOne(
     { email: req.body.email, password: req.body.password },
     (err, data) => {
@@ -164,7 +159,6 @@ app.post("/signin", (req, res, next) => {
       } else {
         req.session.user = data;
         userName = data.userName;
-        // res.status(200).sendFile(__dirname + "/chatPage.html");
         res.status(200).sendFile(__dirname + "/chatPage.html");
       }
     }
@@ -183,15 +177,14 @@ app.get("/getMessages", (req, res) => {
 // Get the user name in chat page
 app.get("/getUserName", (req, res) => {
   UserRecord.findOne({ email: req.session.user.email }, (err, data) => {
-    res.send(data.userName);
+    // res.send(data.userName);
+    res.send(data);
   });
 });
 
 // Route for home page
 app.get("/", (req, res, next) => {
-  // res.status(200).sendFile(__dirname + "/loginPage.html");
   res.status(200).sendFile(__dirname + "/login2.html");
-  // res.status(200).sendFile(__dirname + "/signintest.html");
 });
 
 // Connecting to database
@@ -264,19 +257,18 @@ io.on("connection", socket => {
   // & checking if the receiver of the message is currently connected
   const realtimeUpdate = (newEvent, obj) => {
     Object.keys(io.sockets.sockets).forEach(id => {
-      if (id === sess_sock[obj["receiver"]]) {
+      if (id === sess_sock[obj["receiver"]])
         io.sockets.sockets[id].emit(newEvent, obj);
-      }
     });
   };
 
   // recording messages into the database
   function updateRead(obj) {
     let receiver = obj["receiver"];
-    // let message = obj["message"];
     let sender = obj["sender"];
-    nowReadOne(sender, receiver, "sender"); // save to the sender
-    nowReadOne(receiver, sender, "receiver"); // save to the receiver
+    nowReadOne(sender, receiver, "sender"); // save to the sender in db
+    nowReadOne(receiver, sender, "receiver"); // save to the receiver in db
+    // inform sender that message was read
     realtimeUpdate("messageRead", {
       receiver: obj["sender"],
       sender: obj["receiver"]

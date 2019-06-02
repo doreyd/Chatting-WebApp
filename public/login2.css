@@ -263,3 +263,13 @@ input:focus {
 #close:hover {
   transform: rotate(180deg);
 }
+
+#littleBack {
+  position: absolute;
+  height: 60px;
+  width: 230px;
+  border-radius: 20px 0px 50px 20px;
+  top: 120px;
+  left: 20px;
+  background: #0b6e2f;
+}
