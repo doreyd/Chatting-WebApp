@@ -195,6 +195,21 @@ input:focus {
   display: none;
 }
 
+#centerPart {
+  display: none;
+}
+
+#howText {
+  position: absolute;
+  top: 10px;
+  left: 20px;
+  font-size: 1.2rem;
+  display: block;
+  font-family: verdana;
+  color: white;
+  text-align: center;
+}
+
 #aboutPart {
   background: transparent;
   left: 60px;
@@ -241,6 +256,7 @@ input:focus {
   border-radius: 50%;
   color: white;
   text-align: middle;
+  z-index: 3;
   transition: all linear 0.3s;
 }
 

@@ -21,6 +21,7 @@ const $dot = getElem("dot");
 
 const $signInPart = getElem("signInPart");
 const $signUpPart = getElem("signUpPart");
+const $centerPart = getElem("centerPart");
 
 const $submit = getElem("submit");
 const $underSubmit = getElem("underSubmit");
@@ -74,6 +75,7 @@ let linkStyle = {
 };
 
 const sizeUp = id => {
+  console.log(id);
   let elem = getElem(id);
   let r0 = elem.getAttribute("r");
   elem.setAttribute("r", r0 * 1.3);
@@ -96,12 +98,16 @@ const svgInit = (style, type) => {
   $svg.append($elem);
   setAttr($elem, style);
   setAttr($elem, { class: "change" });
-  if (style.id !== "center-circle" && type === "circle") {
-    $elem.onmouseover = e => sizeUp(e.target.getAttribute("id"));
-    $elem.onmouseout = e => sizeDown(e.target.getAttribute("id"));
+  // if (style.id !== "center-circle" && type === "circle") {
+  if (type === "circle") {
+    $elem.onmouseover = () => sizeUp($elem.id);
+    $elem.onmouseout = () => sizeDown($elem.id);
+
+    // $elem.onmouseover = e => sizeUp(e.target.getAttribute("id"));
+    // $elem.onmouseout = e => sizeDown(e.target.getAttribute("id"));
     $elem.onclick = e => {
       // dot.style.display = "none";
-      showSection($dot, e.target);
+      showSection($dot, $elem);
     };
   }
 
@@ -140,14 +146,9 @@ const createText = (text, style, size, id) => {
     "text"
   );
   $text.textContent = text;
-
   $text.onmouseover = () => sizeUp(`${id}-circle`);
   $text.onmouseout = () => sizeDown(`${id}-circle`);
-
-  $text.onclick = () => {
-    showSection($dot, getElem(`${id}-circle`));
-  };
-
+  $text.onclick = () => showSection($dot, getElem(`${id}-circle`));
   return $text;
 };
 
@@ -155,6 +156,7 @@ const createText = (text, style, size, id) => {
 createText("Sign Up", signUpStyle, 20, "signUp");
 createText("Sign In", signInStyle, 16, "signIn");
 createText("About", aboutStyle, 18, "about");
+createText(`ChitChat`, centerStyle, 12, "center");
 
 const rePos = val => {
   svg.style.left = `${val}px`;
@@ -226,41 +228,45 @@ const $close = getElem("close");
 
 $close.onclick = () => ($dot.style.display = "none");
 
+const showOnly = part => {
+  [$signInPart, $signUpPart, $aboutPart, $centerPart].forEach(elem => {
+    if (elem === part) elem.style.display = "block";
+    else elem.style.display = "none";
+  });
+};
+
 const showSection = (elem, svgElem) => {
   $dot.style.display = "none";
   let [cx, cy, r, col] = getData(svgElem);
   expandDiv(elem, 1, cx, cy, r, col);
   elem.style.transition = "all linear .5s";
 
-  setTimeout(() => expandDiv(elem, 2, cx, cy, r, col), 10);
-  $dot.style.display = "block";
   let svgId = getAttr(svgElem, "id");
+  let f = svgId === "center-circle" ? 3.5 : 2;
+  setTimeout(() => expandDiv(elem, f, cx, cy, r, col), 10);
+  $dot.style.display = "block";
 
   if (svgId === "signIn-circle") {
-    $dot.style.borderRadius = "50%";
-    $signInPart.style.display = "block";
-    $signUpPart.style.display = "none";
-    $aboutPart.style.display = "none";
+    showOnly($signInPart);
     $close.style.background = $dot.style.background;
     let listElem = document.querySelectorAll(".signIn");
     setTimeout(() => {
       listElem.forEach(elem => (elem.style.display = "block"));
     }, 300);
   } else if (svgId === "signUp-circle") {
-    $dot.style.borderRadius = "50%";
-    $signInPart.style.display = "none";
-    $signUpPart.style.display = "block";
-    $aboutPart.style.display = "none";
+    showOnly($signUpPart);
     $close.style.background = $dot.style.background;
     let listElem = document.querySelectorAll(".signUp");
-    setTimeout(() => {
-      listElem.forEach(elem => (elem.style.display = "block"));
-    }, 600);
+    setTimeout(
+      () => listElem.forEach(elem => (elem.style.display = "block")),
+      600
+    );
   } else if (svgId === "about-circle") {
+    showOnly($aboutPart);
+    $close.style.background = $dot.style.background;
+  } else if (svgId === "center-circle") {
     $dot.style.borderRadius = "50%";
-    $signInPart.style.display = "none";
-    $signUpPart.style.display = "none";
-    $aboutPart.style.display = "block";
+    showOnly($centerPart);
     $close.style.background = $dot.style.background;
   }
 };
@@ -315,3 +321,16 @@ The instant messaging itself was accomplished using
 WebSockets. 
 
 Enjoy!`;
+
+let $howText = getElem("howText");
+$howText.innerText = `
+For simplicity,
+you can login using
+any of these usernames:
+
+steve, jessica, kayla,
+frank, susan, john.
+
+The email & password 
+are the same
+`;
