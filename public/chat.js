@@ -55,6 +55,13 @@ const $nameHover = getElem("nameHover");
 const $left = getElem("left");
 const $seen = getElem("seen");
 
+const $blue = getElem("blue");
+const $purple = getElem("purple");
+const $red = getElem("red");
+const $green = getElem("green");
+const $orange = getElem("orange");
+const $grey = getElem("grey");
+
 const svg = getElem("svg");
 
 let $comWith = "";
@@ -194,13 +201,6 @@ const setColors = colors => {
   }
 };
 
-const $blue = getElem("blue");
-const $purple = getElem("purple");
-const $red = getElem("red");
-const $green = getElem("green");
-const $orange = getElem("orange");
-const $grey = getElem("grey");
-
 [$blue, $purple, $red, $green, $orange, $grey].forEach(
   elem => (elem.onclick = () => setColors(colorSuits[elem.id]))
 );
@@ -227,25 +227,25 @@ const ajaxGET = (url, callback) => {
   xhttp.send();
 };
 
-const setImg = (elem, url) => {
-  elem.src = url;
-  elem.onerror = () => {
-    elem.onerror = null;
-    elem.src = "http://localhost:5000/images/steve.jpg";
-  };
-};
+// const setImg = (elem, url) => {
+//   elem.src = url;
+//   elem.onerror = () => {
+//     elem.onerror = null;
+//     elem.src = "http://localhost:5000/images/steve.jpg";
+//   };
+// };
 
-const setImgH = url => {
-  let ss = url;
-  let img = new Image();
-  img.src = url;
-  img.onerror = () => {
-    img.onerror = null;
-    img.src = "http://localhost:5000/images/steve.jpg";
-    ss = "http://localhost:5000/images/steve.jpg";
-  };
-  return ss;
-};
+// const setImgH = url => {
+//   let ss = url;
+//   let img = new Image();
+//   img.src = url;
+//   img.onerror = () => {
+//     img.onerror = null;
+//     img.src = "http://localhost:5000/images/steve.jpg";
+//     ss = "http://localhost:5000/images/steve.jpg";
+//   };
+//   return ss;
+// };
 
 const checkImage = (elem, imageSrc) => {
   let img = new Image();
@@ -262,18 +262,8 @@ const checkImageH = (elem, imageSrc) => {
 };
 
 ajaxGET("/getUserName", result => {
-  // let aa = JSON.parse(result);
   $user = result.userName;
-
-  // let exist = checkImage(`/images/${$user}.jpg`);
-  // console.log(exist);
-  // setImg($chat, `/images/${$user}.jpg`);
   checkImage($chat, `/images/${$user}.jpg`);
-  // $chat.src = `images/${$user}.jpg`;
-  // $chat.onerror = () => {
-  //   $chat.onerror = null;
-  //   $chat.src = "http://localhost:5000/images/steve.jpg";
-  // };
   chatContainer.innerText = `Welcome ${$user} !`;
 });
 
@@ -291,19 +281,22 @@ function addNewMessage(msgType, msg, sender) {
   else mesgCore.style.width = (msg.length * 140) / 17 + "px";
 
   mesgCore["innerText"] = msg;
-  // mesgImg["src"] = `/images/${sender}.jpg`;
 
-  setImg(mesgImg, `/images/${sender}.jpg`);
+  checkImage(mesgImg, `/images/${sender}.jpg`);
 
   append([mesgImg, mesgCore, mesg], [mesg, mesg, $messages]);
-  //"#0084ff"
+
   mesgCore.style.background = msgType === "receiver" ? msgSendBack : "#e7e7e7";
   mesg.style.height = mesgCore.offsetHeight + 5 + "px";
   $messages.scrollTo(0, $messages.scrollHeight);
 }
 
-const setOneElem = (elem, data) =>
-  data["props"].forEach((prop, i) => (elem[prop] = data["values"][i]));
+const setOneElem = (elem, data) => {
+  data["props"].forEach((prop, i) => {
+    if (elem === $senderImg) checkImage(elem, data["values"][i]);
+    else elem[prop] = data["values"][i];
+  });
+};
 
 const setManyElems = (...elems) =>
   elems.forEach(obj => setOneElem(obj["elem"], obj["data"]));
@@ -502,18 +495,10 @@ $chat.onclick = () => {
 };
 
 const showMesgs = (sender, thisUser) => {
-  // let newm = stateCount(allMessage[sender], "sender", false);
   let unread = stateCount(allMessage[sender], "receiver", false);
-
-  // console.log("new messages is : " + newm);
-  // console.log("unread is : " + unread2);
-
   let lastMsgType = allMessage[sender][allMessage[sender].length - 1][0];
   if (unread === 0 && lastMsgType === "receiver") $seen.style.display = "block";
   else $seen.style.display = "none";
-
-  // console.log(allMessage[sender][allMessage[sender].length - 1][0]);
-  // console.log(allMessage[sender]);
   $seen.style.color = msgSendBack;
   $msgStation.style.display = "block";
   $comWith = sender;
@@ -552,7 +537,7 @@ function addSender(sender) {
   name.innerText = sender;
   name.style.color = namesColor;
 
-  setImg(img, `/images/${sender}.jpg`);
+  checkImage(img, `/images/${sender}.jpg`);
 
   // img.src = `/images/${sender}.jpg`;
   // img.onerror = () => {
@@ -693,6 +678,7 @@ const showName = e => {
 const hideName = () => {
   $nameHover.style.display = "none";
 };
+
 // Function to create and set up SVG elements
 const nodeGenerator = (x, ...styles) => {
   let [nodeSt, outerSt, imgSt, typingSt, msgSt, msgTextSt, clipSt] = styles;
@@ -732,18 +718,8 @@ const nodeGenerator = (x, ...styles) => {
 
   let img = setSVGelem("image", imgSt, svg);
   img.onclick = user !== $user ? () => showMesgs(user, $user) : "";
-  // img.href = `images/${user}.jpg`;
 
   checkImageH(img, `images/${user}.jpg`);
-
-  // let aa = setImgH(`images/${user}.jpg`);
-
-  // console.log(aa);
-  // img.href = `images/${user}.jpg`;
-  // img.onerror = () => {
-  //   img.onerror = null;
-  //   img.href = "http://localhost:5000/images/steve.jpg";
-  // };
   img.onmouseover = showName;
   img.onmouseout = hideName;
 
@@ -770,7 +746,6 @@ const outerSt = x => {
     cx: x[2],
     r: x[3] + 6,
     id: `outer${x[4]}`,
-    // fill: newMsgDefault,
     "stroke-width": 3,
     stroke: lineBase,
     fill: nodeBackColor,
