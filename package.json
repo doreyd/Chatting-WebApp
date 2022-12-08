@@ -9,7 +9,7 @@
   "author": "Doreyd Mehila",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.16.4",
+    "express": "^4.18.2",
     "express-session": "^1.16.1",
     "mongoose": "^5.5.4",
     "nodemon": "^1.18.11"
